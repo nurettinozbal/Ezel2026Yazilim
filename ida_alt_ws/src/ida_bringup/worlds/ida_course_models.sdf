@@ -1,0 +1,2132 @@
+<?xml version="1.0" ?>
+<!--
+  sim_gazebo.world — TEKNOFEST İDA simülasyon dünyası (Gazebo Classic 11, SDF 1.6).
+
+  Bu dünya YALNIZCA görselleştirmedir; FİZİK ArduRover SITL'de koşar.
+  ida_boat modeli SITL konumunu İZLER (gazebo_pose_sync_node,
+  /telemetry/state -> SetEntityState). Kamera/lidar plugin'leri modele bağlı
+  olduğundan SITL ile senkron hareket eder ve /camera/image_raw ile /scan
+  yayınlar.
+
+  KOORDİNAT DÖNÜŞÜMÜ (kritik):
+    - full_mission.yaml scenario koordinatları: x = kuzey, y = doğu.
+    - Gazebo world frame: x = doğu, y = kuzey (ENU).
+    - Bu world'deki tüm statik nesne pose'ları dönüştürülmüştür:
+      world(x, y) = scenario(y_east, x_north).
+
+  PARKUR KATMANI: tools/generate_course.py tarafından üretilir (tek kaynak).
+  full_mission.yaml + hakem_mission.txt + aşağıdaki duba modelleri birlikte
+  üretilir; yeni görev dosyası gelince generator yeniden çalıştırılır.
+  DÜBA MODELLERİ buraya gömülüdür (ida_course_models.sdf katmanı).
+-->
+<sdf version="1.6">
+  <world name="ida_sim">
+    <!-- Güneş ışığı + ortam aydınlatması -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <light name="ambient_light" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 30 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 -0.5 -0.9</direction>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+    </light>
+
+    <!-- Varsayılan fizik (yüzey yerçekimi, standart temas) -->
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <!-- Su yüzeyi: z=0 düzleminde büyük mavi yarı saydam tabaka -->
+    <model name="water_plane">
+      <static>true</static>
+      <link name="water_link">
+        <collision name="water_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="water_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.2 0.4 0.8 0.6</ambient>
+            <diffuse>0.2 0.5 0.9 0.6</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!--
+      İDA tekne modeli (SITL konumunu izler).
+      Gövde: 1.4 x 0.9 x 0.25 m; mast: kamera yüksekliği için dikey silindir.
+      Camera: tekne önüne bakar (ENU'da ön +x'tir; sensor pose 0.5 0 0.5 0 0 0).
+      Başlangıç pose 0 0 0.3 0 0 0 (z = su üstü); gerçek konum/yaw
+      gazebo_pose_sync_node tarafından yazılır (heading 0 = kuzey = +y).
+    -->
+    <model name="ida_boat">
+      <static>false</static>
+      <pose>0 0 0.3 0 0 0</pose>
+      <link name="boat_body">
+        <pose>0 0 0.125 0 0 0</pose>
+        <collision name="boat_body_collision">
+          <geometry>
+            <box>
+              <size>1.4 0.9 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="boat_body_visual">
+          <geometry>
+            <box>
+              <size>1.4 0.9 0.25</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1.0 0.55 0.15 1</ambient>
+            <diffuse>1.0 0.6 0.2 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="mast">
+        <pose>0 0 0.25 0 0 0</pose>
+        <visual name="mast_visual">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.4</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.9 0.9 0.9 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <!-- Kamera: tekne önüne (ENU +x) ve mast tepesine monte -->
+      <link name="camera_link">
+        <pose>0.5 0 0.5 0 0 0</pose>
+        <inertial>
+          <mass>0.05</mass>
+          <inertia>
+            <ixx>0.0001</ixx>
+            <iyy>0.0001</iyy>
+            <izz>0.0001</izz>
+          </inertia>
+        </inertial>
+        <sensor name="camera_sensor" type="camera">
+          <camera>
+            <horizontal_fov>1.57</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <update_rate>10</update_rate>
+          <plugin name="ida_camera" filename="libgazebo_ros_camera.so">
+            <ros>
+              <namespace>/</namespace>
+              <remapping>image_raw:=camera/image_raw</remapping>
+            </ros>
+            <camera_name>ida_camera</camera_name>
+            <image_width>640</image_width>
+            <image_height>480</image_height>
+            <update_rate>10</update_rate>
+            <horizontal_fov>1.57</horizontal_fov>
+          </plugin>
+        </sensor>
+      </link>
+      <!-- 2D Lidar (ray): mast üstü, 360 derece -->
+      <link name="lidar_link">
+        <pose>0.2 0 0.2 0 0 0</pose>
+        <inertial>
+          <mass>0.05</mass>
+          <inertia>
+            <ixx>0.0001</ixx>
+            <iyy>0.0001</iyy>
+            <izz>0.0001</izz>
+          </inertia>
+        </inertial>
+        <sensor name="lidar_sensor" type="ray">
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-3.14159</min_angle>
+                <max_angle>3.14159</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.3</min>
+              <max>18.0</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <update_rate>10</update_rate>
+          <plugin name="ida_lidar" filename="libgazebo_ros_ray.so">
+            <ros>
+              <namespace>/</namespace>
+              <remapping>scan:=scan</remapping>
+            </ros>
+            <output_type>sensor_msgs/LaserScan</output_type>
+            <update_rate>10</update_rate>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+            <range_min>0.3</range_min>
+            <range_max>18.0</range_max>
+          </plugin>
+        </sensor>
+      </link>
+    </model>
+
+    <!-- ============================================================
+         PARKUR DUBALARI (otomatik üretildi — tools/generate_course.py).
+         Pozlar full_mission.yaml ile birebir; ENU dönüşümü uygulanmış.
+         ============================================================ -->
+<!-- ida_course_models.sdf — otomatik üretildi (tools/generate_course.py).
+     Duba katmanı: world'e gömülür (ENU dönüşümü uygulanır);
+     pozlar full_mission.yaml ile birebir. -->
+  <model name="p1_o_l1" static="true">
+    <pose>3.201 6.159 0.250 0 0 0</pose>
+    <link name="p1_o_l1_link">
+      <collision name="p1_o_l1_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l1_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l1_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r1" static="true">
+    <pose>-3.201 13.841 0.250 0 0 0</pose>
+    <link name="p1_o_r1_link">
+      <collision name="p1_o_r1_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r1_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r1_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l2" static="true">
+    <pose>9.713 11.585 0.250 0 0 0</pose>
+    <link name="p1_o_l2_link">
+      <collision name="p1_o_l2_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l2_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l2_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r2" static="true">
+    <pose>3.311 19.268 0.250 0 0 0</pose>
+    <link name="p1_o_r2_link">
+      <collision name="p1_o_r2_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r2_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r2_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l3" static="true">
+    <pose>17.403 17.994 0.250 0 0 0</pose>
+    <link name="p1_o_l3_link">
+      <collision name="p1_o_l3_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l3_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l3_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r3" static="true">
+    <pose>11.001 25.676 0.250 0 0 0</pose>
+    <link name="p1_o_r3_link">
+      <collision name="p1_o_r3_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r3_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r3_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l4" static="true">
+    <pose>25.121 24.426 0.250 0 0 0</pose>
+    <link name="p1_o_l4_link">
+      <collision name="p1_o_l4_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l4_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l4_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r4" static="true">
+    <pose>18.719 32.108 0.250 0 0 0</pose>
+    <link name="p1_o_r4_link">
+      <collision name="p1_o_r4_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r4_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r4_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l5" static="true">
+    <pose>27.994 30.328 0.250 0 0 0</pose>
+    <link name="p1_o_l5_link">
+      <collision name="p1_o_l5_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l5_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l5_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r5" static="true">
+    <pose>33.541 38.648 0.250 0 0 0</pose>
+    <link name="p1_o_r5_link">
+      <collision name="p1_o_r5_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r5_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r5_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l6" static="true">
+    <pose>34.992 25.663 0.250 0 0 0</pose>
+    <link name="p1_o_l6_link">
+      <collision name="p1_o_l6_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l6_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l6_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r6" static="true">
+    <pose>40.539 33.983 0.250 0 0 0</pose>
+    <link name="p1_o_r6_link">
+      <collision name="p1_o_r6_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r6_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r6_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l7" static="true">
+    <pose>42.392 20.730 0.250 0 0 0</pose>
+    <link name="p1_o_l7_link">
+      <collision name="p1_o_l7_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l7_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l7_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r7" static="true">
+    <pose>47.939 29.050 0.250 0 0 0</pose>
+    <link name="p1_o_r7_link">
+      <collision name="p1_o_r7_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r7_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r7_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l8" static="true">
+    <pose>51.048 14.958 0.250 0 0 0</pose>
+    <link name="p1_o_l8_link">
+      <collision name="p1_o_l8_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l8_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l8_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r8" static="true">
+    <pose>56.595 23.279 0.250 0 0 0</pose>
+    <link name="p1_o_r8_link">
+      <collision name="p1_o_r8_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r8_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r8_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l9" static="true">
+    <pose>65.516 13.445 0.250 0 0 0</pose>
+    <link name="p1_o_l9_link">
+      <collision name="p1_o_l9_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l9_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l9_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r9" static="true">
+    <pose>58.445 20.516 0.250 0 0 0</pose>
+    <link name="p1_o_r9_link">
+      <collision name="p1_o_r9_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r9_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r9_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l10" static="true">
+    <pose>73.389 21.318 0.250 0 0 0</pose>
+    <link name="p1_o_l10_link">
+      <collision name="p1_o_l10_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l10_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l10_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r10" static="true">
+    <pose>66.318 28.389 0.250 0 0 0</pose>
+    <link name="p1_o_r10_link">
+      <collision name="p1_o_r10_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r10_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r10_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l11" static="true">
+    <pose>80.595 28.524 0.250 0 0 0</pose>
+    <link name="p1_o_l11_link">
+      <collision name="p1_o_l11_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l11_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l11_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r11" static="true">
+    <pose>73.524 35.595 0.250 0 0 0</pose>
+    <link name="p1_o_r11_link">
+      <collision name="p1_o_r11_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r11_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r11_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_l12" static="true">
+    <pose>88.318 36.247 0.250 0 0 0</pose>
+    <link name="p1_o_l12_link">
+      <collision name="p1_o_l12_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_l12_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_l12_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p1_o_r12" static="true">
+    <pose>81.247 43.318 0.250 0 0 0</pose>
+    <link name="p1_o_r12_link">
+      <collision name="p1_o_r12_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p1_o_r12_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p1_o_r12_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_l1" static="true">
+    <pose>93.694 40.000 0.250 0 0 0</pose>
+    <link name="p2_o_l1_link">
+      <collision name="p2_o_l1_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_l1_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_l1_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_r1" static="true">
+    <pose>93.694 50.000 0.250 0 0 0</pose>
+    <link name="p2_o_r1_link">
+      <collision name="p2_o_r1_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_r1_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_r1_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_l2" static="true">
+    <pose>104.698 40.000 0.250 0 0 0</pose>
+    <link name="p2_o_l2_link">
+      <collision name="p2_o_l2_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_l2_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_l2_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_r2" static="true">
+    <pose>104.698 50.000 0.250 0 0 0</pose>
+    <link name="p2_o_r2_link">
+      <collision name="p2_o_r2_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_r2_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_r2_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_l3" static="true">
+    <pose>115.044 40.000 0.250 0 0 0</pose>
+    <link name="p2_o_l3_link">
+      <collision name="p2_o_l3_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_l3_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_l3_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_r3" static="true">
+    <pose>115.044 50.000 0.250 0 0 0</pose>
+    <link name="p2_o_r3_link">
+      <collision name="p2_o_r3_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_r3_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_r3_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_l4" static="true">
+    <pose>124.004 40.000 0.250 0 0 0</pose>
+    <link name="p2_o_l4_link">
+      <collision name="p2_o_l4_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_l4_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_l4_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_r4" static="true">
+    <pose>124.004 50.000 0.250 0 0 0</pose>
+    <link name="p2_o_r4_link">
+      <collision name="p2_o_r4_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_r4_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_r4_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_l5" static="true">
+    <pose>134.461 40.000 0.250 0 0 0</pose>
+    <link name="p2_o_l5_link">
+      <collision name="p2_o_l5_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_l5_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_l5_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_r5" static="true">
+    <pose>134.461 50.000 0.250 0 0 0</pose>
+    <link name="p2_o_r5_link">
+      <collision name="p2_o_r5_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_r5_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_r5_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_l6" static="true">
+    <pose>140.000 40.000 0.250 0 0 0</pose>
+    <link name="p2_o_l6_link">
+      <collision name="p2_o_l6_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_l6_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_l6_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_o_r6" static="true">
+    <pose>140.000 50.000 0.250 0 0 0</pose>
+    <link name="p2_o_r6_link">
+      <collision name="p2_o_r6_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_o_r6_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_o_r6_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.50 0.00 1.00</ambient>
+          <diffuse>1.00 0.50 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_1" static="true">
+    <pose>111.134 42.734 0.250 0 0 0</pose>
+    <link name="p2_yellow_1_link">
+      <collision name="p2_yellow_1_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_1_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_1_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_2" static="true">
+    <pose>122.203 43.708 0.250 0 0 0</pose>
+    <link name="p2_yellow_2_link">
+      <collision name="p2_yellow_2_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_2_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_2_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_3" static="true">
+    <pose>99.881 46.789 0.250 0 0 0</pose>
+    <link name="p2_yellow_3_link">
+      <collision name="p2_yellow_3_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_3_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_3_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_4" static="true">
+    <pose>136.056 41.909 0.250 0 0 0</pose>
+    <link name="p2_yellow_4_link">
+      <collision name="p2_yellow_4_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_4_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_4_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_5" static="true">
+    <pose>127.841 41.402 0.250 0 0 0</pose>
+    <link name="p2_yellow_5_link">
+      <collision name="p2_yellow_5_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_5_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_5_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_6" static="true">
+    <pose>114.139 48.050 0.250 0 0 0</pose>
+    <link name="p2_yellow_6_link">
+      <collision name="p2_yellow_6_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_6_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_6_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_7" static="true">
+    <pose>105.999 44.586 0.250 0 0 0</pose>
+    <link name="p2_yellow_7_link">
+      <collision name="p2_yellow_7_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_7_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_7_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_8" static="true">
+    <pose>103.730 45.306 0.250 0 0 0</pose>
+    <link name="p2_yellow_8_link">
+      <collision name="p2_yellow_8_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_8_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_8_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_9" static="true">
+    <pose>131.194 43.531 0.250 0 0 0</pose>
+    <link name="p2_yellow_9_link">
+      <collision name="p2_yellow_9_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_9_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_9_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="p2_yellow_10" static="true">
+    <pose>117.139 48.422 0.250 0 0 0</pose>
+    <link name="p2_yellow_10_link">
+      <collision name="p2_yellow_10_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="p2_yellow_10_visual_bottom">
+        <pose>0 0 0.125 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.15</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="p2_yellow_10_visual_top">
+        <pose>0 0 0.375 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.25</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.90 0.00 1.00</ambient>
+          <diffuse>1.00 0.90 0.00 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="target_red" static="true">
+    <pose>140.000 74.880 0.450 0 0 0</pose>
+    <link name="target_red_link">
+      <collision name="target_red_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.32</radius>
+            <length>0.95</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="target_red_visual_bottom">
+        <pose>0 0 0.237 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.32</radius>
+            <length>0.475</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.10 0.10 1.00</ambient>
+          <diffuse>1.00 0.10 0.10 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="target_red_visual_top">
+        <pose>0 0 0.712 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.16</radius>
+            <length>0.475</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.00 0.10 0.10 1.00</ambient>
+          <diffuse>1.00 0.10 0.10 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="target_black" static="true">
+    <pose>143.684 67.873 0.450 0 0 0</pose>
+    <link name="target_black_link">
+      <collision name="target_black_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.32</radius>
+            <length>0.95</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="target_black_visual_bottom">
+        <pose>0 0 0.237 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.32</radius>
+            <length>0.475</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.10 0.10 0.10 1.00</ambient>
+          <diffuse>0.10 0.10 0.10 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="target_black_visual_top">
+        <pose>0 0 0.712 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.16</radius>
+            <length>0.475</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.10 0.10 0.10 1.00</ambient>
+          <diffuse>0.10 0.10 0.10 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <model name="target_green" static="true">
+    <pose>136.224 67.820 0.450 0 0 0</pose>
+    <link name="target_green_link">
+      <collision name="target_green_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.32</radius>
+            <length>0.95</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="target_green_visual_bottom">
+        <pose>0 0 0.237 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.32</radius>
+            <length>0.475</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.00 0.80 0.20 1.00</ambient>
+          <diffuse>0.00 0.80 0.20 1.00</diffuse>
+        </material>
+      </visual>
+      <visual name="target_green_visual_top">
+        <pose>0 0 0.712 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.16</radius>
+            <length>0.475</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.00 0.80 0.20 1.00</ambient>
+          <diffuse>0.00 0.80 0.20 1.00</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  </world>
+</sdf>

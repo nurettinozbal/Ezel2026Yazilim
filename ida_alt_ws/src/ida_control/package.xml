@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>ida_control</name>
+  <version>0.1.0</version>
+  <description>Command limiting and MAVSDK bridge nodes for IDA autonomy.</description>
+  <maintainer email="team@example.com">IDA Autonomy Team</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>rcl_interfaces</exec_depend>
+  <!-- Komut yolu: pymavlink GUIDED + SET_POSITION_TARGET_LOCAL_NED (ArduRover'da
+       MAVSDK offboard desteklenmez). 0x05E7 speed + turn-rate dalı vx'i signed
+       forward speed olarak kullanır; body_to_ned bu komut yoluna uygulanmaz. -->
+  <!-- Official rosdistro pip rosdep key; Python import remains `pymavlink`. -->
+  <exec_depend>python3-pymavlink-pip</exec_depend>
+  <exec_depend>python3-serial</exec_depend>
+  <exec_depend>ida_planning</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

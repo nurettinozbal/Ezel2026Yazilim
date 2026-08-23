@@ -1,0 +1,5 @@
+[console_scripts]
+lidar_node = ida_perception.lidar_node:main
+sllidar_bridge_node = ida_perception.sllidar_bridge_node:main
+yolo_camera_node = ida_perception.yolo_camera_node:main
+

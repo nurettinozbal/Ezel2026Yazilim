@@ -1,0 +1,23 @@
+ida_sensor_fusion:
+  ros__parameters:
+    camera_topic_p1p2: "/perception/camera/p1p2/raw"
+    camera_topic_p3: "/perception/camera/p3/raw"
+    lidar_topic: "/perception/lidar/raw_obstacles"
+    shadow_mode: true
+    buoy_output_topic: ""
+    obstacle_output_topic: ""
+    status_output_topic: "/perception/fusion/status"
+    publish_hz: 10.0
+    camera_timeout_s: 0.5
+    lidar_timeout_s: 0.5
+    camera_role_merge_s: 0.0
+    max_bearing_error_deg: 6.0
+    ambiguity_margin_deg: 0.25
+    max_association_items: 10
+    buffer_size: 20
+    clock_rollback_threshold_s: 0.5
+    # Production defaults intentionally inhibit color fusion until calibration.
+    model_loaded: false
+    camera_calibrated: false
+    lidar_calibrated: false
+    extrinsics_calibrated: false

@@ -1,0 +1,8 @@
+{
+  "action": "Pixhawk reboot requested; no arm/mode/motor command sent",
+  "armed": false,
+  "backup": "/home/ezelproject/ida_alt_ws/bench_backups/virtual_gps_backup_20260815T092602Z.json",
+  "created_utc": "20260815T100153Z",
+  "gps1_type_before": 14.0,
+  "gps1_type_restored": 9.0
+}

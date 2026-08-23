@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+ida_perception_sim/__init__.py
+ida_perception_sim/perception_sim_node.py
+ida_perception_sim.egg-info/PKG-INFO
+ida_perception_sim.egg-info/SOURCES.txt
+ida_perception_sim.egg-info/dependency_links.txt
+ida_perception_sim.egg-info/entry_points.txt
+ida_perception_sim.egg-info/requires.txt
+ida_perception_sim.egg-info/top_level.txt
+ida_perception_sim.egg-info/zip-safe
+resource/ida_perception_sim

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>ida_vehicle_test</name>
+  <version>0.1.0</version>
+  <description>Passive and actuation-free ROS 2 vehicle test monitor.</description>
+  <maintainer email="team@example.com">IDA Autonomy Team</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>python3-websockets</exec_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

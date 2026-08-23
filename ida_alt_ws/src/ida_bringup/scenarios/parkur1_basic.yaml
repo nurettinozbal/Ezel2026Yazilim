@@ -1,0 +1,16 @@
+{
+  "origin": {"lat": 40.8630501, "lon": 29.2599517},
+  "initial_pose": {"x": 0.0, "y": 0.0, "heading_deg": 0.0},
+  "waypoints": [
+    {"x": 18.0, "y": 0.0, "parkur": 1},
+    {"x": 36.0, "y": 0.0, "parkur": 1}
+  ],
+  "buoys": [
+    {"id": "p1_orange_l1", "x": 10.0, "y": -4.0, "color": "orange"},
+    {"id": "p1_orange_r1", "x": 10.0, "y": 4.0, "color": "orange"},
+    {"id": "p1_orange_l2", "x": 28.0, "y": -4.0, "color": "orange"},
+    {"id": "p1_orange_r2", "x": 28.0, "y": 4.0, "color": "orange"}
+  ],
+  "obstacles": [],
+  "targets": []
+}

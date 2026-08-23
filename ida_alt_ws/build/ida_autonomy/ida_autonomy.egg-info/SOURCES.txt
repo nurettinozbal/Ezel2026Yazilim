@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+ida_autonomy/__init__.py
+ida_autonomy/autonomy_node.py
+ida_autonomy.egg-info/PKG-INFO
+ida_autonomy.egg-info/SOURCES.txt
+ida_autonomy.egg-info/dependency_links.txt
+ida_autonomy.egg-info/entry_points.txt
+ida_autonomy.egg-info/requires.txt
+ida_autonomy.egg-info/top_level.txt
+ida_autonomy.egg-info/zip-safe
+resource/ida_autonomy

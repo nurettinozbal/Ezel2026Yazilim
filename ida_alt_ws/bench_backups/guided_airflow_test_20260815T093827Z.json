@@ -1,0 +1,32 @@
+{
+  "cleanup_zero_error": "'NoneType' object does not support item assignment",
+  "disarm_error": "'NoneType' object does not support item assignment",
+  "error": "'NoneType' object does not support item assignment",
+  "events": [
+    {
+      "event": "CLEANUP_ZERO",
+      "monotonic": 10668.21861355
+    },
+    {
+      "event": "DISARM_REQUEST",
+      "monotonic": 10668.221273652
+    }
+  ],
+  "lat": 37.8729947,
+  "log_path": "/home/ezelproject/ida_alt_ws/bench_backups/guided_airflow_test_20260815T093827Z.json",
+  "lon": 32.487151,
+  "manual_error": "'NoneType' object does not support item assignment",
+  "mask": "0x5e7",
+  "pulse_s": 1.0,
+  "servo_samples": [
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10668.220986633
+    }
+  ],
+  "source_system": 255,
+  "speed_mps": 0.2,
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/virtual_gps_guided_airflow.py\", line 60, in <module>\n    hb=c.recv_match(type=\"HEARTBEAT\",blocking=True,timeout=7)\n  File \"/home/ezelproject/.local/lib/python3.10/site-packages/pymavlink/mavutil.py\", line 518, in recv_match\n    m = self.recv_msg()\n  File \"/home/ezelproject/.local/lib/python3.10/site-packages/pymavlink/mavutil.py\", line 497, in recv_msg\n    self.post_message(msg)\n  File \"/home/ezelproject/.local/lib/python3.10/site-packages/pymavlink/mavutil.py\", line 402, in post_message\n    add_message(self.sysid_state[src_system].messages, type, msg)\n  File \"/tmp/virtual_gps_guided_airflow.py\", line 13, in safe\n    return _orig(messages,mtype,msg)\n  File \"/home/ezelproject/.local/lib/python3.10/site-packages/pymavlink/mavutil.py\", line 98, in add_message\n    messages[mtype]._instances[instance_value] = msg\nTypeError: 'NoneType' object does not support item assignment\n"
+}

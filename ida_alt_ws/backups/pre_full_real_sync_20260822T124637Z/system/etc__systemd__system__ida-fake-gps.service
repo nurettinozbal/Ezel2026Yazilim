@@ -1,0 +1,21 @@
+[Unit]
+Description=IDA bench-only fake GPS_INPUT publisher (manual start only)
+After=ida-canonical-field.service
+Requires=ida-canonical-field.service
+ConditionPathExists=/run/ida/fake-gps.env
+
+[Service]
+Type=simple
+User=ezelproject
+Group=ezelproject
+EnvironmentFile=/run/ida/fake-gps.env
+WorkingDirectory=/home/ezelproject/ida_alt_ws
+ExecStart=/usr/bin/python3 /home/ezelproject/ida_alt_ws/tools/fake_gps.py --connection udp:127.0.0.1:14542 run --lat ${IDA_FAKE_GPS_LAT} --lon ${IDA_FAKE_GPS_LON} --alt-m ${IDA_FAKE_GPS_ALT_M} --rate-hz 5
+Restart=no
+KillSignal=SIGINT
+TimeoutStopSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0027
+
+# Intentionally no [Install] section: fake GPS cannot start at boot.

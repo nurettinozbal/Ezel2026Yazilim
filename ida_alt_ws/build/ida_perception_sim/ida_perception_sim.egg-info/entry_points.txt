@@ -1,0 +1,3 @@
+[console_scripts]
+perception_sim_node = ida_perception_sim.perception_sim_node:main
+

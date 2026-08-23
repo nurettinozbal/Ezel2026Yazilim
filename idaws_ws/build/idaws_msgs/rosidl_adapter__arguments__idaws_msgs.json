@@ -1,0 +1,9 @@
+{
+  "package_name": "idaws_msgs",
+  "non_idl_tuples": [
+    "/home/ezelproject/idaws_ws/src/idaws/src/idaws_msgs:msg/Buoy.msg",
+    "/home/ezelproject/idaws_ws/src/idaws/src/idaws_msgs:msg/BuoyArray.msg",
+    "/home/ezelproject/idaws_ws/src/idaws/src/idaws_msgs:msg/Cluster.msg",
+    "/home/ezelproject/idaws_ws/src/idaws/src/idaws_msgs:msg/ClusterArray.msg"
+  ]
+}

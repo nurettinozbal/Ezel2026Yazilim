@@ -1,0 +1,11 @@
+# generated from colcon_core/shell/template/command_prefix.sh.em
+. "/home/ezelproject/ida_alt_ws/install/ida_planning/share/ida_planning/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_vehicle_test/share/ida_vehicle_test/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_autonomy/share/ida_autonomy/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_control/share/ida_control/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_logging/share/ida_logging/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_perception/share/ida_perception/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_perception_sim/share/ida_perception_sim/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_sensor_fusion/share/ida_sensor_fusion/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_telemetry_sim/share/ida_telemetry_sim/package.sh"
+. "/home/ezelproject/ida_alt_ws/install/ida_uav_target/share/ida_uav_target/package.sh"

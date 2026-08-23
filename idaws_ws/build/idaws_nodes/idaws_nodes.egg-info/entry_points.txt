@@ -1,0 +1,11 @@
+[console_scripts]
+collision_avoidance_node = idaws_nodes.collision_avoidance_node:main
+fake_gps_node = idaws_nodes.fake_gps_node:main
+kamikaze_node = idaws_nodes.kamikaze_node:main
+lidar_logger_node = idaws_nodes.lidar_logger_node:main
+mission_logger_node = idaws_nodes.mission_logger_node:main
+mission_manager_node = idaws_nodes.mission_manager_node:main
+pymavlink_controller_node = idaws_nodes.pymavlink_controller_node:main
+web_ui_node = idaws_nodes.web_ui_node:main
+yolo_vision_node = idaws_nodes.yolo_vision_node:main
+

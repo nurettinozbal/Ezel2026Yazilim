@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sudo -u ezelproject python3 -c ' *)",
+      "Bash(sudo -u ezelproject python3 -c \"import onnx; print\\('onnx', onnx.__version__\\)\")",
+      "Bash(sudo -u ezelproject python3 -c \"import onnxslim; print\\('onnxslim ok'\\)\")",
+      "Bash(sudo -u ezelproject pip3 install --user \"onnx>=1.12.0,<2.0.0\" \"onnxslim>=0.1.71\")",
+      "Bash(find / -iname \"best.engine\" -newer /home/ezelproject/best.onnx)",
+      "Bash(find / -iname \"best.onnx\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('/home/ezelproject/idaws-jetson/scripts/drive_escape_test.py'\\).read\\(\\)\\)\")"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+*.engine
+*.pt
+*.onnx
+*.zip
+*.tar.gz
+*.mp4
+*.avi
+*.bag
+log/
+logs/
+__pycache__/

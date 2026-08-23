@@ -1,0 +1,2 @@
+Legacy serial gateway is intentionally excluded. The canonical stack uses one
+mavlink-router UART owner and ida_control's routed UDP endpoints.

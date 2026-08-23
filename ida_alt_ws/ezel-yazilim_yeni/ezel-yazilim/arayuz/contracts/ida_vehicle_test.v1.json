@@ -1,0 +1,18 @@
+{
+  "contract": "ida_vehicle_test",
+  "schema_version": 1,
+  "terminal_history_limit": 32,
+  "tests": [
+    {"id":"comms","label":"Haberlesme","description":"Jetson/YKI ve ROS graph","timeout_s":15,"default_profile":"basic_monitor","requires_expectations":false},
+    {"id":"telemetry","label":"Telemetri","description":"Arac telemetrisi ve freshness","timeout_s":20,"default_profile":"basic_monitor","requires_expectations":false},
+    {"id":"camera_p1p2","label":"Kamera P1/P2","description":"P1/P2 kamera fixture","timeout_s":20,"default_profile":"camera_p1p2_fixture","requires_expectations":true,"allowed_cases":["positive","negative"],"allowed_colors":["orange","yellow"]},
+    {"id":"camera_p3","label":"Kamera P3","description":"P3 kamera fixture","timeout_s":20,"default_profile":"camera_p3_fixture","requires_expectations":true,"allowed_cases":["positive","negative"],"allowed_colors":["red","green","black"]},
+    {"id":"lidar","label":"Lidar","description":"Lidar sise fixture","timeout_s":20,"default_profile":"lidar_bottle","requires_expectations":true,"allowed_cases":["positive","negative"],"allowed_colors":[]},
+    {"id":"fusion_shadow","label":"Fuzyon Shadow","description":"Shadow fusion fixture","timeout_s":30,"default_profile":"fusion_buoy","requires_expectations":true,"allowed_cases":["positive","negative","ambiguity","lidar_only","camera_only"],"allowed_colors":["orange","yellow","red","green","black"]},
+    {"id":"autonomy_shadow","label":"Otonomi Shadow","description":"Shadow autonomy karar karsilastirmasi","timeout_s":30,"default_profile":"basic_monitor","requires_expectations":false},
+    {"id":"logging","label":"Kayit","description":"Log topic ve dosya monitoru","timeout_s":20,"default_profile":"basic_monitor","requires_expectations":false}
+  ],
+  "actions":["start","cancel"],
+  "events":["manifest","pending","forwarded","cancel_requested","cancelled","result","rejected","monitor_status","monitor_event"],
+  "result_statuses":["PASS","FAIL","CANCELLED"]
+}

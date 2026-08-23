@@ -1,0 +1,258 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-b7b2d28ed9d703c93b10.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						17,
+						18
+					]
+				},
+				{
+					"build" : "idaws_msgs__py",
+					"jsonFile" : "directory-idaws_msgs__py-5b15854ac3cd04817c46.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/ezelproject/idaws_ws/build/idaws_msgs/idaws_msgs__py",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "idaws_msgs__rs",
+					"jsonFile" : "directory-idaws_msgs__rs-779e7cf990a06b92e784.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/ezelproject/idaws_ws/build/idaws_msgs/idaws_msgs__rs",
+					"targetIndexes" : 
+					[
+						16
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "idaws_msgs",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_idaws_msgs_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_idaws_msgs_egg-04e2a6815cebe0990062.json",
+					"name" : "ament_cmake_python_build_idaws_msgs_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_symlink_idaws_msgs::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_symlink_idaws_msgs-ef5a57ac6bbe4be95455.json",
+					"name" : "ament_cmake_python_symlink_idaws_msgs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs-eaf02b269d615ae6c753.json",
+					"name" : "idaws_msgs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__cpp-d9bc16af6840f48d0e4e.json",
+					"name" : "idaws_msgs__cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "idaws_msgs__py::@66e1693edee221379c14",
+					"jsonFile" : "target-idaws_msgs__py-abe18331ebf2f75b748c.json",
+					"name" : "idaws_msgs__py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_generator_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_generator_c-15196512def6a7d8c32c.json",
+					"name" : "idaws_msgs__rosidl_generator_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_generator_py::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_generator_py-9bde0058cc53f0e8f53b.json",
+					"name" : "idaws_msgs__rosidl_generator_py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_c-20a4cafab8e9ae8397bd.json",
+					"name" : "idaws_msgs__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_c__pyext-c541f36e28f431d6f50a.json",
+					"name" : "idaws_msgs__rosidl_typesupport_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_cpp-ab1f200545fd1aedee1e.json",
+					"name" : "idaws_msgs__rosidl_typesupport_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_fastrtps_c-3b78169245e182b8ced6.json",
+					"name" : "idaws_msgs__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_fastrtps_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_fastrtps_c__pyext-06d80309ebd5bac2d24c.json",
+					"name" : "idaws_msgs__rosidl_typesupport_fastrtps_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_fastrtps_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_fastrtps_cpp-0b15f78ef6783140e6c4.json",
+					"name" : "idaws_msgs__rosidl_typesupport_fastrtps_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_introspection_c-30f2de045f86dd377800.json",
+					"name" : "idaws_msgs__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_introspection_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_introspection_c__pyext-777c6f08410cc23f6a10.json",
+					"name" : "idaws_msgs__rosidl_typesupport_introspection_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs__rosidl_typesupport_introspection_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs__rosidl_typesupport_introspection_cpp-64c5d7a588db858d3f21.json",
+					"name" : "idaws_msgs__rosidl_typesupport_introspection_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "idaws_msgs__rs::@9bb0a3ff6caf442cd81d",
+					"jsonFile" : "target-idaws_msgs__rs-c56199a0259d24c36275.json",
+					"name" : "idaws_msgs__rs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "idaws_msgs_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-idaws_msgs_uninstall-ef33c6d395de542fe293.json",
+					"name" : "idaws_msgs_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-59e5cacee83607c57341.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/ezelproject/idaws_ws/build/idaws_msgs",
+		"source" : "/home/ezelproject/idaws_ws/src/idaws/src/idaws_msgs"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

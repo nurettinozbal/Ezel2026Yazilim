@@ -1,0 +1,327 @@
+# ─────────────────────────────────────────────────────────────
+# IDAWS — gerçek araç (Jetson) parametreleri
+#
+# Simülasyon parametreleri idaws deposunda ayrı durur:
+#   src/idaws_bringup/sim/config/sim_params.yaml
+# Bu dosya yalnızca sahadaki donanım içindir; sim'i etkilemez.
+# ─────────────────────────────────────────────────────────────
+
+# ───────── LiDAR hizalama ─────────
+scan_filter_node:
+  ros__parameters:
+    input_topic: "/scan_raw"
+    output_topic: "/scan"
+    output_frame: "base_link"
+
+    # LiDAR'ın 0° işareti pruvaya göre kaç derece dönük (CCW +).
+    # KALİBRE ET: `idaws lidar` çıktısında pruvanın önündeki hedefin açısını
+    # oku, işaretini ters çevirip buraya yaz. Sıfır bırakmak, montaj hatası
+    # kadar yanlış tarafa kaçmak demektir.
+    # 180°'ye geri alındı: 0.0 denendi (nuri'deki referans testin ham/döndürmesiz
+    # veriyle çalıştığı varsayımıyla) ama sahada DOĞRULANDI ki bu donanımda ham
+    # /scan pruvayı kıçla karıştırıyor (0.0'da "önde" görünen aslında "arkada"
+    # gerçekleşiyordu). 180° montaj hatasını (ya da nuri testindeki farklı bir
+    # etkeni) telafi edip önü/arkayı tek hamlede takas eder. Montaj değişirse ya
+    # da hâlâ yanlışsa `idaws lidar` ile pruvanın TAM önüne 2 m'de bir hedef
+    # koyup ölçülen açı buraya (işareti ters çevrilerek) yeniden yazılmalı —
+    # tahmin yerine gerçek ölçüm.
+    yaw_offset_deg: 180.0
+
+    # Tarayıcı baş aşağı monteliyse açı yönü ters döner.
+    mirror: false
+
+    # Gövdenin kendini gördüğü açı aralıkları — "baslangic:bitis" derece.
+    # Boş liste = maske yok. Sahada `idaws lidar` ile araç boştayken sabit
+    # duran dönüşleri bul ve buraya yaz; yoksa collision_avoidance kalıcı
+    # bir engel görüp aracı hiç hareket ettirmez.
+    # Örnek: ["165:195", "-95:-85"]
+    #
+    # LiDAR montaj yerinden dolayı sadece pruvanın önünü (±80°, toplam 160°)
+    # görebiliyor; geri kalan 200°'lik arka sektör burada maskelenir. "80:-80"
+    # sarmalayarak 80°'den (sağ) 180° üzerinden -80°'ye (sol) kadar olan arka
+    # bölgeyi kör sektör yapar (bkz. _angle_grid sarmalama mantığı). yaw_offset_deg
+    # kalibre edildikten sonra pencere gerekirse kaydırılabilir.
+    blind_sectors_deg: ["80:-80"]
+
+    range_min: 0.25          # altındaki dönüşler gövde/su yansıması
+    range_max: 12.0          # launch modele göre ezer
+    timeout_sec: 2.0
+
+# ───────── Otopilot ─────────
+pymavlink_controller_node:
+  ros__parameters:
+    serial_port: "/dev/idaws_pixhawk"   # udev sabit adı; launch ezebilir
+    baud_rate: 115200
+    system_id: 1
+    component_id: 1
+    # CRUISE_SPEED/MOT_THR_MAX izleniyor: motor kontrolü artık RC_CHANNELS_
+    # OVERRIDE (MANUAL modda ham PWM, ArduPilot'un GUIDED'deki SET_ATTITUDE_
+    # TARGET hız denetleyicisinden BAĞIMSIZ) — ama MOT_THR_MAX yine de PWM
+    # çıkışını sahada kısıtlayabilir, bu yüzden gerçek değerleri görebilmek
+    # için telemetry/user_params'a yayınlanmaya devam ediyor (aynı
+    # SCR_USER1/2/3 mekanizması).
+    user_param_names: ["SCR_USER1", "SCR_USER2", "SCR_USER3", "SCR_USER4", "CRUISE_SPEED", "MOT_THR_MAX"]
+
+# ───────── Görüntü ─────────
+yolo_vision_node:
+  ros__parameters:
+    use_yolo: true
+    # TensorRT FP16 engine — best.pt üzerinden export edildi. Engine'ler GPU/
+    # TensorRT sürümüne özeldir; başka bir Jetson'a taşınırsa yeniden export
+    # gerekir (best.pt bu yüzden silinmedi).
+    model_path: "/home/ezelproject/idaws_models/best.engine"
+    # TÜM modeller model_dir altında tutulur. Yeni bir .engine/.pt'yi oraya
+    # (scp) atmak YETERLİ — yeniden derleme/restart GEREKMEZ, SCR_USER4 her
+    # değiştiğinde dizin isme göre alfabetik yeniden taranır. Model değiştirmenin
+    # sahadaki TEK yolu SCR_USER4 (Jetson'a terminal/ağ erişimi yok, yer
+    # istasyonu yalnızca otopilot parametresi yazabiliyor):
+    #   0     = değişiklik yok, yukarıdaki model_path kullanılır
+    #   1,2,3 = model_dir'deki *.engine/*.pt dosyalarının alfabetik indeksi
+    # Dosya adları çoğunlukla anlamsız (best.engine, selman1.engine gibi)
+    # olduğu için panelde dosya adı (uzantısız) İSİM olarak gösterilir; hangi
+    # indeksin hangi dosyaya karşılık geldiği de panelde TAM LİSTE olarak
+    # görünür (SSH olmadan da okunabilir).
+    model_select_user_param: "SCR_USER4"
+    model_dir: "/home/ezelproject/idaws_models"
+    confidence_threshold: 0.45
+
+    # ── Kamera ──
+    video_source: "device"              # kamerayı fiziksel olarak açan TEK node
+    camera_index: 0
+    input_width: 1920
+    input_height: 1080
+    input_fps: 50
+    # MJPG ŞART. V4L2 varsayılanı YUYV ve 1920x1080'de çoğu USB kamera YUYV
+    # ile sadece 5 FPS verir; yüksek FPS'in tek yolu MJPG.
+    fourcc: "MJPG"
+
+    # ── Kamera (V4L2) kontrolleri ──
+    # -1 = DOKUNMA (kameranın kendi varsayılanı). Panelden canlı ayarlanır;
+    # burada verilen değerler yalnızca açılış durumudur.
+    # DİKKAT: auto_exposure 3 = OTOMATİK, 1 = MANUEL. Güneşte 1'e alıp
+    # exposure'ı kısmak, yazılım filtresinden daha etkilidir.
+    auto_exposure: -1.0
+    exposure: -1.0
+    brightness: -1.0
+    contrast: -1.0
+    saturation: -1.0
+    gain: -1.0
+    sharpness: -1.0
+    auto_wb: -1.0
+    wb_temperature: -1.0
+    autofocus: -1.0
+    focus: -1.0
+    zoom: -1.0
+
+    # ── Yazılım filtresi (güneşte beyazlama) ──
+    filter_enabled: true
+    filter_before_detect: true   # filtre YOLO'ya giden kareye de uygulansın
+    gamma: 1.0
+    brightness_gain: 1.0
+    brightness_offset: 0.0
+    saturation_scale: 1.0
+    clahe_enabled: false         # en etkili adım ama 1080p'de ~10 ms CPU
+    clahe_clip: 2.0
+    clahe_grid: 8
+
+    # ── Tespit ──
+    # Engine giriş boyutu SABİT (export'ta ne verildiyse), bu yüzden burayı
+    # büyütmek çıkarım süresini değiştirmez — sadece yeniden boyutlandırma
+    # maliyetini ve küçük/uzak duba ayrıntısını etkiler. Panelden denenebilir.
+    infer_width: 960
+    detect_hz: 30.0              # ÜST sınır; engine daha yavaşsa o belirler
+
+    # ── Yayın ──
+    annotated_topic: "vision/image_annotated"
+    publish_annotated: true
+    output_hz: 50.0              # çizim/yayın/kayıt hızı — yakalama hızında
+    stream_max_width: 960        # yayınlanan kopya; kayıt bundan ETKİLENMEZ
+    # Akış JPEG (CompressedImage) olarak gider. ÖLÇÜLDÜ: 960x540 HAM Image
+    # yayınlamak çıkışı 31 FPS'ten 5.4 FPS'e düşürüyordu — 1.5 MB'ı kare başına
+    # DDS'ten geçirmek, işin geri kalanının (~3.5 ms) 50 katı. JPEG ~60 KB.
+    stream_jpeg_quality: 70
+    stream_hz: 20.0              # panel zaten bu civarı gösteriyor
+    publish_raw_annotated: false # ham Image'a ihtiyaç duyan tüketici yok
+
+    # ── Kayıt ──
+    # Her segment AYRI mp4: mp4 ancak düzgün kapatılırsa oynatılabilir, Jetson
+    # çökerse yalnızca son segment kaybolur. Tek uzun dosyada çökme kaydın
+    # TAMAMINI okunamaz yapıyordu.
+    record_enabled: true
+    record_dir: "/home/ezelproject/idaws_logs"
+    record_width: 1280           # 1080p50 CPU encode Jetson'ı boğar
+    record_fps: 25.0
+    record_segment_sec: 30.0
+    record_max_segments: 240     # 240 x 30 sn = 2 saat; kart dolmasın
+
+# ───────── Görev yönetimi ─────────
+# Görev seçiminin TEK yolu otopilot parametresi SCR_USER1'dir — sahada Jetson'da
+# terminal/ağ yok, yer istasyonu yalnızca parametre yazabiliyor. Eski UART JSON
+# dinleyicisi (json_serial_port) kaldırıldı; kullanılmıyordu.
+mission_manager_node:
+  ros__parameters:
+    # SCR_USER1  0=IDLE  5=DRIVETEST  10=WAYPOINT  15=KAMIKAZE
+    mode_param_name: "SCR_USER1"
+    # SCR_USER2 → KAMIKAZE hedef rengi (tamsayı kod, aşağıdaki listenin indeksi)
+    color_param_name: "SCR_USER2"
+    color_names: ["NONE", "RED", "GREEN", "BLACK", "YELLOW", "ORANGE"]
+    phase_publish_hz: 1.0
+    # Açılış kilidi KAPALI (istekle) — SCR_USER1 açılışta ne değerdeyse (ör.
+    # önceki testten kalma 5/10/15/20) O AN uygulanır, önce 0 yazmayı BEKLEMEZ.
+    # ⚠ Bu, "arac ARM edilir edilmez LiDAR/kamera kontrol edilmeden kendiliğinden
+    # sürmeye başlayabilir" riskini GERİ GETİRİR — kilit tam da bunun için
+    # eklenmişti. Tekrar istenirse: require_idle_at_start: true.
+    require_idle_at_start: false
+
+# ───────── Engelden kaçınma ─────────
+collision_avoidance_node:
+  ros__parameters:
+    # Bölge tabanlı reaktif kaçınma (kullanıcının donanımda doğrulanmış
+    # referans script'iyle birebir aynı karar ağacı) — VFH DEĞİL.
+    safe_distance: 2.0           # bu mesafenin altı "engel" → dönerek kaç (eski 1.3, hız fazla yakın buldu)
+    # Geri gitme (çıkmaz sokak) eşiği. safe_distance 3 m'ye çıkarıldığında tek
+    # eşik bırakmak dar bir kanalda üç bölgeyi de sürekli "kapalı" gösterip
+    # aracı durmadan geri gitmeye zorluyordu. safe_distance'a eşitlenirse eski
+    # tek eşikli davranış birebir geri gelir.
+    reverse_distance: 2.0        # safe_distance ile eşitlendi
+    forward_speed: 0.95          # yol temizken ileri itki [-1,1] — hızlandırıldı (eski 0.85, ilk 0.4)
+    reverse_speed: 0.65          # çıkmaz sokakta (her yön kapalı) geri itki büyüklüğü — hızlandırıldı (eski 0.55)
+    turn_speed: 1.0              # kaçış dönüş komutu büyüklüğü [-1,1] — TAVANDA (eski 0.9), kacis "yavas" bulundu
+    center_half_deg: 15.0        # merkez bölge: ±bu derece (yalnızca corridor_mode_enabled: false iken kullanılır)
+    side_max_deg: 75.0           # yan bölgeler: center_half_deg..bu derece (yalnızca corridor_mode_enabled: false iken)
+    # Sanal koridor: 8 m'lik dar parkurda açık deniz/alanı "en boş taraf"
+    # sanıp sınır dubalarının dışına çıkmasın diye |y| > corridor_half_width
+    # olan LiDAR/YOLO noktaları hiç görülmez. Gerçek sınır 4.0 m; güvenlik
+    # payıyla 3.5. Kapatmak için corridor_mode_enabled: false (eski açı
+    # tabanlı bölgelemeye döner).
+    corridor_mode_enabled: true
+    corridor_half_width: 3.5
+    corridor_center_half_width: 1.0
+    # LiDAR+kamera füzyonu (SCR_USER3=3 FUSION). Kamera güvenilmez olabilir
+    # (parlama/su sıçraması/az ışık) — bu yüzden LiDAR HER ZAMAN "gerçeklik"
+    # kabul edilir, kamera SADECE renk etiketler. turuncu = SINIR (o açıdaki
+    # nokta merkez kaçış tetiklemez ama sol/sağ şeritte hâlâ tam engel
+    # sayılır — araç sınırın ötesine kaçamaz). sarı VEYA kamera hiç renk
+    # veremiyorsa = varsayılan ENGEL (güvenlik önceliği: sınıflandırılamayan
+    # kütle engel sayılır, kaçış tetiklenir).
+    fusion_boundary_color: "ORANGE"
+    fusion_color_aliases_json: '{"ORANGE": ["orange", "turuncu"], "YELLOW": ["yellow", "sari", "sarı"]}'
+    fusion_match_angle_deg: 8.0
+    # Histerezis: kamera bir açıyı turuncu etiketledikten sonra, o frame'de
+    # nesneyi kaybetse/karıştırsa bile bu süre boyunca hâlâ SINIR sayılır —
+    # kamera titremesinin merkez kaçışını yanlış tetiklemesini önler.
+    fusion_hysteresis_hold_sec: 1.0
+    fusion_angle_bin_deg: 3.0
+    min_valid_range: 0.1         # altı gövde/su yansıması
+    max_valid_range: 12.0        # üstü menzil dışı/geçersiz
+    camera_fov_deg: 60.0
+    decision_hz: 30.0            # karar döngüsü — kaçış tepki süresi (eski 20, ilk 10)
+    # En yakın engeli yer istasyonu arayüzüne STATUSTEXT olarak bildir
+    # ("OBS,1,mesafe,açı,renk" formatı, pymavlink_controller_node iletir).
+    obstacle_report_max_range: 10.0
+    obstacle_report_hz: 2.0
+    obstacle_report_color: "red"
+    # drive_phases: bu fazlarda node MANUAL'de sürekli RC override üretir
+    # (ileri sür + engelde kaç) — "test drive escape".
+    # auto_watch_phases: bu fazlarda Pixhawk kendi AUTO görevini sürüyor
+    # (waypoint listesi yer istasyonundan yüklendi) — node sadece engel
+    # yaklaşınca GEÇİCİ MANUAL'e geçip RC override ile kaçar, sonra AUTO'ya döner.
+    # Tetikleyici her iki yolda da AYNI yerel LiDAR (/scan) bölgeleridir.
+    drive_phases: ["DRIVETEST"]
+    # WAYPOINT_KAMIKAZE: WAYPOINT ile birebir aynı (son waypoint'e ulaşınca
+    # pymavlink_controller_node kendisi KAMIKAZE'ye geçirir, bkz. mission_manager_node).
+    auto_watch_phases: ["WAYPOINT", "WAYPOINT_KAMIKAZE"]
+    # Kaçış histerezisi — hepsi tepkiyi hızlandırmak için kısaltıldı.
+    auto_avoid_min_manual_sec: 0.2        # MANUAL'de kalınan asgari süre (eski 0.3, ilk 2.0)
+    auto_avoid_clear_hold_sec: 0.15       # AUTO'ya dönmeden önce temiz kalma (eski 0.25, ilk 1.0)
+    auto_avoid_resume_cooldown_sec: 0.4   # AUTO'ya dönünce yeni tetik beklemesi (eski 0.6, ilk 2.0)
+    auto_avoid_max_duration_sec: 20.0     # aşılırsa sıkışmış say, motorları durdur
+    # LiDAR kaçışının sahadaki TEK kontrolü Pixhawk parametresi SCR_USER3 —
+    # HER fazda geçerli, hem aç/kapa hem algoritma seçimi (Jetson'a terminal/ağ
+    # erişimi yok, yer istasyonu yalnızca otopilot parametresi yazabiliyor):
+    #   0 = OFF       kaçış tamamen devre dışı
+    #   1 = ANGLE     eski açı tabanlı bölgeleme (menzil sınırsız)
+    #   2 = CORRIDOR  sanal koridor kısıtlamalı bölgeleme (bkz. yukarı)
+    #   3 = FUSION    CORRIDOR + LiDAR/kamera renk füzyonu (bkz. yukarı)
+    # Aşağıdaki iki değer sadece otopilottan ilk okuma gelene kadarki
+    # başlangıç durumunu belirler; SCR_USER3 okununca geçersiz kılınır.
+    lidar_escape_enabled_default: true
+    lidar_escape_user_param: "SCR_USER3"
+
+# ───────── Kamikaze (SCR_USER1 = 15) ─────────
+# Hedef renk SCR_USER2 ile secilir. LiDAR kacisi bu fazda KASITLI olarak
+# devre disidir — gorev tam da hedefe carpmak.
+kamikaze_node:
+  ros__parameters:
+    active_phase: "KAMIKAZE"
+    # Zayif/belirsiz tespitlerle hedefe kilitlenmesin diye yukseltildi —
+    # bu esigin altindaki kutular hic izlenmez/saldirilmaz (eski 0.45).
+    # SADECE kilit ALIRKEN (ARAMA/BEKLEME -> TAKIP) gecerli.
+    min_confidence: 0.6
+    # Kilit zaten VARKEN (TAKIP/DALIS) tolere edilen cok daha dusuk bar.
+    # Hedef yaklastikca kutu kareyi doldurur/kadraj disina tasar, YOLO guven
+    # skoru dogal olarak DUSER tam da temasa en yakinken -- onceden zaten
+    # kilitlenmis hedefi salt bu yuzden kaybedip ARAMA'ya donmesin diye.
+    min_confidence_locked: 0.2
+    # Renk secilmemisse (SCR_USER2 = 0) saldirma. Rastgele bir dubaya dalmak
+    # sahada kabul edilebilir degil. Renksiz test icin false yapilabilir.
+    require_target_color: true
+
+    approach_speed: 0.8          # takipte ileri itki [-1,1] — hizlandirildi (eski 0.65, ilk 0.5)
+    ram_speed: 1.0               # dalista tam gaz — zaten tavanda (max [-1,1])
+    search_turn_speed: 0.45      # hedef gorunmezken yerinde tarama donusu — hizlandirildi (eski 0.35)
+    steer_gain: 2.0              # goruntudeki yatay hata → dumen kazanci
+    max_steer: 0.9
+    # +1.0 = ROS gelenegi (angular.z > 0 SOLA dondurur).
+    # ⚠ SAHADA DOGRULA: tekne hedeften UZAKLASARAK donuyorsa -1.0 yap.
+    # Kodda celiskili iki kayit var (collision_avoidance ROS gelenegini,
+    # pymavlink yorumu tersini soyluyor); dogrusu araca/RC ters cevirme
+    # ayarina bagli, bu yuzden parametre birakildi.
+    steer_sign: 1.0
+    turn_throttle_cut: 0.5       # sert donuste gazi kis, hedefin yanindan gecmesin
+
+    # Mesafe yerine kutu yuksekligi / kare yuksekligi orani kullanilir.
+    # Yukseltildi: tekne artik daha ERKEN tam gaza gecmek yerine hedefe iyice
+    # YAKLASANA kadar approach_speed'de takip eder, sonra tam gaz "dalis"a gecer.
+    ram_ratio: 0.55               # bunun ustunde tam gaz (eski 0.35)
+    hit_ratio: 0.85               # bunun ustu "carpti" sayilir (eski 0.75)
+
+    control_hz: 20.0
+    target_lost_sec: 1.0         # bu sure gorunmezse ARAMA'ya don
+    # DALIS'a girmis (ram_ratio asilmis = zaten cok yakin ve emindik) bir
+    # taahhudun, kamera hedefi TAMAMEN kaybetse bile son bilinen yonde kor
+    # bicimde ne kadar surdurulecegi. target_lost_sec'ten SONRA devreye girer.
+    dive_commit_hold_sec: 2.5
+    hit_hold_sec: 1.5            # carpma sonrasi itkiyi surdurme
+    max_duration_sec: 120.0      # bu sure sonunda dur
+    command_manual_mode: true    # faz girisinde MANUAL iste (RC override icin)
+
+# ───────── Şartname kayıtları ─────────
+mission_logger_node:
+  ros__parameters:
+    log_dir: "/home/ezelproject/idaws_logs"
+
+lidar_logger_node:
+  ros__parameters:
+    scan_topic: "/scan"                 # filtrelenmiş tarama
+    log_dir: "/home/ezelproject/idaws_logs"
+    record_hz: 1.0                      # şartname: en az 1 Hz
+    record_video: true
+    render_size_px: 600
+    cluster_gap_base: 0.35
+    cluster_gap_factor: 0.06
+    cluster_min_points: 3
+    max_cluster_range: 12.0
+    map_size_m: 24.0
+    map_resolution: 0.1
+    inflation_radius: 0.8
+
+# ───────── Kamera kalibrasyon paneli ─────────
+web_ui_node:
+  ros__parameters:
+    web_port: 5000
+    # Panel SADECE kamera + filtre + lens + ROS log. Görev kontrolü panelde
+    # DEĞİL, otopilot parametrelerinde (SCR_USER1/2/3).
+    annotated_topic: "vision/image_annotated"
+    stream_fps: 25.0
+    log_lines: 300

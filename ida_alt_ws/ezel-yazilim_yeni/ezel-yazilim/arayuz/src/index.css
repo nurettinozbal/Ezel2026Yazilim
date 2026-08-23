@@ -1,0 +1,32 @@
+:root {
+  /* Takım Renkleri */
+  --color-bg-core: #09090b;   /* Simsiyah zemin */
+  --color-bg-panel: #121214;  /* Kart zeminleri */
+  --color-border: #27272a;    /* Silik gri kenarlıklar */
+  
+  --color-primary: #ef4444;   /* Parlak Kırmızı (Takım Rengi) */
+  --color-primary-dim: #7f1d1d; /* Koyu Kırmızı (Arka plan vurgusu) */
+  
+  --color-text-main: #f4f4f5;
+  --color-text-muted: #a1a1aa;
+  
+  /* Durum Renkleri */
+  --color-success: #10b981;   /* Yeşil (Pil/GPS iyi) */
+  --color-warning: #f59e0b;   /* Sarı */
+  --color-danger: #dc2626;    /* Kritik Kırmızı */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg-core);
+  font-family: 'Segoe UI', 'Roboto', monospace; /* Daha teknik font */
+  color: var(--color-text-main);
+}

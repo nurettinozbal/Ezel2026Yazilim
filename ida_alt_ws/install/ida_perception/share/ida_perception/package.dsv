@@ -1,0 +1,9 @@
+source;share/ida_perception/hook/pythonpath.ps1
+source;share/ida_perception/hook/pythonpath.dsv
+source;share/ida_perception/hook/pythonpath.sh
+source;share/ida_perception/hook/ament_prefix_path.ps1
+source;share/ida_perception/hook/ament_prefix_path.dsv
+source;share/ida_perception/hook/ament_prefix_path.sh
+source;../../build/ida_perception/share/ida_perception/hook/pythonpath_develop.ps1
+source;../../build/ida_perception/share/ida_perception/hook/pythonpath_develop.dsv
+source;../../build/ida_perception/share/ida_perception/hook/pythonpath_develop.sh

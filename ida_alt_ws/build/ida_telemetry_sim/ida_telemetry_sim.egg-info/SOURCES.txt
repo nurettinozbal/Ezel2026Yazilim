@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+ida_telemetry_sim/__init__.py
+ida_telemetry_sim/telemetry_sim_node.py
+ida_telemetry_sim.egg-info/PKG-INFO
+ida_telemetry_sim.egg-info/SOURCES.txt
+ida_telemetry_sim.egg-info/dependency_links.txt
+ida_telemetry_sim.egg-info/entry_points.txt
+ida_telemetry_sim.egg-info/requires.txt
+ida_telemetry_sim.egg-info/top_level.txt
+ida_telemetry_sim.egg-info/zip-safe
+resource/ida_telemetry_sim

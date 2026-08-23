@@ -1,0 +1,8 @@
+[console_scripts]
+events_logger_node = ida_logging.events_logger:main
+finalize_video = ida_logging.video_finalize_cli:main
+logging_status_node = ida_logging.status_node:main
+map_logger_node = ida_logging.map_logger_node:main
+telemetry_logger_node = ida_logging.telemetry_logger_node:main
+video_logger_node = ida_logging.video_logger_node:main
+

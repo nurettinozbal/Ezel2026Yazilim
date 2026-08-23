@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>İDA Kamera Lens Ayarı</title>
+<style>
+  :root { --bg:#12141a; --panel:#1c1f27; --panel2:#242833; --accent:#4cc2ff; --text:#e6e9f0; --dim:#9aa3b5; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:Segoe UI, system-ui, sans-serif; }
+  header { display:flex; align-items:baseline; gap:14px; padding:14px 22px; background:var(--panel); border-bottom:1px solid #2c3140; }
+  header h1 { font-size:18px; margin:0; }
+  header .sub { color:var(--dim); font-size:13px; }
+  main { display:grid; grid-template-columns: 1fr 320px; gap:16px; padding:16px 22px; max-width:1500px; margin:0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .video-wrap { background:#000; border-radius:10px; overflow:hidden; position:relative; min-height:300px; }
+  #video { width:100%; display:block; }
+  .overlay { position:absolute; top:10px; left:10px; background:rgba(0,0,0,.55); padding:6px 10px; border-radius:6px; font:12px/1.5 Consolas, monospace; color:var(--accent); pointer-events:none; }
+  .panel { background:var(--panel); border-radius:10px; padding:16px; }
+  .panel h2 { font-size:14px; margin:0 0 12px; color:var(--accent); }
+  .row { margin-bottom:12px; }
+  .row label { display:flex; justify-content:space-between; font-size:12px; color:var(--dim); margin-bottom:4px; }
+  .row label span { color:var(--text); font-variant-numeric:tabular-nums; }
+  input[type=range] { width:100%; accent-color:var(--accent); }
+  select, button { background:var(--panel2); color:var(--text); border:1px solid #3a4152; border-radius:6px; padding:7px 10px; font-size:13px; }
+  button { cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  .btn-row { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .btn-row button { flex:1; min-width:110px; }
+  .btn-row button.active { background:var(--accent); color:#12141a; border-color:var(--accent); }
+  .status-line { font-size:12px; color:var(--dim); margin-top:10px; line-height:1.6; }
+  .ctrl-list { max-height:380px; overflow-y:auto; margin-top:8px; }
+  .ctrl { background:var(--panel2); border-radius:8px; padding:10px; margin-bottom:8px; }
+  .ctrl .cname { font-size:12px; color:var(--dim); margin-bottom:6px; }
+  .badge { display:inline-block; font-size:11px; background:#232a38; border-radius:4px; padding:1px 6px; margin-left:6px; color:var(--dim); }
+  .ctrl input[type=range] { margin-top:2px; }
+  .ctrl .disp { font-variant-numeric:tabular-nums; }
+  #err { color:#ff8a80; font-size:12px; margin-top:8px; display:none; white-space:pre-wrap; }
+  .preset-note { font-size:11px; color:var(--dim); margin-top:6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📷 İDA Kamera · Lens Ayarı</h1>
+  <span class="sub">Jetson MJPEG yayını</span>
+  <span class="sub" id="dev-label"></span>
+</header>
+
+<main>
+  <div>
+    <div class="video-wrap">
+      <img id="video" alt="canlı yayın" />
+      <div class="overlay" id="overlay">bağlanıyor…</div>
+    </div>
+    <div class="btn-row">
+      <button id="btn-preset-0">1080p @50</button>
+      <button id="btn-preset-1">960x600 @80</button>
+      <button id="btn-preset-2">960x600 @10</button>
+      <button id="btn-apply">Preset uygula</button>
+      <button id="btn-refresh">Görüntüyü tazele</button>
+    </div>
+    <div class="preset-note">Preset'i seçip "Preset uygula" ile pipeline yeniden kurulur.</div>
+    <div class="status-line" id="status"></div>
+    <div id="err"></div>
+
+    <div class="panel" style="margin-top:16px;">
+      <h2>Costmap (lokal maliyet haritası) — debug</h2>
+      <canvas id="costmap" width="360" height="360" style="width:100%; max-width:520px; aspect-ratio:1/1; background:#0d1016; border-radius:8px;"></canvas>
+      <div class="status-line" id="costmap-status">costmap bekleniyor…</div>
+      <div class="preset-note">
+        Hücre renkleri: turuncu=koridor(1) · sarı=engel(8) · unknown(4)=yavaş/dar · mavi=hedef(3) ·
+        koyu=boş. Merkezdeki oklar: beyaz ok bot yönü, yeşil ok hedef yönü (body-frame).
+        Kaynak: <code>/planning/costmap</code> (autonomy). Yarışma DIŞI debug aracı.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Kamera Ayarları (v4l2)</h2>
+    <div class="row">
+      <label>Cihaz</label>
+      <select id="sel-device">
+        <option value="/dev/video0">/dev/video0</option>
+        <option value="/dev/video1">/dev/video1</option>
+      </select>
+    </div>
+    <div class="ctrl-list" id="ctrl-list">yükleniyor…</div>
+    <div class="status-line">Not: Lens (M12) manuel odaktır — bu panel ışık/renk/exposure ayarı içindir.</div>
+  </div>
+</main>
+
+<script>
+"use strict";
+const video = document.getElementById("video");
+const overlay = document.getElementById("overlay");
+const statusEl = document.getElementById("status");
+const errEl = document.getElementById("err");
+const devLabel = document.getElementById("dev-label");
+const ctrlList = document.getElementById("ctrl-list");
+const selDevice = document.getElementById("sel-device");
+const btnApply = document.getElementById("btn-apply");
+const btnRefresh = document.getElementById("btn-refresh");
+
+const PRESETS = [
+  { width:1920, height:1080, fps:50, label:"1080p @50" },
+  { width:960,  height:600,  fps:80, label:"960x600 @80" },
+  { width:960,  height:600,  fps:10, label:"960x600 @10" },
+];
+let activePreset = PRESETS[0];
+let ctrls = [];
+let videoBusy = false;
+
+function setStatus(t){ statusEl.textContent = t; }
+function setErr(t){ errEl.style.display = t ? "block" : "none"; errEl.textContent = t || ""; }
+function apiBase(){ return location.origin; }
+
+// ---- canlı görüntü (query'siz — sunucu varsayılan pipeline'ı akar) ----
+// NOT: query parametreleri (width/height/fps) sunucuda rebuild tetikler ve
+// akışı kesebilir. Sunucu kendi pipeline'ıyla (csi/1280x720@60) akar; preset
+// butonları yalnızca istek gösterir.
+function startVideo(){
+  if (videoBusy) { return; }
+  videoBusy = true;
+  // NOT: <img> elementinde load() YOK (HTMLMediaElement'e aittir) — kullanılırsa
+  // TypeError fırlatır ve src ayarlanmaz. src'yi boşaltıp yeniden kur:
+  video.src = "";                     // mevcut MJPEG bağlantısını kes
+  video.src = apiBase() + "/video";   // query'siz — rebuild tetiklenmez
+  videoBusy = false;
+}
+video.addEventListener("load", () => {
+  overlay.textContent = `${video.videoWidth}×${video.videoHeight} · canlı`;
+});
+video.addEventListener("error", () => {
+  overlay.textContent = "görüntü akışı hatası — sunucu/pipeline kapalı olabilir";
+});
+
+// ---- durum polling (FPS ölçümü + cihaz) ----
+async function pollStatus(){
+  try {
+    const r = await fetch(apiBase() + "/api/status");
+    const s = await r.json();
+    overlay.textContent =
+      `${s.width}×${s.height} · istek ${s.fps_requested} · ölçülen ${s.fps_measured} fps` +
+      (s.fallback ? " · [yedek kodlama]" : "") +
+      (s.connected ? "" : " · BAĞLI DEĞİL");
+    devLabel.textContent = s.device || "";
+    setStatus(`cihaz: ${s.device} · port ${s.port} · bağlı: ${s.connected}`);
+    // Sunucudaki gerçek cihazı yansıt (farklıysa seçimi güncelle)
+    if (s.device && selDevice.value !== s.device) { selDevice.value = s.device; }
+  } catch (e) {
+    overlay.textContent = "sunucuya ulaşılamıyor…";
+    setErr(String(e));
+  }
+}
+setInterval(pollStatus, 1000);
+
+// ---- v4l2 kontroller ----
+function renderCtrls(){
+  if (!ctrls.length) { ctrlList.textContent = "kontroller yüklenemedi (v4l2-ctl kurulu mu?)"; return; }
+  ctrlList.innerHTML = "";
+  for (const c of ctrls) {
+    const el = document.createElement("div");
+    el.className = "ctrl";
+    const min = c.min ?? 0, max = c.max ?? 100, step = Math.max(c.step ?? 1, 1);
+    const val = c.value ?? c.default ?? 0;
+    const name = c.name;
+    const isBool = c.type === "bool";
+    el.innerHTML = `
+      <div class="cname">${name}<span class="badge">${c.type}</span></div>
+      <div class="row"><label><span class="disp" id="val-${name}">${val}</span><span>${min}..${max}</span></label>
+      ${isBool
+        ? `<button class="bool-btn" data-name="${name}" data-val="${val}">${val ? "Açık" : "Kapalı"}</button>`
+        : `<input type="range" id="in-${name}" min="${min}" max="${max}" step="${step}" value="${val}" />`}
+      </div>`;
+    const inp = el.querySelector(`#in-${name}`);
+    const valEl = el.querySelector(`#val-${name}`);
+    if (inp) {
+      inp.addEventListener("input", () => { valEl.textContent = inp.value; });
+      inp.addEventListener("change", () => sendCtrl(name, parseInt(inp.value, 10)));
+    }
+    const btn = el.querySelector(".bool-btn");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        const next = btn.dataset.val === "1" ? 0 : 1;
+        btn.dataset.val = String(next);
+        btn.textContent = next ? "Açık" : "Kapalı";
+        sendCtrl(name, next);
+      });
+    }
+    ctrlList.appendChild(el);
+  }
+}
+
+async function sendCtrl(name, value){
+  try {
+    const r = await fetch(apiBase() + "/api/ctrl", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ name, value }),
+    });
+    const res = await r.json();
+    setStatus(res.ok ? `OK: ${name}=${value}` : `HATA: ${name}=${value} → ${res.message}`);
+  } catch (e) { setErr(String(e)); }
+}
+
+async function loadCtrls(){
+  try {
+    const r = await fetch(apiBase() + "/api/ctrls");
+    const j = await r.json();
+    ctrls = j.controls || [];
+    renderCtrls();
+  } catch (e) { setErr(String(e)); }
+}
+
+// ---- preset butonları ----
+function markActivePreset(i){
+  document.querySelectorAll("[id^=btn-preset-]").forEach((b, bi) => {
+    b.classList.toggle("active", bi === i);
+  });
+}
+document.querySelectorAll("[id^=btn-preset-]").forEach((btn, i) => {
+  btn.addEventListener("click", () => {
+    activePreset = PRESETS[i];
+    markActivePreset(i);
+    setStatus(`Preset seçildi: ${activePreset.label} — "Preset uygula"ya bas`);
+  });
+});
+btnApply.addEventListener("click", () => {
+  startVideo();
+  setStatus(`Uygulandı: ${activePreset.label}`);
+});
+btnRefresh.addEventListener("click", () => {
+  startVideo();
+  setStatus("Görüntü tazelendi");
+});
+
+// ---- cihaz seçimi ----
+selDevice.addEventListener("change", () => {
+  setStatus("Cihaz değiştirildi: " + selDevice.value + " — sunucu yeniden başlatılmalı");
+  setErr("stream.py'yi --device " + selDevice.value + " ile yeniden başlat.\n" +
+         "Veya cihaz yolunu baştan ayarlayıp sayfayı yenile.");
+});
+
+// ---- costmap canvas (lokal maliyet haritası) ----
+const cmCanvas = document.getElementById("costmap");
+const cmCtx = cmCanvas.getContext("2d");
+const cmStatus = document.getElementById("costmap-status");
+let lastCellsJson = "";
+
+// Hücre maliyeti -> renk (costmap.py sabitleri: 1 turuncu, 3 hedef, 4 unknown, 8 engel).
+function cellColor(cost, tag){
+  if (tag === "inflated") return "rgba(255,80,60,0.22)";  // şişirme halkası
+  if (cost === 1) return "rgba(255,140,0,0.85)";           // turuncu koridor
+  if (cost === 3) return "rgba(60,160,255,0.9)";           // hedef (goal)
+  if (cost === 4) return "rgba(200,180,80,0.6)";           // unknown (yavaş/dar)
+  if (cost >= 8) return "rgba(240,210,40,0.9)";            // sarı engel
+  return "transparent";
+}
+
+function drawCostmap(payload){
+  const n = payload.n || 120;
+  const size = cmCanvas.width;
+  const cellPx = size / n;
+  cmCtx.clearRect(0, 0, size, size);
+  // Yalnız sıfır olmayan hücreleri çiz (veri az olduğunda performans).
+  const cells = payload.cells || [];
+  for (const cell of cells){
+    const x = cell[0], y = cell[1], cost = cell[2], tag = cell[3] || "";
+    // payload koordinatları body-frame metre; canvas yukarı = ileri (lateral sağa).
+    const px = size / 2 + (y / (payload.size_m || 30)) * size;  // y = lateral
+    const py = size / 2 - (x / (payload.size_m || 30)) * size;  // x = forward
+    cmCtx.fillStyle = cellColor(cost, tag);
+    cmCtx.fillRect(px - cellPx, py - cellPx, cellPx * 2, cellPx * 2);
+  }
+  // Bot (merkez) + ileri yön (beyaz ok) + hedef yönü (yeşil ok).
+  const cx = size / 2, cy = size / 2;
+  cmCtx.strokeStyle = "#ffffff";
+  cmCtx.lineWidth = 2;
+  cmCtx.beginPath();
+  cmCtx.moveTo(cx, cy);
+  cmCtx.lineTo(cx, cy - size * 0.18);  // ileri (kuzey, body +x)
+  cmCtx.stroke();
+  cmCtx.fillStyle = "#ffffff";
+  cmCtx.beginPath();
+  cmCtx.arc(cx, cy, 4, 0, Math.PI * 2);
+  cmCtx.fill();
+  // Hedef yönü: /autonomy/debug 'goal_body' varsa canvas'ta gösterilebilir;
+  // topic yoksa costmap goal hücresi yönü kullanılır (mavi ok).
+  let goalPx = null, goalPy = null;
+  for (const cell of cells){
+    if (cell[2] === 3){ goalPx = size / 2 + (cell[1] / (payload.size_m || 30)) * size; goalPy = size / 2 - (cell[0] / (payload.size_m || 30)) * size; }
+  }
+  if (goalPx !== null){
+    cmCtx.strokeStyle = "#4cff7a";
+    cmCtx.lineWidth = 2;
+    cmCtx.beginPath();
+    cmCtx.moveTo(cx, cy);
+    cmCtx.lineTo(goalPx, goalPy);
+    cmCtx.stroke();
+  }
+  cmStatus.textContent = `n=${n} · hücre ${payload.cell_m || 0.25} m · ${cells.length} dolu hücre · ${payload.available ? "canlı" : "yok"}`;
+}
+
+async function pollCostmap(){
+  try {
+    const r = await fetch(apiBase() + "/costmap");
+    const j = await r.json();
+    const sig = JSON.stringify(j.cells || []);
+    if (sig !== lastCellsJson){
+      lastCellsJson = sig;
+      drawCostmap(j);
+    }
+  } catch (e){
+    cmStatus.textContent = "costmap alınamadı: " + e;
+  }
+}
+setInterval(pollCostmap, 500);
+
+// Başlat
+(() => {
+  markActivePreset(0);
+  startVideo();
+  pollStatus();
+  loadCtrls();
+  pollCostmap();
+  setInterval(loadCtrls, 10000);
+})();
+</script>
+</body>
+</html>

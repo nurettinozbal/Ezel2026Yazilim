@@ -1,0 +1,3 @@
+[console_scripts]
+telemetry_sim_node = ida_telemetry_sim.telemetry_sim_node:main
+

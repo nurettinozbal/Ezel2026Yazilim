@@ -1,0 +1,40 @@
+[Unit]
+Description=IDAWS otonomi yigini (gercek arac)
+# Hotspot once acilsin ki panel ilk saniyeden itibaren erisilebilir olsun.
+After=network-online.target idaws-hotspot.service
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=ezelproject
+Group=ezelproject
+# LiDAR ve Pixhawk seri portlari icin
+SupplementaryGroups=dialout video
+
+Environment=IDAWS_WS=/home/ezelproject/idaws_ws
+Environment=IDAWS_LOG_DIR=/home/ezelproject/idaws_ws/recordings
+# ROS 2 alanini diger tekne/dizustunden ayirir; sahada iki arac yan yana
+# calisirken topic'lerin karismasini engeller.
+Environment=ROS_DOMAIN_ID=42
+Environment=ROS_LOCALHOST_ONLY=0
+
+WorkingDirectory=/home/ezelproject/idaws_ws
+ExecStart=/home/ezelproject/idaws-jetson/scripts/run-stack.sh
+
+# Node'larin mp4 kayitlarini duzgun kapatabilmesi icin SIGINT gonder ve
+# yeterli sure taniyin: VideoWriter.release() cagrilmazsa mp4'un moov
+# atom'u yazilmaz ve teslim dosyalari oynatilamaz halde kalir.
+KillSignal=SIGINT
+KillMode=mixed
+TimeoutStopSec=40
+
+Restart=on-failure
+RestartSec=10
+
+StandardOutput=append:/home/ezelproject/idaws_ws/recordings/idaws-service.log
+StandardError=append:/home/ezelproject/idaws_ws/recordings/idaws-service.log
+
+[Install]
+WantedBy=multi-user.target

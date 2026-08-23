@@ -1,0 +1,2 @@
+"""UAV target color package."""
+

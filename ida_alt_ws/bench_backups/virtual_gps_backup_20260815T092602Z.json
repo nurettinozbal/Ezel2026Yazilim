@@ -1,0 +1,25 @@
+{
+  "before": {
+    "AHRS_EKF_TYPE": 3.0,
+    "ARMING_CHECK": 0.0,
+    "EK3_SRC1_POSXY": 3.0,
+    "EK3_SRC1_POSZ": 1.0,
+    "EK3_SRC1_VELXY": 3.0,
+    "EK3_SRC1_YAW": 1.0,
+    "FRAME_CLASS": 2.0,
+    "FRAME_TYPE": 0.0,
+    "GPS1_TYPE": 9.0,
+    "GPS2_TYPE": 0.0,
+    "GPS_AUTO_SWITCH": 1.0,
+    "GPS_INJECT_TO": 127.0,
+    "SERVO11_FUNCTION": 74.0,
+    "SERVO11_REVERSED": 0.0,
+    "SERVO9_FUNCTION": 73.0,
+    "SERVO9_REVERSED": 0.0
+  },
+  "created_utc": "20260815T092602Z",
+  "device": "/dev/ttyACM0",
+  "restore_instruction": "Set GPS1_TYPE back to 9, reboot Pixhawk, then verify GPS fix.",
+  "target_component": 0,
+  "target_system": 1
+}

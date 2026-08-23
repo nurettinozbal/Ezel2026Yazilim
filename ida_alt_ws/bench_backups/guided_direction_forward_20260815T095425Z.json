@@ -1,0 +1,150 @@
+{
+  "cycle_summaries": [
+    {
+      "cycle": 1,
+      "sample_count": 8,
+      "servo11_max": 1595,
+      "servo11_min": 1512,
+      "servo9_max": 1595,
+      "servo9_min": 1513
+    },
+    {
+      "cycle": 2,
+      "sample_count": 8,
+      "servo11_max": 1592,
+      "servo11_min": 1507,
+      "servo9_max": 1592,
+      "servo9_min": 1507
+    },
+    {
+      "cycle": 3,
+      "sample_count": 8,
+      "servo11_max": 1590,
+      "servo11_min": 1504,
+      "servo9_max": 1590,
+      "servo9_min": 1504
+    }
+  ],
+  "cycles": 3,
+  "disarmed_confirmed": true,
+  "events": [
+    {
+      "event": "GPS_WARMUP",
+      "monotonic": 11598.379269888
+    },
+    {
+      "event": "SET_GUIDED_DISARMED",
+      "monotonic": 11605.404151568
+    },
+    {
+      "event": "ARM_REQUEST",
+      "monotonic": 11606.451036886
+    },
+    {
+      "event": "ARMED_ZERO_SETTLE",
+      "monotonic": 11607.495934993
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 11608.724289818,
+      "seconds": 3
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 11609.724987151,
+      "seconds": 2
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 11610.754503695,
+      "seconds": 1
+    },
+    {
+      "cycle": 1,
+      "duration_s": 2.0,
+      "event": "PULSE_START",
+      "monotonic": 11611.754610861,
+      "vx": 0.35,
+      "yaw_rate": 0.0
+    },
+    {
+      "cycle": 1,
+      "event": "PULSE_END",
+      "monotonic": 11613.755927825,
+      "sample_count": 8,
+      "servo11_max": 1595,
+      "servo11_min": 1512,
+      "servo9_max": 1595,
+      "servo9_min": 1513
+    },
+    {
+      "event": "NEUTRAL_PAUSE",
+      "monotonic": 11613.756034549,
+      "seconds": 3.0
+    },
+    {
+      "cycle": 2,
+      "duration_s": 2.0,
+      "event": "PULSE_START",
+      "monotonic": 11616.786919446,
+      "vx": 0.35,
+      "yaw_rate": 0.0
+    },
+    {
+      "cycle": 2,
+      "event": "PULSE_END",
+      "monotonic": 11618.816042715,
+      "sample_count": 8,
+      "servo11_max": 1592,
+      "servo11_min": 1507,
+      "servo9_max": 1592,
+      "servo9_min": 1507
+    },
+    {
+      "event": "NEUTRAL_PAUSE",
+      "monotonic": 11618.816115134,
+      "seconds": 3.0
+    },
+    {
+      "cycle": 3,
+      "duration_s": 2.0,
+      "event": "PULSE_START",
+      "monotonic": 11621.816282342,
+      "vx": 0.35,
+      "yaw_rate": 0.0
+    },
+    {
+      "cycle": 3,
+      "event": "PULSE_END",
+      "monotonic": 11623.829765699,
+      "sample_count": 8,
+      "servo11_max": 1590,
+      "servo11_min": 1504,
+      "servo9_max": 1590,
+      "servo9_min": 1504
+    },
+    {
+      "event": "CLEANUP_ZERO",
+      "monotonic": 11625.346645155
+    },
+    {
+      "event": "DISARM_REQUEST",
+      "monotonic": 11626.370292322
+    }
+  ],
+  "gps_fix": 3,
+  "label": "forward",
+  "log_path": "/home/ezelproject/ida_alt_ws/bench_backups/guided_direction_forward_20260815T095425Z.json",
+  "manual_confirmed": true,
+  "mask": "0x5e7",
+  "mode_mapping": {
+    "GUIDED": 15,
+    "MANUAL": 0
+  },
+  "pause_s": 3.0,
+  "pulse_s": 2.0,
+  "source_system": 255,
+  "success": true,
+  "vx_mps": 0.35,
+  "yaw_rate_rps": 0.0
+}

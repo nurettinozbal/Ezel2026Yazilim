@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+ida_uav_target/__init__.py
+ida_uav_target/uav_target_node.py
+ida_uav_target.egg-info/PKG-INFO
+ida_uav_target.egg-info/SOURCES.txt
+ida_uav_target.egg-info/dependency_links.txt
+ida_uav_target.egg-info/entry_points.txt
+ida_uav_target.egg-info/requires.txt
+ida_uav_target.egg-info/top_level.txt
+ida_uav_target.egg-info/zip-safe
+resource/ida_uav_target

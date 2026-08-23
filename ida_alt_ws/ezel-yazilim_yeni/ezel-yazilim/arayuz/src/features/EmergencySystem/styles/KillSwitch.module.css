@@ -1,0 +1,79 @@
+.container {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f59e0b; /* Uyarı Sarısı */
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.button {
+  width: 100%;
+  background: #050505;
+  border: 2px solid #ef4444; /* Neon Kırmızı */
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  /* Kırmızı Parlama Efekti */
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3), inset 0 0 10px rgba(239, 68, 68, 0.1);
+  transition: all 0.1s ease;
+  transform: scale(1);
+  outline: none;
+}
+
+/* Sistem Kilitlendiğinde (Aktif Durum) */
+.active {
+  background: #450a0a; /* Koyu Kırmızı Zemin */
+  transform: scale(0.96); /* Hafif içeri göçme */
+}
+
+.button:hover {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), inset 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+.buttonText {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.resetButton {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  color: #fbbf24;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 8px 10px;
+}
+
+.resetButton:hover {
+  background: rgba(245, 158, 11, 0.16);
+}

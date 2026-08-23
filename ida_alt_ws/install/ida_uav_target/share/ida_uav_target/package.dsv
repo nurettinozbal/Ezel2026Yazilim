@@ -1,0 +1,9 @@
+source;share/ida_uav_target/hook/pythonpath.ps1
+source;share/ida_uav_target/hook/pythonpath.dsv
+source;share/ida_uav_target/hook/pythonpath.sh
+source;share/ida_uav_target/hook/ament_prefix_path.ps1
+source;share/ida_uav_target/hook/ament_prefix_path.dsv
+source;share/ida_uav_target/hook/ament_prefix_path.sh
+source;../../build/ida_uav_target/share/ida_uav_target/hook/pythonpath_develop.ps1
+source;../../build/ida_uav_target/share/ida_uav_target/hook/pythonpath_develop.dsv
+source;../../build/ida_uav_target/share/ida_uav_target/hook/pythonpath_develop.sh

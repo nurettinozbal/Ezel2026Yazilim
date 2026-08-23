@@ -1,0 +1,106 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 15px; /* Yan boşluklar daraltıldı */
+  height: 100%;
+  background: #09090b;
+  font-family: monospace;
+  font-size: 11px; /* Genel yazı boyutu küçüldü */
+}
+
+/* --- SOL GRUP (Sistem Sağlığı) --- */
+.healthGroup {
+  display: flex;
+  gap: 15px; /* Öğeler birbirine yaklaştı */
+}
+
+.healthItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.failsafeItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #3498db;
+}
+
+/* --- ORTA GRUP (Komutlar) --- */
+.commandGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.commandButton {
+  border: none;
+  padding: 3px 12px; /* TOMBULLUK ALINDI (Dikey padding azaldı) */
+  border-radius: 3px; /* Köşeler biraz daha keskin */
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px; /* Buton yazıları küçüldü */
+  transition: background 0.3s ease;
+}
+
+.armButtonActive {
+  background: #ef4444; /* Kırmızı (Kapat) */
+  color: white;
+}
+
+.armButtonInactive {
+  background: #e67e22; /* Turuncu (Hazırla) */
+  color: white;
+}
+
+.missionButtonActive {
+  background: #10b981; /* Yeşil */
+  color: black;
+}
+
+.missionButtonInactive {
+  background: #333; /* Gri (Pasif) */
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* --- SAĞ GRUP (Log ve Durum) --- */
+.logGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pulseIcon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.recButton {
+  border: 1px solid #444;
+  padding: 2px 8px; /* Daha ince yapıldı */
+  border-radius: 3px;
+  cursor: pointer;
+  color: white;
+  font-size: 10px;
+}
+
+.csvButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 2px 8px; /* Daha ince yapıldı */
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+}

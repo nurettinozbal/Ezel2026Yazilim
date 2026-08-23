@@ -1,0 +1,6 @@
+# TEKNOFEST İDA hakem görevi (otomatik üretildi) — parkur<no> lat lon
+parkur1 40.8631400 29.2599517
+parkur1 40.8633649 29.2603084
+parkur1 40.8631850 29.2606652
+parkur1 40.8634548 29.2610219
+parkur2 40.8634548 29.2616165

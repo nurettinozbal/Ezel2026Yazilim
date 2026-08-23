@@ -1,0 +1,88 @@
+{
+  "cycle_summaries": [
+    {
+      "cycle": 1,
+      "sample_count": 4,
+      "servo11_max": 1574,
+      "servo11_min": 1544,
+      "servo9_max": 1484,
+      "servo9_min": 1476
+    }
+  ],
+  "cycles": 1,
+  "disarmed_confirmed": true,
+  "events": [
+    {
+      "event": "GPS_WARMUP",
+      "monotonic": 11905.894467777
+    },
+    {
+      "event": "SET_GUIDED_DISARMED",
+      "monotonic": 11912.905227661
+    },
+    {
+      "event": "ARM_REQUEST",
+      "monotonic": 11913.163911106
+    },
+    {
+      "event": "ARMED_ZERO_SETTLE",
+      "monotonic": 11913.965148196
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 11915.194832922,
+      "seconds": 3
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 11916.224677113,
+      "seconds": 2
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 11917.255149519,
+      "seconds": 1
+    },
+    {
+      "cycle": 1,
+      "duration_s": 1.0,
+      "event": "PULSE_START",
+      "monotonic": 11918.28419528,
+      "vx": 0.15,
+      "yaw_rate": -0.15
+    },
+    {
+      "cycle": 1,
+      "event": "PULSE_END",
+      "monotonic": 11919.288388123,
+      "sample_count": 4,
+      "servo11_max": 1574,
+      "servo11_min": 1544,
+      "servo9_max": 1484,
+      "servo9_min": 1476
+    },
+    {
+      "event": "CLEANUP_ZERO",
+      "monotonic": 11920.817406402
+    },
+    {
+      "event": "DISARM_REQUEST",
+      "monotonic": 11921.829772729
+    }
+  ],
+  "gps_fix": 3,
+  "label": "left",
+  "log_path": "/home/ezelproject/ida_alt_ws/bench_backups/guided_direction_left_20260815T095921Z.json",
+  "manual_confirmed": true,
+  "mask": "0x5e7",
+  "mode_mapping": {
+    "GUIDED": 15,
+    "MANUAL": 0
+  },
+  "pause_s": 3.0,
+  "pulse_s": 1.0,
+  "source_system": 255,
+  "success": true,
+  "vx_mps": 0.15,
+  "yaw_rate_rps": -0.15
+}

@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "default_profile": "general",
+  "artifacts": {
+    "general-yolo11s-20260808": {
+      "path": "p3_candidates/general_yolo11s_20260808.pt",
+      "sha256": "e3277e1778ec59e5af64cbeea81292fe97daefa6f0dc7bf1cc26780e24e93138",
+      "class_names": [
+        "black",
+        "green",
+        "orange",
+        "red",
+        "yellow"
+      ],
+      "class_name_map": {
+        "black": "black",
+        "green": "green",
+        "orange": "orange",
+        "red": "red",
+        "yellow": "yellow"
+      }
+    },
+    "general-brogy-190826": {
+      "path": "p3_candidates/190826_brogy.pt",
+      "sha256": "c2951ac30143f9fcd0ccd85f7a110207dc4c913389d633f83dc356d7097f525d",
+      "class_names": [
+        "black_buoy",
+        "red_buoy",
+        "green_buoy",
+        "orange",
+        "yellow"
+      ],
+      "class_name_map": {
+        "black_buoy": "black",
+        "red_buoy": "red",
+        "green_buoy": "green",
+        "orange": "orange",
+        "yellow": "yellow"
+      }
+    },
+    "general-brgoy-2208260615-pt": {
+      "path": "p3_candidates/2208260615brgoy.pt",
+      "sha256": "f736fdb9ce76fbf13459d89c9019cfd286f45649896b3f6f585813d9d9259b99",
+      "class_names": [
+        "black_buoy",
+        "red_buoy",
+        "green_buoy",
+        "orange",
+        "yellow"
+      ],
+      "class_name_map": {
+        "black_buoy": "black",
+        "red_buoy": "red",
+        "green_buoy": "green",
+        "orange": "orange",
+        "yellow": "yellow"
+      }
+    },
+    "general-brgoy-2208260615-engine": {
+      "path": "operator/general-brgoy-2208260615-engine.engine",
+      "sha256": "e4f241882c6b937256dd342d8ed7b96e90e4af658eda21477ce961865cce253f",
+      "class_names": [
+        "black_buoy",
+        "red_buoy",
+        "green_buoy",
+        "orange",
+        "yellow"
+      ],
+      "class_name_map": {
+        "black_buoy": "black",
+        "red_buoy": "red",
+        "green_buoy": "green",
+        "orange": "orange",
+        "yellow": "yellow"
+      }
+    },
+    "general-gercekbest-engine": {
+      "path": "operator/general-gercekbest-engine.engine",
+      "sha256": "56359c9f41f30bd899687e271e4487faab276e7114fb88f542bbac78a17290bd",
+      "class_names": [
+        "black_buoy",
+        "red_buoy",
+        "green_buoy",
+        "orange",
+        "yellow"
+      ],
+      "class_name_map": {
+        "black_buoy": "black",
+        "red_buoy": "red",
+        "green_buoy": "green",
+        "orange": "orange",
+        "yellow": "yellow"
+      }
+    }
+  },
+  "profiles": {
+    "general": {
+      "p1p2_artifact": "general-brgoy-2208260615-pt",
+      "p3_artifact": "general-brgoy-2208260615-pt",
+      "p1p2_allowed_colors": [
+        "orange",
+        "yellow"
+      ],
+      "p3_allowed_colors": [
+        "red",
+        "green",
+        "black"
+      ],
+      "single_general_model": true
+    },
+    "general-brgoy-2208260615-engine": {
+      "p1p2_artifact": "general-brgoy-2208260615-engine",
+      "p3_artifact": "general-brgoy-2208260615-engine",
+      "p1p2_allowed_colors": [
+        "orange",
+        "yellow"
+      ],
+      "p3_allowed_colors": [
+        "red",
+        "green",
+        "black"
+      ],
+      "single_general_model": true
+    },
+    "general-gercekbest-engine": {
+      "p1p2_artifact": "general-gercekbest-engine",
+      "p3_artifact": "general-gercekbest-engine",
+      "p1p2_allowed_colors": [
+        "orange",
+        "yellow"
+      ],
+      "p3_allowed_colors": [
+        "red",
+        "green",
+        "black"
+      ],
+      "single_general_model": true
+    }
+  }
+}

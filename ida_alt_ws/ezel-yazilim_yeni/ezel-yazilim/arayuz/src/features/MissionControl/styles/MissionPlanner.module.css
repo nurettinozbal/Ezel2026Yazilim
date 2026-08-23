@@ -1,0 +1,89 @@
+.container {
+  padding: 15px;
+  border-top: 1px solid #333;
+  margin-top: 10px;
+}
+
+.title {
+  font-size: 12px;
+  color: #ef4444;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 50%;
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.addButton {
+  width: 100%;
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.addButton:hover {
+  background: #444;
+}
+
+.pointList {
+  height: 80px;
+  overflow-y: auto;
+  background: #111;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #222;
+  border-radius: 4px;
+}
+
+.pointItem {
+  font-size: 11px;
+  color: #ccc;
+  border-bottom: 1px solid #222;
+  padding: 2px 0;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 5px;
+}
+
+.uploadButton {
+  flex: 1;
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.clearButton {
+  background: #e74c3c;
+  border: none;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}

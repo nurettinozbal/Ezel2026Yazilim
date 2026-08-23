@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "default_profile": "general",
+  "artifacts": {
+    "general-yolo11s-20260808": {
+      "path": "p3_candidates/general_yolo11s_20260808.pt",
+      "sha256": "e3277e1778ec59e5af64cbeea81292fe97daefa6f0dc7bf1cc26780e24e93138",
+      "class_names": [
+        "black",
+        "green",
+        "orange",
+        "red",
+        "yellow"
+      ],
+      "class_name_map": {
+        "black": "black",
+        "green": "green",
+        "orange": "orange",
+        "red": "red",
+        "yellow": "yellow"
+      }
+    }
+  },
+  "profiles": {
+    "general": {
+      "p1p2_artifact": "general-yolo11s-20260808",
+      "p3_artifact": "general-yolo11s-20260808",
+      "p1p2_allowed_colors": [
+        "orange",
+        "yellow"
+      ],
+      "p3_allowed_colors": [
+        "red",
+        "green",
+        "black"
+      ],
+      "single_general_model": true
+    }
+  }
+}

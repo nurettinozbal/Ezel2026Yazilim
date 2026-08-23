@@ -1,0 +1,26 @@
+[Unit]
+Description=IDA canonical field stack (field boot)
+Wants=systemd-udev-settle.service
+After=local-fs.target systemd-udev-settle.service
+StartLimitIntervalSec=0
+ConditionPathExists=/etc/ida/field-test.env
+
+[Service]
+Type=simple
+User=ezelproject
+Group=ezelproject
+EnvironmentFile=/etc/ida/field-test.env
+# Host/IP and credentials are machine-local and are never overwritten by a
+# workspace reinstall. Values here intentionally override the shared profile.
+EnvironmentFile=-/etc/ida/field-test.local.env
+WorkingDirectory=/home/ezelproject/ida_alt_ws
+ExecStart=/home/ezelproject/ida_alt_ws/scripts/start_field_stack.sh
+Restart=on-failure
+RestartSec=10
+KillSignal=SIGINT
+TimeoutStopSec=20
+NoNewPrivileges=true
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

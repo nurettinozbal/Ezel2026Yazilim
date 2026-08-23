@@ -1,0 +1,249 @@
+{
+  "disarmed_confirmed": true,
+  "events": [
+    {
+      "event": "GPS_WARMUP",
+      "monotonic": 10816.976550037
+    },
+    {
+      "event": "SET_GUIDED_DISARMED",
+      "monotonic": 10824.003598042
+    },
+    {
+      "event": "ARM_REQUEST",
+      "monotonic": 10824.274895879
+    },
+    {
+      "event": "ARMED_ZERO_SETTLE",
+      "monotonic": 10825.091558008
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 10826.303981026,
+      "seconds": 3
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 10827.304523914,
+      "seconds": 2
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 10828.33438535,
+      "seconds": 1
+    },
+    {
+      "duration_s": 2.0,
+      "event": "FORWARD_PULSE_START",
+      "monotonic": 10829.364042361,
+      "speed_mps": 0.35
+    },
+    {
+      "event": "FORWARD_PULSE_END",
+      "monotonic": 10831.364362204
+    },
+    {
+      "event": "CLEANUP_ZERO",
+      "monotonic": 10832.890629579
+    },
+    {
+      "event": "DISARM_REQUEST",
+      "monotonic": 10833.920213649
+    }
+  ],
+  "gps_fix": 3,
+  "lat": 37.8729947,
+  "log_path": "/home/ezelproject/ida_alt_ws/bench_backups/guided_airflow_test_20260815T094113Z.json",
+  "lon": 32.487151,
+  "manual_confirmed": true,
+  "mask": "0x5e7",
+  "mode_mapping": {
+    "GUIDED": 15,
+    "MANUAL": 0
+  },
+  "pulse_s": 2.0,
+  "pulse_servo11_max": 1593,
+  "pulse_servo11_min": 1512,
+  "pulse_servo9_max": 1593,
+  "pulse_servo9_min": 1512,
+  "servo_samples": [
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10825.211180143
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10825.471329846
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10825.711975352
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10825.952275278
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10826.210390919
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10826.450897124
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10826.710365616
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10826.971733219
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10827.210336824
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10827.452061922
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10827.710297375
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10827.971210977
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10828.210585746
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10828.471010049
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10828.711556095
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10828.951943254
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10829.210299862
+    },
+    {
+      "servo11": 1512,
+      "servo9": 1512,
+      "t": 10829.471692777
+    },
+    {
+      "servo11": 1547,
+      "servo9": 1547,
+      "t": 10829.711725619
+    },
+    {
+      "servo11": 1557,
+      "servo9": 1557,
+      "t": 10829.971509449
+    },
+    {
+      "servo11": 1564,
+      "servo9": 1564,
+      "t": 10830.211838621
+    },
+    {
+      "servo11": 1571,
+      "servo9": 1571,
+      "t": 10830.452185842
+    },
+    {
+      "servo11": 1579,
+      "servo9": 1579,
+      "t": 10830.710397356
+    },
+    {
+      "servo11": 1586,
+      "servo9": 1586,
+      "t": 10830.971162343
+    },
+    {
+      "servo11": 1593,
+      "servo9": 1593,
+      "t": 10831.210511221
+    },
+    {
+      "servo11": 1590,
+      "servo9": 1590,
+      "t": 10831.4506929
+    },
+    {
+      "servo11": 1560,
+      "servo9": 1560,
+      "t": 10831.710899081
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10831.971644226
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10832.21194898
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10832.452168067
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10832.710428478
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10832.970258132
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10833.210322525
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10833.471352832
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10833.710931991
+    }
+  ],
+  "source_system": 255,
+  "speed_mps": 0.35,
+  "success": true
+}

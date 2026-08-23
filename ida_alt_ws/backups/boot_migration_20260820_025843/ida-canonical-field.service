@@ -1,0 +1,22 @@
+[Unit]
+Description=IDA canonical field stack (manual start only)
+After=network-online.target
+ConditionPathExists=/etc/ida/field-test.env
+
+[Service]
+Type=simple
+User=ezelproject
+Group=ezelproject
+EnvironmentFile=/etc/ida/field-test.env
+# Host/IP and credentials are machine-local and are never overwritten by a
+# workspace reinstall. Values here intentionally override the shared profile.
+EnvironmentFile=-/etc/ida/field-test.local.env
+WorkingDirectory=/home/ezelproject/ida_alt_ws
+ExecStart=/home/ezelproject/ida_alt_ws/scripts/start_field_stack.sh
+Restart=no
+KillSignal=SIGINT
+TimeoutStopSec=20
+NoNewPrivileges=true
+UMask=0027
+
+# Intentionally no [Install] section: this service cannot be enabled at boot.

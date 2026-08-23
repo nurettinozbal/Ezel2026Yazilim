@@ -1,0 +1,7 @@
+ida_command_limiter:
+  ros__parameters:
+    # B13: otonomi max_speed_mps=0.6 ile hizalandı (eski 0.8 -> araç %33 hızlı
+    # komut geçirebiliyordu). Limiter güvenlik tavanı = otonomi tavanı.
+    max_vx_mps: 0.6
+    max_vy_mps: 0.0
+    max_yaw_rate_rad_s: 0.785398163

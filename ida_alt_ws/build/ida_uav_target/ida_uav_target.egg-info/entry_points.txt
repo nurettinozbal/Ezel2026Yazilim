@@ -1,0 +1,3 @@
+[console_scripts]
+uav_target_node = ida_uav_target.uav_target_node:main
+

@@ -1,0 +1,24 @@
+ida_telemetry_logger:
+  ros__parameters:
+    log_dir: "./logs"
+    log_hz: 1.0
+    # Hakem kanıtı güç kesintisinde ve status node'unda hemen görünür olmalı.
+    flush_every_lines: 1
+
+ida_video_logger:
+  ros__parameters:
+    log_dir: "./logs"
+    log_hz: 1.0
+    fps: 15.0
+    fourcc: "mp4v"
+    frame_width: -1
+    frame_height: -1
+    record_path: ""
+    processed_image_topic: "/perception/processed_image/p1p2"
+
+ida_map_logger:
+  ros__parameters:
+    log_dir: "./logs"
+    # map.mp4: gerçek zamanlı, okunabilir ve kamera videosundan bağımsız.
+    log_hz: 5.0
+    flush_every_lines: 1

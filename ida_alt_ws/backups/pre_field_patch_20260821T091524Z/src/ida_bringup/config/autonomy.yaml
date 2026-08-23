@@ -1,0 +1,177 @@
+ida_autonomy:
+  ros__parameters:
+    loop_hz: 10.0
+    waypoint_threshold_m: 2.5   # 4.0 -> 2.5: köşede ani yön değişimi azalsın (heading hatası küçük)
+    waypoint_overshoot_guard_m: 5.0  # eşik kaçarsa yalnız mevcut WP 5m içinde arkadaysa ilerle
+    max_speed_mps: 0.6        # mission süre limiti için (P1 360s, P2 420s)
+    max_yaw_rate_deg_s: 50.0  # 70 -> 50: keskin dönüş çok agresif — kademeli dönüş
+    yaw_kp_deg_s_per_deg: 0.55
+    telemetry_timeout_s: 2.0
+    perception_timeout_s: 2.0
+    obstacle_avoid_distance_m: 8.0
+    target_min_confidence: 0.20 # renk + lidar aynı fiziksel hedefte birleşmeli
+    p3_search_yaw_rate_deg_s: 30.0 # 360 derece / 30 deg/s = 12 saniye
+    p3_search_rotations_per_cycle: 1 # bir tam tarama, sonra düz konum değişimi
+    p3_search_initial_hold_s: 1.0   # P3 girişinde fizik sakinleşsin
+    p3_staging_advance_s: 3.0       # düz konum değişimi en fazla 3 saniye
+    p3_staging_speed_mps: 0.30      # sim hareket zarfında kontrollü ilerleme
+    p3_staging_arrival_m: 1.0       # staging noktasına varınca ileri komut yok
+    p2_exit_advance_m: 5.0          # son P2 kabulünden sonra iç geçiş; waypoint değil
+    p2_exit_advance_speed_mps: 0.50
+    p3_lock_confirm_s: 0.0          # ilk lidar-fused hedef yeterli
+    p3_lock_confirm_frames: 1
+    p3_target_loss_grace_s: 0.80
+    p3_lock_yaw_gain_deg_s: 35.0
+    p3_engage_center_max: 0.18
+    p3_engage_distance_m: 1.2
+    p3_align_distance_m: 5.0
+    p3_approach_speed_mps: 0.40
+    p3_approach_yaw_max_deg_s: 12.0
+    sim_gate_truth_enabled: false  # yalnız sim launch override eder; real/production kapalı
+
+    # Parkur geçiş eşikleri
+    p2_min_pair_crossings: 2
+    # 0 görev-tamamlama timeout'unu kapatır; sensör/telemetri timeout'ları aktiftir.
+    p1_max_duration_s: 0.0
+    p2_max_duration_s: 0.0
+    p3_hold_timeout_s: 0.0
+    yellow_sighting_threshold: 4
+    yellow_sighting_decay: 2
+    yellow_sighting_range_m: 15.0
+    yellow_sighting_forward_m: 1.0
+    yellow_sighting_lateral_m: 6.0
+    yellow_sighting_min_confidence: 0.35
+
+    # Duba ikilisi geçiş detektörü
+    pair_max_lateral_m: 15.0
+    pair_min_lateral_gap_m: 1.0
+    pair_cross_trigger_forward_m: 3.0
+    pair_cross_complete_forward_m: -0.5
+    pair_min_confidence: 0.35
+    pair_max_age_s: 20.0
+    pair_max_forward_gap_m: 3.0
+    pair_max_crossing_gap_s: 2.0
+
+    # Parkur 3 hedef angajmanı
+    wrong_avoid_lateral_m: 1.5
+    wrong_avoid_speed_mps: 0.35
+    engage_window_s: 2.0
+
+    # Failsafe
+    failsafe_recovery_enabled: true
+    failsafe_recovery_s: 5.0
+
+    # --- Puan ceza modülü (çarpma + parkur dışı; /autonomy/score) ---
+    # Şartname formülleri ida_planning.scoring'de; bu parametreler yalnız
+    # araçta BİLİNMEYEN değişkenleri ve geometri/temas eşiklerini verir.
+    # estimated=true her zaman: temas eşiği tanımsız, hakem sayısı bilinmez;
+    # sayılar davranışı yönlendirir (yakın duba -> yavaşla), itiraz adayı üretir.
+    score_kd1: 5.0
+    score_kd2: 5.0
+    score_ed2: 5.0
+    score_ooc_mode: "corridor"   # gerçek waypoint polyline koridoru
+    score_half_width_m: 8.0
+    score_sustained_contact_s: 30.0
+    score_contact_radius_m: 1.6
+    score_drop_after_s: 5.0
+    score_include_uav_bonus: true
+    # Gerçek rota içi/dışı debug histerezisi. Sert turuncu maliyeti bu
+    # durumdan bağımsız mission latch'idir.
+    course_geometry_enter_m: 4.5
+    course_geometry_exit_m: 5.5
+
+    # --- Costmap + DWA (lokal maliyet haritası tabanlı planlama) ---
+    # dwa_enabled=true -> P1/P2 tick'i costmap.update() + dwa.plan() kullanır
+    # (apply_corridor_bias/apply_obstacle_avoidance KULLANILMAZ — çakışma #15).
+    # dwa_enabled=false -> eski zincir: corridor bias + obstacle avoidance
+    # (saha testi A/B karşılaştırma yedeği).
+    dwa_enabled: true
+    nn_sort_enabled: false     # Hakem WP sıralı gelir; true → NN sıralama (eski davranış)
+    costmap_size_m: 30.0
+    costmap_cell_m: 0.25
+    costmap_bot_radius_m: 0.6
+    costmap_safety_m: 0.5        # safety_base ile aynı; dinamik durma payı ayrıca eklenir
+    dwa_recovery_vx: 0.70      # saha: 0.35 su üzerinde etkili itki eşiğinin altında kaldı
+    dwa_recovery_yaw: 25.0        # 20 -> 25: tek seferde dubayı geç (smooth ama etkili)
+    dwa_w_obstacle: 0.7           # kenar dubalarına takılmasın (koridor)
+    dwa_w_heading: 1.8        # DUNKU CALISAN (P1 koridor takibi): 1.4 heading zayifatti, araç koridoru takip edemedi — geri alindi
+    dwa_w_progress: 1.2
+    dwa_w_speed: 0.6          # DUNKU CALISAN: 1.0 hiz odulu aracı koridorda agresif yapti — geri alindi
+    dwa_w_smooth: 0.3         # vx=0 smooth bonusu azalsın (dur-devam kırılır)
+    dwa_w_unknown: 0.6
+    dwa_w_corridor: 1.6       # 1.0 -> 1.6: koridor bias baskın (salınım azalır)
+    dwa_w_avoid: 0.25         # Kamera sarı yönü ikincil; lidar çarpışma veto'su birincil
+    dwa_vx_steps: 7
+    dwa_yaw_steps: 17         # daha çok yaw adayı (smooth kaçınma)
+    dwa_sim_time: 3.5          # DUNKU CALISAN: 2.0 kisa supurme koridorda gec tepki verdi — geri alindi
+    dwa_sim_step: 0.25
+    dwa_accel_max: 0.8
+    dwa_slow_vx: 0.70          # saha: kaçınma sırasında yön kararını uygulayacak itki
+    dwa_min_drive_vx: 0.70     # ölçülen su üstü kontrol/itki alt sınırı
+    dwa_min_turn_rate_deg_s: 20.0  # 5 deg/s saha testinde heading değiştirmedi
+    dwa_recovery_latch_ticks: 12   # recovery sırasında sağ-sol karar titreşimini önle
+    dwa_align_before_drive_deg: 42.0 # büyük WP açısında geniş yay yerine önce yerinde hizalan
+    dwa_align_yaw_rate_deg_s: 30.0  # ölçülen etkili fakat kontrollü hizalanma dönüşü
+    dwa_align_parkurs: [1]          # P2 yerinde WP align lidar kaçınmasını bloke etmez
+    # P2 DWA uygulanabilir ileri yayları doğrudan bu tavanla skorlar; son
+    # güvenlik katmanında yüksek-yaw yerinde dönüşüne çevrilmez.
+    p2_dwa_max_yaw_rate_deg_s: 22.0
+
+    # Yakın-alan kuralı + tek davranış hakemi. DWA/align/recovery yalnız aday
+    # üretir; son komut yüksek yaw veya 2 m öndeki hard obstacle ile ileri gidemez.
+    near_field_stop_m: 2.0
+    near_field_slow_m: 3.0
+    near_field_stop_lateral_m: 1.0
+    near_field_slow_lateral_m: 1.5
+    near_field_pivot_yaw_deg_s: 30.0
+    near_field_slow_speed_mps: 0.40
+    near_field_stop_release_m: 3.0
+    # Centered close obstacle can deadlock a differential boat when a zero-vx
+    # pivot produces no yaw. After stable proof, use a short bounded reverse
+    # arc; refuse it when a hard obstacle is close behind.
+    near_field_escape_trigger_s: 0.6
+    near_field_escape_reverse_s: 1.5
+    near_field_escape_cooldown_s: 1.0
+    near_field_escape_reverse_mps: 0.20
+    near_field_escape_yaw_deg_s: 30.0
+    near_field_escape_rear_stop_m: 1.5
+    # Sim motorboat cannot yaw effectively at zero surge; corner alignment is
+    # a controlled low-speed arc, never the 0.6 m/s cruise command.
+    near_field_heading_align_speed_mps: 0.20
+    near_field_heading_align_max_yaw_deg_s: 12.0
+    nav_align_min_dwell_s: 0.6
+    nav_recovery_min_dwell_s: 1.0
+    nav_slow_min_dwell_s: 0.4
+    nav_final_high_yaw_deg_s: 22.5
+    nav_final_obstacle_stop_m: 2.0
+    # 1.18x0.76 m gövde + duba yarıçapı: yerinde dönüşte köşe süpürmesi.
+    nav_rotational_sweep_radius_m: 1.0
+    nav_rear_sweep_escape_speed_mps: 0.20
+
+    # --- Hıza bağlı güvenlik (idaws'tan) ---
+    # Durma mesafesi = v*t_tepki + v^2/(2a); costmap şişirmesi hızla büyür,
+    # DWA hız ölçeği sensör menziline (safety_max_m) göre governor'da sınırlanır.
+    safety_base_m: 0.5
+    safety_max_m: 10.0
+    reaction_time_s: 1.0
+    max_decel_mps2: 1.5
+    max_speed_scale: 1.0
+
+    # --- Tekil hedef kaynağı (T1) ---
+    # WAYPOINT BİRİNCİL HEDEF: corridor_goal_parkurs kod default [0] -> koridor
+    # hedef override'ı KAPALI (hedef her zaman waypoint). Koridor bilgisi yalnız
+    # DWA skor bias'ı (corridor_bias_parkurs) olarak kullanılır — engellerden
+    # DWA zaten kaçınır (collides), koridor kısıtı aracı koridorda tutar.
+    # NOT: [0] hiçbir gerçek parkurla eşleşmez; ROS2 Humble'daki boş
+    # liste/BYTE_ARRAY tip belirsizliğini önler.
+    corridor_bias_parkurs: [1]
+    corridor_goal_lookahead_min_m: 8.0
+    corridor_goal_lateral_gain: 0.3
+
+    # --- Zaman tabanlı stuck dedektörü (T3) ---
+    # Araç bu süre boyunca sürekli düşük hızda ve < stuck_min_dist_m yol
+    # almadıysa recovery tetiklenir. Anlık vx düşüşü (approach/yellow brake)
+    # takılma sayılmaz — yalnızca gerçek sürekli hareketsizlik.
+    stuck_timeout_s: 3.0
+    stuck_min_dist_m: 0.2
+    stuck_vx_threshold: 0.1

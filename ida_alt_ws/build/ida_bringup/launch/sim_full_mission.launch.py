@@ -1,0 +1,1 @@
+/home/ezelproject/ida_alt_ws/src/ida_bringup/launch/sim_full_mission.launch.py

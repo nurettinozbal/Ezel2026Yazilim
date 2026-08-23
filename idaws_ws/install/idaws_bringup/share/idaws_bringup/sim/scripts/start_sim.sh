@@ -1,0 +1,1 @@
+/home/ezelproject/idaws_ws/src/idaws/src/idaws_bringup/sim/scripts/start_sim.sh

@@ -1,0 +1,1050 @@
+PAGES: 29
+--- PAGE 1 ---
+ 
+1 
+ 
+ 
+ 
+VERSİYON TABLOSU  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+İNSANSIZ DENİZ 
+ARACI YARIŞMA 
+
+--- PAGE 2 ---
+ 
+2 
+ İÇİNDEKİLER  
+TANIMLAR ve KISALTMALAR  ................................ ................................ ........................  6 
+Tanımlar  ................................ ................................ ................................ ...............................  6 
+Kısaltmalar  ................................ ................................ ................................ ...........................  6 
+1 YARIŞMAYA YÖNELİK GENEL BİLGİLER  ................................ ................................ ... 7 
+1.1 Yarışma Kapsamı  ................................ ................................ ................................ ........  7 
+1.2 Yarışma Amacı  ................................ ................................ ................................ ............  7 
+1.3 Yarışma Katılım Koşulları  ................................ ................................ ..............................  7 
+1.3.1  Takım Oluşturma  ................................ ................................ ................................ ............  7 
+1.3.2  Danışman Yükümlülükleri  ................................ ................................ ................................ . 8 
+1.3.3  Süreç Bilgileri  ................................ ................................ ................................ .................  8 
+1.3.4  Başvuru Esasları  ................................ ................................ ................................ .............  9 
+2 YARIŞMA TAKVİMİ  ................................ ................................ ................................  9 
+2.1 İletişim ve Soru & Cevap  ................................ ................................ ..............................  9 
+2.1.1  İletişim  ................................ ................................ ................................ ..........................  9 
+2.1.2.  Soru & Cevap  ................................ ................................ ................................ ...............  10 
+3 YARIŞMA SÜRECİ  ................................ ................................ ..............................  10 
+3.1. Teknik Yeterlilik Raporu  ................................ ................................ ..............................  10 
+3.2. Kritik Tasarım Raporu  ................................ ................................ ................................ . 11 
+3.3. Otonomi Kabiliyeti Gösterimi Videosu  ................................ ................................ ..........  11 
+4. ARAÇLAR İÇİN TANIMLI TEKNİK ÖZELLİK İSTERLERİ VE KISITLAMALAR  ....................  12 
+4.1. Ortak Gereksinimler  ................................ ................................ ................................ .. 12 
+4.2. İnsansız Deniz Aracı (İDA) Gereksinimleri  ................................ ................................ ..... 13 
+4.3. İnsansız Hava Aracı (İHA)  ................................ ................................ ...........................  16 
+5. YARIŞMA DETAYLARI ................................ ................................ ..........................  16 
+5.1. Yarışma Alanı ve Çalışma Alanları  ................................ ................................ ................  16 
+5.2. Teknik Kontroller  ................................ ................................ ................................ .......  16 
+5.3. Sunumlar  ................................ ................................ ................................ .................  17 
+5.4. Hakemler Tarafından Yarışmacılara Verilecek Brifing  ................................ ......................  17 
+5.5. Yarışma Detayları, Parkurlar, Puanlama ve Değerlendirme  ................................ ..............  17 
+6. ÖDÜL  ................................ ................................ ................................ ..............  27 
+7. İLETİŞİM  ................................ ................................ ................................ ...........  28 
+8. GENEL KURALLAR  ................................ ................................ .............................  28 
+9. ETİK KURALLAR ................................ ................................ ................................ . 28 
+SORUMLULUK BEYANI  ................................ ................................ .............................  28 
+ 
+--- PAGE 3 ---
+ 
+3 
+ VERSİYONLAR  
+Tablo 1 Versiyonlar Tablosu  
+Versiyon  Tarih  Değişiklik Açıklaması  
+V1.0 09.01.2026  TEKNOFEST 2026 İlk Versiyon  
+V1.1  20.02.2026  Yarışma Son Başvuru Tarihi  
+V1.2  18.05.2026  5.5.2.1.Parkur Bileşenleri  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+--- PAGE 4 ---
+ 
+4 
+  
+ 
+TABLOLAR  
+Tablo 1 Versiyonlar Tablosu  ................................ ................................ ................................ ........  3 
+Tablo 2 Kısaltmalar Tablosu  ................................ ................................ ................................ ........  6 
+Tablo 3 Yarışma Takvimi  ................................ ................................ ................................ .............  9 
+Tablo 4  Rapor Puanlaması  ................................ ................................ ................................ .......  24 
+Tablo 5  Görev Puanlaması  ................................ ................................ ................................ .......  24 
+Tablo 6  Toplam Puan Hesabı  ................................ ................................ ................................ .... 27 
+Tablo 7  Ödül Miktarları  ................................ ................................ ................................ ............  27 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+--- PAGE 5 ---
+ 
+5 
+  
+ 
+ŞEKİLLER  
+Şekil 1: Video Ekranı  ................................ ................................ ................................ ...............  12 
+Şekil 2: Hedef Duba Temsili Görsel  ................................ ................................ ...........................  18 
+Şekil 3: Parkur Genel Görünümü  ................................ ................................ ..............................  20 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+--- PAGE 6 ---
+ 
+6 
+ TANIMLAR ve KISALTMALAR  
+Tanımlar  
+Görev: Engel bulunmayan ortamda nokta takibi, engel bulunan ortamda nokta takibi ve kamikaze 
+angajmanı olmak üzere otonomi özeliklerinin sınandığı ve sırasıyla tek seferde icra edilecek 
+adımlar bütünüdür.  
+Parkur: Parkur-1, Parkur-2 ve Parkur -3 olmak üzere alt görevlerin icra edildiği fiziksel ortamdır.  
+Yarışma Alanı:  Yarışma Çadırı ile göreve başlangıç noktası arasında yer alan güvenlik bariyeri ile 
+ayrılmış alandır.  
+Yarışma Çadırı:  İDA’ya komut göndermek üzere kullanılan kontrol konsolu/bilgisayar vb. cihazın 
+konulacağı masanın bulunduğu, Yarışma Alanı içerisinde yer alan kısmi kapalı alandır.  
+Yarışma Süresi:  Sırası gelen yarışmacı takımın üyelerinden herhangi birinin, Yarışma Alanına 
+girişi sonrasında başlatılacak DSB dakikalık süredir . 
+ 
+Kısaltmalar  
+Tablo 2 Kısaltmalar Tablosu  
+Kısaltma  Açıklama  
+DSB  Daha Sonra Belirlenecek  
+İDA  İnsansız Deniz Aracı  
+İHA  İnsansız Hava Aracı  
+KTR  Kritik Tasarım Raporu  
+KYS  Kurumsal Yönetim Sitemi  
+TYF  Teknik Yeterlik Formu  
+YKİ Yer Kontrol İstasyonu  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+--- PAGE 7 ---
+ 
+7 
+ 1 YARIŞMAYA YÖNELİK GENEL BİLGİLER  
+1.1 Yarışma Kapsamı  
+İnsansız Deniz Aracı Yarışması, İnsansız Deniz Aracı geliştiren takımların şartnamede belirtilen 
+görevleri yerine getirebilme başarımlarını ölçümlemeyi esas alan bir yarışmadır. Her bir takım 
+kendi geliştirdikleri prototip ile yarışmaya katılabilecek, yarı şma sürecinde yapılacak proje 
+değerlendirmeleri, yarışmanın yapıldığı parkurlardaki görevlerin başarımı, kurallara uyumun 
+değerlendirilmesi ve ölçümlenmesi ile sıralamalar belirlenecek; başarım puanına göre ilk üç 
+sıradaki takımlar yine bu şartnamede yer a lan ödüllere hak kazanacaktır.  
+1.2 Yarışma Amacı  
+İnsansız Deniz Araçları teknolojileri; günümüzde sivil ve askeri uygulamalarda, doğal kaynakların 
+korunması ve incelenmesi, ülke güvenliğinin sağlanması gibi çeşitli amaçlarla kullanılmakta ve 
+geliştirilmektedir.  
+Bu ihtiyaç doğrultusunda amacımız; işbu şartnamede tanımlı görevleri başarı ile 
+gerçekleştirecek, otonom olarak görev icra edebilen İnsansız Deniz Araçlarının tasarım, analiz, 
+üretim ve geliştirilmesi konularında ülke çapında daha geniş bir tabana yayılara k özgün araçların 
+geliştirilmesine öncülük etmektir.  
+1.3 Yarışma Katılım Koşulları  
+• Yarışmaya, Türkiye ve yurt dışında öğrenim gören tüm yükseköğretim öğrencileri (Ön 
+lisans, lisans, yüksek lisans ve doktora) takım halinde katılabilir.  
+• Geçmiş yıl TEKNOFEST proje raporları kapsamında www.teknofest.org adresinden 
+yayınlanmış olan raporlar geçmiş yıllarda katılım sağlamış olduğu proje raporları 
+üzerinden alıntı yapılması halinde kaynak belirtilmelidir. Kaynak belirtme formatına 
+şartnamede y er alan genel kurallar başlığından ulaşabilirsiniz.  
+• Yarışmacılar farklı projeler ile farklı TEKNOFEST yarışmalarına başvuru yapabilir.  
+• Yarışmacılar aynı proje ile yalnızca tek bir kategoriye veya tek bir yarışmaya başvurulabilir. 
+Aynı proje ile farklı kategori veya TEKNOFEST kapsamında düzenlenen farklı yarışmaya 
+başvuru yapan takımların veya kişilerin  başvuruları geçersiz sayılacaktır.  
+• Yarışmacı aynı proje ile daha evvel bir başka yarışmada (TEKNOFEST veya diğer  
+yarışmalar) yer almışsa, katılmış olduğu yarışmanın adı, yeri, tarihi,  organizatörü, 
+yarışmada aldığı netice bilgilerini proje dosyası içerisinde bildirmelidir.  
+1.3.1  Takım Oluşturma  
+• Takımlar en az 3 en fazla 15 kişiden oluşması gerekmektedir. (Bu sayıya danışman dahil 
+değildir.)  
+• Takım içerisinde takım kaptanı bulunmalıdır.  
+• Yarışmaya bireysel katılım sağlanamaz. Yarışmacıların takım halinde başvurmaları 
+gerekmektedir.  
+• Öğrencilerin onaylı öğrenci belgelerini, danışmanların ise çalıştıkları kurumu gösteren 
+onaylı belgelerini ıslak imzalı olarak TEKNOFEST Yarışmalar Komitesi tarafından 
+--- PAGE 8 ---
+ 
+8 
+ açıklanacak tarihte sisteme yüklemeleri gerekmektedir. (Belge şablonları web sitesinde 
+paylaşılacaktır.)  
+• Bu yarışma için bir kişi (danışman, kaptan veya takım üyesi olarak) yalnızca bir takımında 
+bulunabilir.  
+• Takımlar, tek bir okuldan oluşturulabileceği gibi, bir veya birden fazla farklı okuldan 
+öğrencinin bir araya gelmesiyle karma bir takım da oluşturabilir.  
+• Takımlar tek bir ülkeden oluşturulabileceği gibi bir veya birden fazla ülkenin öğrencisinin 
+bir araya gelmesiyle karma bir takım oluşturulabilir.  
+• Başvuru tarihleri arasında takım kaptanı/danışman sistem üzerinden kayıt olur, 
+danışman ve/veya takım kaptanı, takım üyelerinin kaydını doğru ve eksiksiz olarak 
+sistemde oluşturur ve üyelerin e -postalarına davet gönderir. Davet gönderilen üye, 
+başvuru sist emine giriş yaparak “Takım bilgilerim” kısmından gelen daveti kabul eder ve 
+kayıt işlemi tamamlanır. Aksi durumda kayıt işlemi tamamlanmış olmaz.  
+1.3.2  Danışman Yükümlülükleri  
+• Danışman zorunluluğu yoktur, her takımın en fazla bir danışmanı olabilir. Birden fazla 
+danışman bulunan takımların başvuruları geçersiz sayılacaktır.  
+• Takımlar danışman olarak bir öğretim görevlisi, öğretim üyesi veya araştırma görevlisi 
+takımlarına alabilirler.  
+• Danışman olarak görev yapacak kişinin danışmanlık görevlerini yerine getireceğine dair 
+belgenin ıslak imzalı olarak TEKNOFEST Yarışmalar Komitesinin açıklayacağı tarihte 
+sisteme yüklenmesi gerekmektedir.  
+1.3.3  Süreç Bilgileri  
+• Yarışma süreci boyunca TEKNOFEST yarışmalar komitesi tarafından yapılacak olan tüm 
+bilgilendirmeler takımın iletişim sorumlusu olarak belirlediği kişiye yapılacaktır. Bu 
+sebeple her takım bir iletişim sorumlusu belirlemelidir. (KYS’ ye kayıtlı e -mail adres ine 
+bilgilendirme yapılmaktadır.)  
+• Süreçlerin (Başvuru Yapma, Rapor Son Yükleme Tarihi, İtiraz Süreci, Doldurulması 
+Gereken Form vb.) takibi iletişim sorumlusunun görevi olup iletişim sorumlusundan 
+kaynaklı gecikmeler ve/veya aksaklıklardan TEKNOFEST Yarışmalar komitesi sorumlu 
+değildir.  
+• Yarışma kapsamında gerekli tüm süreçler (Başvuru, Rapor Alımı, Rapor Sonuçları, Maddi 
+Destek Başvurusu, İtiraz Süreçleri, Üye ekleme/çıkarma işlemleri vb.) KYS sistemi 
+üzerinden yapılmaktadır. Takımların KYS portalı üzerinden süreçleri takip etmesi 
+gerekmektedir.  
+• Yarışma süreci boyunca başvuru yapma, rapor yükleme, itiraz süreci ve form doldurma 
+işlemleri takım kaptanı ve/veya danışmanın yetkisi dahilinde olup yarışma süreçleri bu 
+kişiler üzerinden yönetilmektedir.  
+• Üye ekleme/çıkarma işlemleri kritik tasarım  raporu teslim tarihine kadar yapılabilir. Kritik 
+tasarım raporu son teslim tarihinden sonra takımlar içerisinde değişiklik yapılmayacaktır.  
+• Takım kaptanı değişiklikleri kritik tasarım  raporu teslim tarihine kadar yapılmaktadır.  
+--- PAGE 9 ---
+ 
+9 
+ • Finale kalan takımlara sağlanacak ulaşım ve konaklama desteği sınırlıdır. Destek 
+verilecek kişi sayısı daha sonra açıklanacak olup TEKNOFEST Yarışmalar Komitesi’nin 
+süreçle ilgili değişiklik yapma hakkı bulunmaktadır.  
+• TEKNOFEST Yarışmalar Komitesi festival alanında bulunacak üye sayısını sınırlandırma 
+yetkisine sahiptir. Sınırlandırma yapılması durumunda komite tarafından bilgilendirme 
+yapılacaktır.  
+1.3.4  Başvuru Esasları  
+• Başvurular, TEKNOFEST Havacılık, Uzay ve Teknoloji Festivali Teknoloji Yarışmaları resmî 
+web sitesi (www.teknofest.org) üzerinden alınacaktır.  
+• Başvurular  28 Şubat 202 6 tarihine kadar www.t3kys.com başvuru sistemi üzerinden 
+çevrim içi olarak yapılır.  
+• Yarışmacı, başvuru yapmadan önce yarışma hakkındaki tüm açıklamaları ve katılım 
+koşullarını okuyup onaylamak suretiyle yarışmaya katılabilecektir.  
+• Yarışmaya başvuranlar şartnamede yer alan şartların tamamını kabul etmiş oldukları 
+sayılmaktadır.  
+ 
+2 YARIŞMA TAKVİMİ  
+Tablo 3 Yarışma Takvimi  
+Tarih  Açıklama  
+28.02.2026 Yarışma Son Başvuru Tarihi  
+24.03.2026 17:00  Teknik Yeterlilik Raporu Son Teslim Tarihi  
+31.03.2026 Teknik Yeterlilik Raporu Sonuçlarının Açıklanması  
+20.05.202 6 17:00  Kritik Tasarım Raporu Son Teslim Tarihi  
+08.06.2026 Kritik Tasarım Raporu Sonuçlarının Açıklanması  
+21.07.2026 17:00  Sistem Kabiliyeti Videolarının Son Teslim Tarihi  
+27.07.2026 Finale Kalan (Finalist) Takımların Açıklanması  
+Ağustos-Eylül 2026 YARIŞMA TARİHİ -YERİ  
+30 Eylül- 4 Ekim 2026  TEKNOFEST  
+ 
+2.1 İletişim ve Soru & Cevap  
+2.1.1  İletişim  
+Yarışma hakkındaki teknik sorular için iletişim kanalı internet sitesinde (www.teknofest.org)  yer 
+alan İnsansız Deniz Aracı Yarışması’nın tanıtım bölümünde linki (İnsansız Deniz Aracı Yarışması 
+Grubu) verilen mail gurubudur . Bu grubun aktif olarak takip edilmesi ve her takımdan en az 1 
+--- PAGE 10 ---
+ 
+10 
+ kişinin üye olarak bu gruptaki duyuruları ve soru & cevapları takip etmek yarışmacı takım 
+sorumluluğundadır. Belirtilen mail grubunun takip edilmemesi sonucunda takımların güncel 
+bilgilendirmelere ulaşamama durumundan Hakem Kurulu sorumlu değildir.  
+Yarışmanın organizasyonel bölümleri ile ilgili soruların iletisim@teknofest.org  mail adresi 
+üzerinden iletilmesi gereklidir.  
+Teknik sorularınızı ve organizasyonel sorularınızın yukarıda belirtilen doğru kanallar üzerinden 
+iletilmesi, sorulan sorulara hızlı dönüş yapılabilmesi açısından önem arz etmektedir.  
+2.1.2.  Soru & Cevap  
+Yarışma ile ilgili detaylar bu şartname içerisinde açıklanmıştır. Yarışmanın sağlıklı bir süreç 
+içerisinde yürütülebilmesi için şartnamenin dikkatle okunması gerekmektedir . 
+Şartnamedeki ilgili kural ve/veya ibarenin açık/anlaşılır olmadığı ya da yetersiz olduğu 
+düşünüldüğü durumlarda ilgili konu hakkında soru sorulması gerekmektedir.  
+Soru & Cevap aşağıdaki maddeler için bir kaynak değildir:  
+• Stratejik veya yarışmacı takımın geleceğe yönelik planladığı belirsiz durumlar  
+• Hakem Kurulu tarafından geçmişte yapılan yarışma esnası kural değişikliğini sorgulamak  
+• Araç dizaynını/tasarımını Hakem Kurulu üyelerine onaylatmak  
+Şartname içerisinden referans gösterilmemiş, ucu açık, net anlaşılmayan ve şartname içerisinde 
+hali hazırda cevabı yer alan sorular cevaplandırılmayacaktır. Cevaplandırılmayacak sorulara 
+örnek olarak aşağıdaki maddeler verilebilir:  
+• Tasarladığımız parça/araç yarışma için uygun mudur?  
+• Açık/net olmayan ya da referans eksikliği sebebiyle anlaşılmayan sorular  
+• Tekrar eden sorular  
+• Şartnamede belirtilen konular  
+3 YARIŞMA SÜRECİ  
+Değerlendirme; Teknik Yeterlilik Raporu, Kritik Tasarım Raporu, Otonomi Kabiliyeti Videosu ve 
+Final değerlendirme aşaması olmak üzere dört aşamada yapılacaktır. Yarışma kapsamında, 
+Teknik Yeterlilik Raporu ve Kritik Tasarım Raporu olmak üzere toplamda 2 ad et rapor 
+hazırlanacaktır. Teknik Yeterlilik Raporu, Kritik Tasarım Raporu ve Otonomi Kabiliyeti videosu 
+göndermeyen takımlar yarışmaya katılmaya hak kazanamayacaklardır.  
+ 
+3.1. Teknik Yeterlilik Raporu  
+Takımlar, Teknik Yeterlilik Raporu (TYR)’nu Yarışma Takviminde belirtilen tarihte teslim etmekle 
+yükümlüdürler. TYR’de, İDA’ların mekanik, elektronik, algoritma ve yazılım tasarımı 
+tanımlanmalıdır. Yarışma kapsamında destek talebinde bulunabilmek için TYR’ nin teslim edilmiş 
+olması gerekmektedir. TYR sonuçlarına göre bir ön eleme gerçekleştirilecektir. TYR 
+--- PAGE 11 ---
+ 
+11 
+ değerlendirmeleri sonucunda Kritik  Tasarım Raporu (KTR) aşamasına geçen takımlar Yarışma 
+Takviminde belirtilen tarihte açıklanacaktır.  
+ 
+3.2. Kritik Tasarım Raporu  
+Kritik Tasarım Raporu (KTR) aşamasına geçen takımlar, KTR’lerini  Yarışma Takviminde belirtilen 
+tarihe kadar teslim etmekle yükümlüdürler. KTR’ye ait şablon yarışma son başvuru tarihinden 
+sonra açıklanacaktır. KTR en fazla 30 sayfa (kapak, içindekiler ve referanslar bölümleri dahil) 
+olacaktır. Sayfa sınırına uymayan raporlar değerlendirmeye alınmayacaktır.  
+KTR aşamasını başarılı şekilde geçen takımlar arasından maddi destek almaya hak kazanan 
+takımlar Yarışma Takviminde belirtilen tarihte açıklanacaktır.  
+ 
+3.3. Otonomi Kabiliyeti Gösterimi Videosu  
+Otonomi Kabiliyeti gösterimi videosu yarışmaya katılacak İDA’nın temel otonomi ve denizcilik 
+isterlerini karşılayabildiğinin gösterildiği kesintisiz bir videodur. Bu aşamayı geçebilen takımlar 
+final aşamasında yarışmaya hak kazanacaktır.  
+3.3.1.  Otonomi Kabiliyetinin Gösteriminde Beklenenler  
+• İDA ve Yer Kontrol İstasyonu ( YKİ) arasında kablosuz bağlantı sağlanmış olacaktır. Bu 
+kapsamda, İDA bilgileri YKİ üzerinde gösterilecektir.  
+• YKİ üzerinden 4 noktalı görev tanımlanacaktır. Bu görev noktaları, bir dikdörtgen 
+oluşturacak şekilde konumlandırılacak ve bu görev İDA’ya gönderilecektir.  
+• YKİ ya da bir RC kumanda üzerinden verilen bir komutla görev başlayacak ve YKİ 
+üzerinden tanımlanıp gönderilen 4 noktalı görevin son noktasına ulaşıldığında otonom 
+görev tamamlanmış olacaktır. Bu aşamadan sonra İDA başlangıç noktasına manuel 
+olarak döndürü lebilecektir.  
+• Dönüşün akabinde İDA’nın motorları ya da gücü güvenlik butonu/anahtarı ile kapatılacak 
+ve RC kumandadan manuel komut verildiği halde motorların hareket etmediği 
+gösterilecektir.  
+• İDA’nın kapakları açılarak herhangi bir şekilde su almadığı gösterilecektir . 
+ 
+3.3.1.1.  Videoda Dikkat Edilmesi Gereken Genel Hususlar  
+• 3.3.1 başlığında verilen bütün aşamalar tek bir gösterimde, kesintisiz ve aralıksız olarak 
+yapılacaktır.  
+• Video ekranı aşağıdaki şekilde bölünecektir:  
+--- PAGE 12 ---
+ 
+12 
+  
+Şekil 1: Video Ekranı  
+o 1. Ekran: YKİ ekran görüntüsü  
+o 2. Ekran: Temel grafikler (İDA’nın  hareketleri senkron bir şekilde)  
+▪ Gerçek hız, hız isteği (setpoint)  
+▪ Gerçek heading/yaw açısı, heading/yaw açısı isteği (setpoint)  
+▪ Thrusterlardan kuvvet isteği  
+o 3. Ekran: Dış kamera görüntüsü (videodaki aşamaya göre RC kumanda, İDA’nın 
+suda hareketi, İDA’nın iç görüntüsü vs.) olacaktır. İDA’nın görev yaptığı aşamada 
+YKİ ekranı ile İDA’nın hareketleri senkron bir şekilde görülmelidir.  
+• Gösterim videosunda, hareket eksenlerinde istemsiz ve hareket yönünden bağımsız 
+dönüş/sürüş gözlemlenmesi durumunda ilgili takımın Otonomi Kabiliyeti Gösterim 
+Videosu başarısız olarak değerlendirilecektir.  
+• Aracın görüntüsünün ve hareketinin net olmadığı durumunda ilgili takımın Otonomi 
+Kabiliyeti Gösterim Videosu başarısız olarak değerlendirilecektir.  
+• Videonun çözünürlüğü en az 720p, toplam süresi ise en az 2 dakika, en fazla 5 dakika 
+olmalıdır.  
+• Yarışmaya katılabilmek için Otonomi Kabiliyeti videosunun 2. Yarışma Takviminde 
+belirtilen tarihe kadar bir link aracılığı ile TEKNOFEST KYS sistemine yüklenmesi 
+gerekmektedir. Linkte sorun yaşanması halinde takımlar elenecektir.  
+• Videolar Youtube’a yüklenecektir. Diğer platformlara yüklenen videolar kabul 
+edilmeyecektir. Videolar “Liste dışı” olarak yüklenebilir.  
+ 
+4. ARAÇLAR İÇİN TANIMLI TEKNİK ÖZELLİK İSTERLERİ VE 
+KISITLAMALAR  
+İnsansız Deniz Aracı için  minimum gereksinimlerin listesi aşağıda bulunmaktadır. Minimum 
+gereksinimleri sağlayamayan takımlar final aşamasında yarışmaya hak kazanamaz . 
+4.1. Ortak Gereksinimler  
+• Haberleşme:  
+o İDA, İDA-YKİ, İHA, İHA -YKİ(varsa), RC kumandalar ve telemetri modülleri 
+dahilinde 2.4 -2.8 GHz, 5.15 -5.85 GHz aralıklarında çalışan herhangi bir bileşen 
+ya da modül kullanılmayacaktır. Sistemlere dahil olan gömülü bilgisayar, laptop 
+vs. dahil olmak üzere bü tün bilgisayarların dahili wi -fi özellikleri kapatılmış 
+olacaktır.  
+
+--- PAGE 13 ---
+ 
+13 
+ o İHA’dan ve İDA’dan YKI’lere (İDA YKI ve varsa İHA YKI’si de dahil olmak üzere) 
+herhangi bir şekilde görüntü aktarımı yapılmayacaktır. Sadece YKI’ler değil yer 
+tarafına herhangi bir şekilde görüntü transferi olmayacaktır. Gözlükler de dahil 
+olmak üzere anal og ya da dijital görüntü transferleri de bu kapsamda 
+değerlendirilmektedir.  
+o İDA, YKİ’ler ve İHA arasında sadece telekomut ve telemetri sağlayabilecek alıcı -
+verici modülleri kullanabilecektir.  
+o Haberleşme modüllerinin frekans kanalı seçilebilir olacaktır. Bu kural telemetri 
+ve RC modülleri için de geçerlidir.  
+o İDA-İHA haberleşmesi için İDA YKİ bir haberleşme rölesi olarak 
+kullanılabilecektir.  
+o Gerekli şartların oluşturulması halinde frekans tahsisi yapılacaktır. Frekans kanal 
+tahsisi takımların kendi kullandığı modüllerin aralıklarında yapılacaktır. Bu 
+bağlamda her takım için kullandığı modüllerin frekans aralıklarında sabit bir 
+frekans verilece ktir. Takımın birden fazla modül kullanması durumunda her 
+modül için ayrı frekans tahsisi yapılacaktır.  
+o Hücresel bağlantı(4G&LTE vb.) sağlayan modemler kullanılamayacaktır.  
+o Haberleşme ile ilgili kısıtlar sadece otonomi ve araç ile ilgili değil bütün sistemler 
+için geçerlidir. Örnek olarak RTK -GPS kullanımı durumunda, düzeltmeler için 
+gereken haberleşme alt yapısı da bu başlıkta verilen kısıtlamalara tabidir.  
+ 
+• Otonomi, Görüntü ve Sensör İşleme Yazılım Çalışma Ortamları  
+o YKİ’lerde görüntü işleme, sensör işleme ya da otonomi kabiliyeti olmayacaktır. 
+Bahse konu bütün yazılımlar ilgili araçların üzerinde koşacaktır.  
+ 
+• Ortam Şartları  
+o Yarışma alanındaki RF kirliliği, çalışılan frekans bölgesinde başka kaynaklardan 
+yayılan sinyallerin varlığı, açık alanda çalışmanın etkileri, yarışma çadırı ile deniz 
+arasındaki yükselti farklılıkları vs. gibi haberleşmeyi etkileyen faktörlere karşın 
+önlemler almak takımların sorumluğundadır.  
+o İDA ve İHA’lar yağmur altında görev yapabilecektir. Bu kapsamda sızdırmazlık 
+önlemlerinin alınması beklenmektedir. Bunun yanında yağmura karşı duyarlı 
+sensörler için de (kamera, lidar vs.) önlemlerin alınması takımların 
+sorumluluğundadır.  
+ 
+4.2. İnsansız Deniz Aracı (İDA) Gereksinimleri  
+• Boyutlar:  
+o İDA’nın uçtan uca ölçüleri, en -boy-yükseklik olmak üzere 150x200x200 cm’den 
+büyük olmayacaktır. Bu boyut bütün komponentler için geçerlidir. Örneğin İDA 
+üzerinde bir direk varsa bu diğerin en ucundan İDA’nın dikey kesitteki en altta 
+kalan noktasına ölçüm e sastır.  
+--- PAGE 14 ---
+ 
+14 
+ o İDA en-boy-yükseklik olmak üzere 75x75x30 cm’den küçük olmayacaktır. 
+Minimum boyut kriterinde, maksimum boyut kriterinden farklı olarak, İDA’nın 
+gövde ölçüleri baz alınacaktır.  
+• Ağırlık: Araç, bütün faydalı yükler dahil 50 kg’dan daha az ağırlığa sahip olacaktır.  
+• Kimlik: İDA üzerinde, iskele, sancak ve kıç bölgesi olmak üzere toplamda 3 farklı yerde 
+takım ismi yazacaktır. Bu yazının boyutu, en ve boy olarak gövde boyutunun minimum 
+yarısı kadar olacaktır.  
+• Enerji kaynağı:  Araçlarda güç kaynağı olarak bataryalar kullanılacaktır. Bataryaların 
+bulunduğu bölüm sızdırmaz olacaktır. Takımlar, kendileri tarafından tedarik edilen bir 
+bataryayı doğrudan araca monte ederek yarışa katılabilirler.  
+• Araç Üzerinden Güç Kesme:  Aracın üzerinde, üzerine basıldığı ya çevrildiği zaman 
+araçtaki motor ve aktüatörlerden gücün kesilmesini sağlayacak kırmızı bir anahtar 
+bulunacaktır.  
+• Uzaktan Güç Kesme:  Aracın üzerindeki fiziki güç anahtarının yanı sıra aktive edildiğinde 
+tüm motorlardan ve aktüatörlerden anında gücü kesebilecek bir uzak güç kesme 
+fonksiyonu olacaktır. Uzaktan güç kesme İDA YKİ yazılımı üzerinden ya da RC 
+kumandadan verilebilecektir.  
+o Güç kesme önlemlerinde motorlara gönderilen sinyallerin akışını kesmek yeterli 
+değildir, motorların gücünün kesilmesi şarttır.  
+• Tahrik: Herhangi bir tahrik sistemi kullanılabilir (itici, paddle, vb.). Yanmalı motor 
+kullanılmayacaktır.  
+• Yedeklenebilir/çekilebilir:  Aracın ihtiyaç olması durumunda çekilebilmesi için en az 1 
+tane çeki demiri olacaktır.  
+• Deniz Durumu:  
+o İDA Deniz Durumu -2’ye (Deniz Durumu -2 dahil) kadar görev yapabilecektir.  
+• Telemetri Verileri ve İDA YKI  
+o Görev noktaları İDA YKI üzerindeki haritada görülecektir.  
+o Aracın anlık konum bilgileri görev noktaları ile birlikte harita üzerinde görülecektir.  
+o Aracın anlık durum ve mod bilgileri İDA YKI ekranında görülecektir.  
+• Faydalı Yük ve Otonomi:  
+o Araçların üzerinde en az bir kamera olacaktır.  
+o Takımlar İDA içerisinde dizüstü bilgisayar kullanabilecektir. Fakat herhangi bir 
+arıza, denize düşme, batma, ıslanma gibi nedenlerden oluşabilecek kayıplardan 
+yarışma ve Hakem Kurulu sorumlu tutulamayacaktır.  
+o Otonomi amacıyla kullanılan aşağıdaki veriler kaydedilecek ve teslim edilecektir. 
+Veriler 3 dosya olacak şekilde teslim edilecektir. Verilerin teslim formatları ve 
+frekansları aşağıda verilmiştir.  
+▪ Dosya 1: Otonomi Sensörleri Veri seti  
+• İşlenmiş kamera verisi  
+o En az 1 Hz  
+o Her bir frame zaman etiketine sahip olacak şekilde  
+mp4 formatında  
+--- PAGE 15 ---
+ 
+15 
+ o Tespit ve takip işlemleri sonucunda obje çerçeve çizimleri 
+ve yapıldıysa tespit sınıf bilgileri görünecek şekilde  
+▪ Diğer Otonomi Sensörleri Veri Seti: Kamera dışında kullanılan bir otonomi 
+sensörü ya da sensörleri varsa (lidar vs. gibi), her bir sensör tipi için ayrı 
+ayrı olacak şekilde  
+o En az 1 Hz  
+o Her bir veri seti zaman etiketine sahip olacak şekilde  
+mp4 formatında  
+o Tespit ve takip işlemleri sonucunda kümeleme, ayırma vs. 
+gibi bir işlem yapıldıysa görünecek şekilde  
+▪ Dosya 2: Araç telemetri verisi  
+• En az 1 Hz  
+• Konum (lat, lon),  
+• Hız (yer hızı),  
+• Yönelim açıları (roll, pitch, heading)  
+• Hız set pointi  
+• Yön set pointi  
+• csv formatında (İDA içerisinde istenilen formatta kayıt yapılabilir 
+ve çevrilebilir, teslim edilirken csv formatında teslim edilecektir). 
+csv dosyasında ilk satır, verinin tanımının olduğu header olacaktır.  
+▪ Dosya 3: Lokal harita/cost map/engel haritası  
+• En Az 1 Hz  
+• Emniyet Önlemleri:  
+o Enerji iletimi ile ilgili kabloların yalıtımı dahil olmak üzere bütün güvenlik önlemleri 
+alınacaktır.  
+o Araca ve kontrol ünitesine olan elektriksel bağlantılar gergin olmamalı, ani 
+hareketlerde esneklik sağlayabilmelidir.  
+o Aracın hareketini sağlayan motor/pervane sistemlerinde açık keskin uçlar 
+olmayacak, tüm uçlar köreltilmiş ve nozul içerisinde bulunacaktır.  
+o Motor pervaneleri insan eliyle temas durumunda insana zarar vermemek 
+amacıyla korumaya sahip olmalıdır.  
+o Araç üzerinde bulunan elektrik motorlarının suya karşı izolasyonu yapılmış 
+olmalıdır.  
+o Aracın  ana  gövdesi  üzerinde  keskin  noktalar bulunmayacak  ve 
+yuvarlatılacaktır.  
+o İDA’nın üzerindeki sensör, kamera vb. bileşenler gevşek bir şekilde monte 
+edilmeyecek, sabitlenecektir.  
+o Yarışmaya katılan her bir İDA’nın, kurallar kapsamında tanımlanan emniyet 
+hususlarına uygunluğu denetlenecektir.  
+o Güvenlik  şartlarının  tamamını  sağlamayan  araçların 
+yarışmasına müsaade edilmeyecektir.  
+--- PAGE 16 ---
+ 
+16 
+ 4.3. İnsansız Hava Aracı ( İHA) 
+• Takımlar hazır ya da kendi tasarladıkları İHA’ları kullanabilirler.  
+• İHA için YKI kullanıp kullanmamak takımların tasarrufundadır. Sadece RC kumanda ile 
+de operasyon yürütülebilecektir.  
+• İHA'ların denize düşme durumuna karşı gerekli güvenlik önlemlerine sahip olması 
+gerekmektedir.  
+• İHA, uçuşu devre dışı bırakmasını sağlayacak uzaktan kumanda sistemine sahip 
+olmalıdır.  
+• İHA’lar 5 kg’dan daha fazla ağırlıkta olmamalıdır.  
+• İHA’sını kendisi tasarlamış takımlar için İHA içerisindeki komponentler sabitlenmiş 
+olmalıdır.  
+• Yarışma esnasında Hakem Kurulu tarafından uygun bulunmayan İHA’ların uçuşuna 
+kesinlikle izin verilmeyecektir. Yarışma alanında karışıklığın önlenmesi amacıyla sırasını 
+bekleyen takımların İHA’ları ile uçuş yapması yasaktır.  
+5. YARIŞMA DETAYLARI  
+5.1. Yarışma Alanı ve Çalışma Alanları  
+• Araçların yarışacağı alan, açık denize karşı korunaklı bir deniz kenarı veya göl/gölet 
+olacaktır.  
+• Yarışma alanından ayrı bir konumda, katılan her bir yarışmacı takımın kullanması için 
+birer masanın konumlandığı kapalı alan olacaktır. Alan içerisinde 220 VAC enerji tedarik 
+edilecektir.  
+• Yarışma alanında kontrollerin sağlanacağı ve kontrol ünitelerinin yerleştirileceği bir masa 
+bulunacaktır.  
+5.2. Teknik Kontroller  
+• İnsansız Deniz Aracı Yarışması’nda finale katılmaya hak kazanan takımların araçları, 
+yarışma öncesinde teknik kontrollerden geçirilecektir.  
+• Teknik kontroller, Hakem Kurulu tarafından yapılacaktır.  
+• Her takım, belirlenen sıra ile yarışacağı araçlarının teknik kontrollerini yaptıracaktır.  
+Takım üyeleri, teknik kontrol sıralarını takip etmekle yükümlüdür. Teknik kontrollerini 
+gerçekleştirmemiş bir takım, hiçbir şekilde yarışamayacak, yarışma ile ilgili bir hak 
+talep edemeyecektir.  
+• Bu kontroller,  Hakem Kurulu ve takım üyelerinden en az  2 kişi ile gerçekleştirilecektir.  
+• Teknik kontrolleri  tamamlayamayan  araçlar yarışa dahil olamayacaktır.  
+• Teknik kontrollere girip, teknik kontroller sonucunda olumsuz ya da yetersiz bulunan bir 
+takım, hiçbir şekilde yarışamayacak, yarışma ile ilgili bir hak talep edemeyecektir. Bu 
+konuda, Hakem Kurulu yetkilidir.  
+• Teknik kontroller,  işbu dokümanın  4.1, 4.2 ve 4.3  nolu maddelerinde  belirtilen isterler 
+çerçevesinde yapılacaktır. Bununla birlikte, tahrik sistemine ilişkin temel masaüstü 
+kontrol (motor test) testleri yapılacaktır . 
+--- PAGE 17 ---
+ 
+17 
+ 5.3. Sunumlar  
+• İnsansız Deniz Aracı Yarışması’nda finale katılmaya hak kazanan takımlar teknik 
+kontrollerin tamamlanması sonrasında geliştirdikleri prototipe ilişkin sunum 
+yapacaklardır.  
+• Her bir takım, kura çekimine bağlı olarak sırasıyla sunumlarını yapacaktır.  
+• Sunumlar, Hakem Kurulu ve takım üyelerinden en az 2 kişi ile gerçekleştirilecektir.  
+• Her bir takımın sunumu için ayrılan süre maksimum 15 dakikadır.   
+• Sunumlar, işbu dokümanın 4.1, 4.2 ve 4.3 maddelerinde belirtilen isterler çerçevesinde, 
+takımların proje süreçleri, tasarımları ve özgünlüklerini de içerecek şekilde yapılacaktır.  
+ 
+5.4. Hakemler Tarafından Yarışmacılara Verilecek Brifing  
+• Final aşamasında, yarışma hakkındaki genel hususların yarışmacılara aktarıldığı hakem 
+brifingi yapılacaktır.  
+• Brifing final yarışmasında uygulanacak kuralları içerecektir.  
+• Brifingde verilen bilgiler kural niteliğinde olup gerekli bilgileri almak takımların 
+sorumluluğundadır.  
+• Yarışma sırasında ortaya çıkabilecek herhangi bir güvenlik endişesi veya sorunu 
+kapsamında Hakem Kurulu yarışmayı durdurma ve İDA’nın karaya getirilmesi konusunda 
+yetkilidir.  
+• Hakem Kurulu, ihtiyaç duyulması halinde yarışma sonrası takımların sistemleri ile ilgili 
+bir mülakat talep edebilecektir. İDA’yı geliştiren yarışmacı takımın araç ile ilgili teknik 
+sorulara cevap verebiliyor olması beklenmektedir. Danışmanlar mülakata 
+katılamayacaktır.  
+5.5. Yarışma Detayları, Parkurlar, Puanlama ve Değerlendirme  
+5.5.1.  Yarışma Detayları  
+• Teknik kontroller ve yarışma aynı sıra ile yapılacaktır. Yarışma sıralamasını belirlemek 
+amacıyla kura çekimi yapılacaktır. Kura çekimi ile sıralama yapıldıktan sonra teknik 
+kontrollerden geçebilen bütün takımlar sırasıyla yarışacaklardır.  
+• Araçlar, yarışma alanına daha önce belirlenen başlangıç noktasından bırakılacaktır.  
+5.5.2.  Yarışma Parkurları  
+5.5.2.1.  Parkur Bileşen Bilgileri  
+Parkur içerisinde bulunan bileşenler ile ilgili bilgiler aşağıda verilmiştir. Burada verilen 
+şamandıraların boyut ve renk bilgileri ile yarışma alanındaki duba ve engellerin boyut ve 
+renklerinde farklılıklar olabilecektir. Bunun yanında dubaların suyun içi nde olduğu ve suyun 
+üzerinde kalan yüksekliğin o anki şartlara bağlı olduğu unutulmamalıdır. Takımlar her durumda 
+görevi icra etmekle yükümlüdür. Parkurda sadece Armut tip dubalar kullanılacaktır, daha önce 
+verilen sosis tip dubalar parkur alanında kullanı lmayacaktır. Yarışma parkurunun dışında alanı 
+çevrelemek ve güvenliği sağlamak için beyaz renk sosis tip dubalar bulunacaktır.  
+ 
+--- PAGE 18 ---
+ 
+18 
+ 
+Parkur Kanar Dubaları:  
+• Armut tip  
+o Çap: 30 cm  
+o Yükseklik: 50 cm (bayrak dahil değildir.)  
+o Renk: Turuncu (RAL 2003)  
+ 
+ 
+ Engel Dubaları:  
+• Armut tip  
+• Çap: 30 cm  
+• Yükseklik: 50 cm (bayrak dahil değildir.)  
+• Renk: Sarı (RAL 1026)  
+ 
+Hedef Dubaları: Bu dubalar, engel dubaları ve parkur kenar dubalarından daha büyük 
+ebatlarda olacaktır. Bununla birlikte aynı ebatlarda ve farklı renk kodlarında 3 ayrı hedef 
+dubası Parkur 3 kapsamında konumlandırılacaktır.   
+• Çap: 640 mm   
+• Yükseklik: 950  mm   
+• Renkler: RAL 9005, RAL 3026, RAL 6037  
+Hedef dubalarının temsili görseli Şekil 2’de yer almaktadır.  
+ 
+Şekil 2: Hedef Duba Temsili Görsel  
+ 
+
+--- PAGE 19 ---
+ 
+19 
+  
+5.5.2.2.  Parkur Bileşen Bilgileri  
+• Yarışma 3 parkurdan oluşmaktadır.  
+• Her bir parkur için bütün görevler sırasıyla tek seferde yapılacaktır.  
+• Bir parkurdan diğer parkura geçiş ancak önceki parkurun tamamlanmasıyla olacaktır. 
+Parkurlar arası geçiş kullanıcı (YKI, RC vb.) girişi olmadan otomatik olarak algılanacak ve 
+yapılacaktır . 
+• Engellerin konum bilgileri paylaşılmayacaktır.  
+• Yarışma parkurlarının önceden haritalanmasına izin verilmeyecektir.  
+• Görev noktaları coğrafik koordinatlar (dd.ddddddd -Derece ve derecenin ondalık 
+gösterimi formatında) olarak teknik kontroller öncesinde veya sonrasında yarışmacılara 
+bir dosya olarak verilecektir. Takımlar hakem çadırına kendi USB bellekleriyle gelerek bu 
+dosyayı alacaklardır. Görev noktaları dağıtımı zaman aralığı anonsundan itibaren 
+verilecek süre içerisinde takımlar bu dosyaları almakla yükümlüdür. Her bir takım 
+yarışma sırası gelmeden önce görev noktalarını YKİ’lerinde tanımlamış olacaktır.  
+• Görev yükleme, yarışma alanına girişe müteakip İDA’ya  güç verildikten sonra yapılacaktır. 
+Görev yükleme karada ya da denizde yapılabilecektir.  
+ 
+--- PAGE 20 ---
+ 
+20 
+ Yarışma Parkurlarının genel görünümü aşağıdaki şekilde verilmiştir. Verilen bütün bilgiler temsili olarak gösterilmiştir. Parkurların uzunlukları, 
+parkurlarda kullanılan duba sayıları ve kenar dubaları arasındaki mesafeler yarışma alanına göre değişkenlik gösterecektir.  
+ 
+Şekil 3: Parkur Genel Görünümü  
+
+--- PAGE 21 ---
+ 
+21 
+ 5.5.2.3.      Parkur-1: Nokta Takip Görevi  
+Amaç: Temel seviyede bot kontrolünün ve navigasyonunun sağlandığının gösterimi maksadıyla 
+nokta takibi özelliği gösterilecektir.  
+Parkur Tamamlama Şartı:  Parkur-1 için Geçiş Bazında puanlamadan 5 ve üzeri puan almaktır.  
+5.5.2.4.  Parkur-2: Engel Bulunan Ortamda Nokta Takip Görevi  
+Amaç: Birden fazla görev noktası arasında bulunan engellerden sakınarak nihai görev noktasına 
+ulaşıldığının gösterimi sağlanacaktır.  
+Parkur Tamamlama Şartı:  En az 2 adet duba ikilisi arasından geçmek (Parkur -2 son görev 
+noktası haricinde) ve Parkur -2 için tanımlı son görev noktasına ulaşmaktır (Parkur -2’nin son 
+karşılıklı duba ikilisi arasından geçmektir).  
+5.5.2.5.  Parkur-3: Kamikaze Angajman Görevi  
+Amaç: Kamikaze angajmanı yeteneği gösterimini sağlamaktır.  
+Parkur Tamamlama Şartı:  Yarışma Alanına giriş sonrasında belirlenecek ya da İHA’ lı yarışılacak 
+olması durumunda İHA tarafından tespit edilecek hedefe, İDA ile fiziksel olarak temas etmektir.  
+5.5.3.  Parkur ve Yarışma Alanı Kuralları  
+5.5.3.1.   Parkur Kuralları  
+İDA’ların, şartnamede İDA’lar için tanımlı deniz durumu ve atmosferik şartlarda görev 
+yapabilmesi gerekmektedir. Şartların uygunluğu sadece Hakem Kurulu tarafından 
+değerlendirilebilecektir. Hakem Kurulunun yarışma uygunluğu vermesine rağmen katılım 
+sağlamayan takım yarışmadan çekilmiş sayılacaktır.  
+• Yarışma Alanı Takım Dağılımı:  
+o Yarışma alanında en fazla 6 takım üyesi bulunabilecektir.  
+o Takımların danışmanları Yarışma Alanında ve Yarışma Çadırında 
+bulunamayacaklardır.  
+o Görev öncesinde İDA’yı başlangıç noktası üzerinden en fazla 4 kişi denize 
+bırakabilecektir. İDA’yı denize bırakan takım üyeleri Yarışma Çadırına 
+giremeyecektir. Eğer görev kablolu olarak yüklenecekse, YKI operatörü İDA’ya 
+görev yükledikten sonra YKI çadırı na geçecektir. Görev kablosuz olarak 
+yüklenecekse İDA operatörü yarışma çadırından çıkamayacaktır.  
+o Yarışma Çadırında en fazla 2 takım üyesi bulunabilecek, bu takım üyeleri yarışma 
+boyunca yarış alanını ve İDA’yı göremeyecektir.  
+o İDA’nın hareketlerine ve denizdeki konumuna ilişkin dışarıdan herhangi bir 
+bilgilendirme ve yönlendirme alınmayacaktır. Dışarıdan herhangi bir bilgilendirme 
+ve yönlendirmenin anlaşılması durumunda Hakem Kurulu kararıyla yarışmacı 
+takım yarışma dışı bırakıl abilecektir.  
+• Haberleşme, Görev ve Komut Akışları  
+o Görev yükleme kablolu ya da kablosuz olarak yapılabilir. Görev yükleme 
+aşamasında herhangi bir şekilde kod başlatma gibi işlemler yapılmayacak, YKI’de 
+sadece YKI arayüzü açık olacak ve görev sadece YKİ’den yüklenecektir.  
+--- PAGE 22 ---
+ 
+22 
+ o Görev/Hareket Başlat komutu kablolu olarak verilmeyecektir.  
+o İHA’sız yarışacak takımlar için angajman gerçekleştirilecek hedef bilgisi, Yarışma 
+Alanına giriş sonrasında verilecektir.  
+o Angajman hedef bilgisi (renk bilgisi) görev yükleme sırasında veya görev 
+başlangıcı için komut verilmeden önce İDA’ya aktarılabilir. Hedef bilgisi İDA 
+harekete başladıktan sonra İDA’ya aktarılamaz.  
+o İDA harekete/göreve başladıktan sonra YKİ ya da RC kumanda üzerinden İDA’ya 
+herhangi bir komut verilemeyecektir (Acil durum motor kesme verisi dışında).  
+o Hakem Kurulu, test ve yarışma için ayrı ayrı frekans belirleyebilecektir. Her bir 
+takımın, yarışma öncesinde belirlenen yarışma frekans kanalına geçmesi 
+gerekmektedir. Bu frekans kanalının yarışma öncesinde modüllere girilmediği 
+durumda bu işlem sırasında harcanan zaman takımın sorumluluğundadır.  
+o Takımların haberleşme birimlerine güç verebilmesine dair kurallar aşağıda 
+sıralanmıştır:  
+▪ Takım yarışlarının başladığı günden yarışma bitene kadar, atölye 
+çadırında, yarışma kurallarında tanımlı frekans aralığını kullanan 
+modüller, test amaçlı da olsa hiçbir şekilde kullanılamayacaktır.  
+▪ Hiçbir koşulda, yarışma esnasında (herhangi bir takımın anonsuyla 
+başlayıp ilgili takımın İDA’sının karaya alınmasına kadar geçen süreç) 
+yarışacak takım dışındaki takımlar haberleşme birimlerine güç 
+veremezler.  
+▪ Üst maddede tanımlı süreç dışında, kendilerine tahsisli frekansta 
+haberleşme modüllerini çalıştırabilirler.  
+o Yarışması tamamlanan takım İDA’sını kalkış iskelesine/noktasına manuel olarak 
+getirebilecektir.  
+ 
+• Süreler, Yeniden Başlama ve Yarışmanın Sonlanması:  
+o Takım ismi anons edildikten sonra takımın yarışma alanına gelmesi için 3 dakika 
+süre tanınacaktır.  
+o 3 dakika süre içerisinde yarışma alanına gelmeyen takımların yarışma süresi 
+otomatik olarak başlatılacaktır.  
+o Anons edilen takım 3 dakikalık süre dolmadan yarışma alanına giriş yaparsa, 
+yarışma süresi bu giriş anından itibaren başlatılacaktır.  
+o Yarış alanı düzenlemesi, protokol ziyareti, teknik sorunlar, hakem toplantısı vb. 
+gibi nedenlerden ötürü takımların yarışmaya başlama/anons süreleri arasında 
+zaman farkları oluşabilecektir. Takımların ve araçların yarışma başlangıç 
+gününden önce hazır olma sı esas olduğu için bu süre farklarına yapılacak itirazlar 
+dikkate alınmayacaktır.  
+o Yarışma süresi 20 dakikadır. Parkur -3’ün tamamlanması sonrasında İDA’nın 
+başlangıç noktasına dönüş süresi Yarışma Süresine dahil değildir.  
+o Yarışma süresi dolduğunda İDA’nın o ana kadarki topladığı puanlar ve parkur 
+tamamlama miktarı durumu hesaba katılacaktır.  
+o Takımların 1 kereye mahsus yeniden parkura başlama hakkı vardır. Bu durumda 
+yarışma süresi durdurulmaksızın devam edecektir.  
+--- PAGE 23 ---
+ 
+23 
+ o Yeniden başlama hakkını kullanan takımın topladığı puanlar sıfırlanacaktır.  
+o Her bir takım, bir defaya mahsus yarışmaya yeniden başlama ve bir defa pas 
+geçme hakkını kullanabilecektir. Takımın pas geçmesi durumunda, kura çekimine 
+bağlı olarak bir sonraki takım ile yarışma sürdürülecektir. Yarışma sıralaması, pas 
+geçen takımın en so na geçmesi şeklinde güncellenecektir. Herhangi bir sapma ya 
+da güvenlik açısından risk görüldüğü durumda Hakem Kurulu parkuru sonlandırıp  
+aracı karaya getirmek suretiyle yarışmayı sonlandırabilir.  
+ 
+• İHA ile Yarışma  
+o Takımlar, yarışmaya İHA’lı ya da İHA’sız olarak katılım sağlanabilir. İHA ile yarışılıp 
+yarışılmayacağı Yarışma Alanına giriş esnasında belirtilecektir.  
+o İlk hakkında İHA kullanımıyla yarışmaya başlayan takım yeniden başlama hakkını 
+kullanmak istediğinde İHA’sız olarak yarışmaya karar verebilir.  
+o DSB renklerdeki (3 farklı renk) plakalardan bir tanesi, Hakem Heyeti tarafından 
+rastgele seçilerek kıyı tarafında, belirli bir noktaya bırakılacaktır. Bu bölge İDA’nın 
+angajman yapacağı bölge değildir.  
+o Bırakılan plakanın rengi, İHA tarafından otomatik olarak algılanacaktır. İHA’nın 
+kontrolü manuel olarak yapılabilecektir.  
+o İHA, yarışma süresinin başlangıcından itibaren herhangi bir zamanda 
+kaldırılabilecektir.  
+o İHA’nın uçuş bölgesi kıyı tarafında belirlenecek alan ile kısıtlı olacaktır. Bu alan 
+dışında ya da deniz tarafında uçuş yapılması durumunda Parkur 3 görevi başarısız 
+sayılacaktır.  
+o İDA’nın angajman yapacağı bölgede 3 farklı renkte hedef olacaktır.  
+o İDA’nın İHA tarafından saptanan renkteki hedefe angajman yapılması  
+beklenecektir . 
+ 
+• Yarışma ve Parkur Alanı  
+o İhtiyaç duyulabilecek yan ekipmanlar (tripod, uzatma kablosu, USB uzatma 
+kablosu, Ethernet kablosu vs.), takımlar tarafından yarışma alanına getirilecektir. 
+Bu ekipmanlar ile ilgili Hakem Kurulu üyelerine herhangi bir talep yapılmayacaktır.  
+o Hakem Kurulu tarafından verilecek görev noktaları doğrudan iki kenar dubasının 
+arasında bir nokta olmayabilir. Bunun yanında kenar dubaları ve engeller de deniz 
+şartlarından dolayı yer değiştirebilir. Bunlar göze alındığında kenar dubaları ayırt 
+etmek ve k açınma konusu yarışmacılara bırakılmıştır. Yarışma esnasında, bu ve 
+benzeri yaşanabilecek durumlardan kaynaklı takımlardan gelebilecek itirazlar 
+Hakem Kurulu tarafından dikkate alınmayacaktır.  
+o Dubalar arasındaki mesafeler, duba sayıları, parkur uzunluğu yarışma alanına 
+göre belirlenecektir. Duba sayılarına göre bir akış tasarlanmaması tavsiye 
+edilmektedir.  
+o Dubaya Çarpma ve Engele Çarpma kriteri, aynı dubaya birden fazla çarpma 
+olması durumu dahil olmak üzere her bir çarpmanın sayılması şeklinde olacaktır. 
+Ayrıca aynı dubaya 30 saniye süre sürekli temas durumunda 2 defa çarpmış 
+sayılacaktır.  
+--- PAGE 24 ---
+ 
+24 
+ o Parkur dışına çıkma sayısı Parkur dışında geçirilen süreye de bağlıdır. Dışarıda 40 
+süreden fazla kalan takım 2 defa dışarı çıkmış sayılacaktır.  
+o Üçüncü parkurda angajman gerçekleştirilecek hedefe temastan önce başka bir 
+hedefe temas edilmesi durumunda puan düşümü olacaktır. Angaje olunacak 
+hedeften farklı olan 2 hedefe temas, ardından doğru hedefe temas durumunda 
+minimum puan alınacaktır.  
+• Ödül sıralaması:  
+o Ödül sıralamasına girebilmek için en az Parkur 1 ve Parkur 2 Görevini 
+tamamlamak gereklidir.  
+5.5.3.2.  Yarışma Alanı Kuralları  
+• İtirazlar:  
+o Takımı temsilen Takım Kaptanı tarafından yazılı olarak yapılacaktır. Her takımın en 
+fazla 2 (iki) itiraz hakkı vardır.  
+o İtirazlardan en az biri takımın kendi yarışması ile ilgili olacaktır.  
+o İtirazlar ancak takımın kendi yarışmasından sonra yapılabilecektir.  
+o İtirazlar, Hakem Kurulu üyeleri tarafından cevaplanacaktır.  
+• Tüm Final Turu kamera ile kayıt altına alınacaktır. Hakem Kurulu üyeleri, ihtiyaç duymaları 
+halinde kamera görüntülerini inceleyecektir.  
+• Kamera kayıt sistemi, takımlar tarafından yapılacak herhangi bir itiraz durumu ve olası 
+hilelerin önlenmesi amacıyla devrede olacaktır. Ayrıca yarışma sırasında takımların 
+performansı kayıt altına alınarak tanıtım malzemesi olarak da kullanılabilecektir.  
+• Yarışma sırasında ortaya çıkabilecek özel durumlar için Hakem Kurulu vaka üzerine 
+toplanıp karar verecektir.  
+• Hakem Kurulunun kararları nihai ve kesin kararlardır.  
+• Yarışmaya katılan takımların araçlarında meydana gelebilecek herhangi bir hasardan 
+TEKNOFEST ekibi ve Hakem Kurulu sorumlu değildir.  
+5.5.4.  Puanlama  
+Nihai Puan; rapor, görev, ceza ( -) ve bonus puanlarının toplamından oluşacaktır.  
+5.5.4.1.  Rapor Puanlaması  
+Tablo 4  Rapor Puanlaması  
+Rapor  Puanlama  
+Kritik Tasarım Raporu  15 puan  
+5.5.4.2.  Görev Puanlaması  
+Tablo 5  Görev  Puanlaması  
+• G1: Birinci Parkurda Farklı Karşılıklı Kenar Dubaları Arasından Geçiş Sayısı  
+• KD1: Birinci Parkurdaki Karşılıklı Kenar Dubası Sayısı  
+• Ç1: Birinci Parkurda Çarpılan Duba Sayısı  
+• PDÇ1: Birinci Parkurda Parkurdan Çıkış Sayısı  
+• G2: İkinci Parkurda Farklı Karşılıklı Kenar Dubaları Arasından Geçiş Sayısı  
+--- PAGE 25 ---
+ 
+25 
+ • KD2: İkinci Parkurdaki Karşılıklı Kenar Dubası Sayısı  
+• Ç2: İkinci Parkurda Çarpılan Duba Sayısı  
+• ED2: İkinci Parkurdaki Engel Dubası Sayısı  
+• PDÇ2: İkinci Parkurda Parkurdan Çıkış Sayısı  
+• TS3: Üçüncü Parkurda Angaje Olunacak Hedefe Vurduğu Andan Önce Farklı 
+Hedeflere Temas Sayısı  
+Parkur  No Kriter  Puanlama  
+Parkur -1 Başlama,  Motor  Çalıştırma  
+ve Hareket  2 
+Parkur -1’e giriş yapma 
+(İDA’nın  birinci duba 
+ikilisinin %100’ünü geçmiş 
+olması)  3 
+Geçiş  (G1/KD 1) x 10  
+Çarpma  ( ( -16 x Ç 1 ) / (KD 1 ) + 16 ), Ç 1 : [0: (KD 1 )] 
+                                                0 , Ç 1 > (KD 1 ) 
+Parkur  Dışına Çıkma  ( ( ( -24 x PDÇ 1 ) / 4) + 24 ), PDÇ 1 : [0: 4]  
+                                             0 , PDÇ 1 > 4 
+Maksimum  Parkur  Puanı  55 
+Parkur -2 Geçiş  (G2/KD 2) x 40  
+Çarpma  ( ( -30 x Ç 2 ) / ( KD 2 + ED 2)) + 30 ), Ç 2 : [0: ( KD 2 + ED 2)) 
+                                                              0 , Ç 2 > ( KD 2 + ED 2)) 
+Parkur  Dışına Çıkma  ( ( -30 x PDÇ 2 ) / 5 + 30 ), PDÇ 2 : [0: 5]  
+                                         0 , PDÇ 2 > 5 
+Maksimum  Parkur  Puanı  100 
+Parkur -3 
+ Başarılı Angajman  100, TS 3 = 0 
+50, TS 3 = 1 
+5, TS 3 = 2 
+2, 2<TS 3<=8 
+1, 8<TS 3 
+Başarılı Angajman 
+Koşuluyla İHA Kullanımı  45 
+Maksimum  Parkur  Puanı  145 
+Örnek Puan Hesabı:  
+ 
+Senaryo: Final aşamasında, 5’er adet KD1, KD2 ve ED2 Parkur -1 ve/veya Parkur -2 için 
+konumlandırılmış ve Parkur -1’de  2 adet dubaya , Parkur -2’de 4 adet dubaya çarpılmış olsun.  
+ 
+ 
+Parkur 1 Puanlama (Çarpma):  
+ 
+Ç1= 2 < 5  olduğundan;  
+( -16 x 2 ) / (5) + 16 = 9.6  
+--- PAGE 26 ---
+ 
+26 
+  
+Parkur 2 Puanlama (Çarpma):  
+ 
+Ç2=2 < 5+5  olduğundan;  
+( -30 x 4 ) / (5+5) + 30  = 18 
+ 
+5.5.4.3.  Ceza Puanları  
+Pas geçme, yeniden başlama, deniz alanı kirletme, video ve veri teslim cezaları tek seferlik; diğer 
+cezalar vaka başına olarak uygulanacaktır.  
+5.5.4.3.1.  Pas geçme cezası  
+Her bir takım bir defaya mahsus pas geçme hakkını kullanabilecektir. Ancak, Pas  geçme hakkının 
+kullanılması durumunda 10 ceza puanı uygulanacaktır.  
+5.5.4.3.2.  Haberleşme ortamı ihlal cezaları  
+Herhangi bir takım yarışma halindeyken iletişim modüllerini kullandığı tespit edilen takıma 150 
+ceza puanı uygulanacaktır.  
+Herhangi bir koşul ya da şekilde şartnamede kullanılmayacağı belirtilen haberleşme frekansını 
+kullandığı tespit edilen takıma ise 55 ceza puanı uygulanacaktır.  
+5.5.4.3.3.  Görev, Komut, Aktarım ve diğer ihlal cezaları  
+Parkur ve Yarışma Alanı Kuralları başlığında verilen görev, komut, aktarım ve diğer parkur 
+kurallarına dair ihlallerde takıma 50 ceza puanı uygulanacaktır.  
+5.5.4.3.4.  Deniz alanı kirletme cezası  
+Deniz alanının kirletilmesi neticesinde ilgili takıma 20 ceza puanı uygulanacaktır.  
+5.5.4.3.5.  Video ve veri teslim cezası  
+İDA’nın karaya alım anından itibaren 20 dakika içerisinde, her bir takımın kendi USB flash belleği 
+ile birlikte teslim edilmeyen “4.2 İnsansız Deniz Aracı (İDA) Gereksinimleri” maddesinde 
+tanımlanan her bir dosya için 5’er ceza puanı uygulanacaktır.  
+5.5.4.3.6.  Teknik Kontroller Süre Aşımı Cezası  
+Teknik Kontrolleri yaptırmak üzere sırası gelen takımın ismi anons edildikten sonra 3 dakika 
+içerisinde İDA’sı ile birlikte Teknik Kontroller çadırına gelmesi beklenmektedir. Aksi halde 5 ceza 
+puanı uygulanacaktır.  
+5.5.4.3.7.  Etik davranış cezası  
+Kendi takım arkadaşlarına, diğer takım üyelerine, Hakem Kuruluna, organizasyon heyetine veya 
+ziyaretçilere etik olmayan davranış sergileyen bireylerin takımlarına ceza puanı uygulanacaktır. 
+Ceza miktarı konusunda Hakem Kurulu yetkilidir.  
+Etik davranış cezası alan takımlar Hakem Kurulu tarafından “En İyi Takım Ruhu”, “En Özgün 
+Yazılım” ve “En İyi Tasarım” ödüllerinden herhangi birine aday gösterilmeyecektir.  
+--- PAGE 27 ---
+ 
+27 
+ 5.5.4.3.8.  Bonus puanlar  
+Yarışmanın başlangıcında, diğer bütün takımların pas geçmek istemesi ve yalnızca bir takımın 
+gönüllü olarak ilk yarışmak istemesi durumunda gönüllü takıma 15 bonus puan verilecektir.  
+5.5.4.4.  Toplam Puan Hesabı  
+Tablo 6  Toplam Puan Hesabı  
+No Tanım  Puan  
+1 Rapor  Puanlaması  15 
+2 Görev Puanlaması  
+2.1 Parkur -1 55 
+2.2 Parkur -2 100 
+2.3 Parkur -3 145 
+3 Ceza  Puanlaması   
+4 Bonus  Puanlaması   
+6. ÖDÜL  
+Ödül sıralamasına giren takımlar arasında dereceye giren takımlara aşağıdaki tabloda belirtilen 
+para ödülleri verilecektir. Bu tabloda belirtilen ödüller, ödül almaya hak kazanan takımlara 
+verilecek toplam tutarı göstermektedir, bireysel ödüllendirme yapıl mayacaktır. Birincilik, ikincilik 
+ve üçüncülük ödülleri, Takım üyeleri toplam sayısına göre eşit miktarda bölünerek her şahsın 
+belirteceği banka hesabına yatırılacaktır.  
+Tablo 7  Ödül Miktarları  
+DERECE  ÖDÜL MİKTARI  DANIŞMAN  
+Birinci  300.000 TL 20.000 TL 
+İkinci  250.000 TL 15.000 TL 
+Üçüncü  200.000 TL 12.000 TL 
+ 
+En İyi Takım Ruhu Ödülü:  Yarışma alanında üstlenilen görevlerini ve alandaki iş planlarını en iyi 
+şekilde sonuçlandırmayı hedefleyen takımlara, bu amaçta başarı elde edip edilmemesine 
+bakılmaksızın enerjilerini alanda en iyi şekilde yansıtan takımlara verilen ödüldür. Takım olara k 
+alanda gösterilen çaba, beceri, takım içi ve takımlar arası iletişim vb. durumlarına bakılarak 
+değerlendirme yapılacaktır. Belirtilen ödül prestij amaçlı olup bir maddi karşılığı 
+bulunmamaktadır.  
+En Özgün Yazılım Ödülü:  Rapor aşamaları ile birlikte Yarışma Değerlendirme Kurulu tarafından 
+yazılım değerlendirmeleri yapılmaktadır. İletilen yazılım ürününün işlevselliği, güvenilirliği, güncel 
+yüksek teknolojiyle uyumlu altyapı ve sistem mimarisi açısından değerlendirilecek v e ilgili 
+danışma kurulu tarafından en özgün yazılıma sahip takım belirlenecektir. Belirtilen ödül prestij 
+--- PAGE 28 ---
+ 
+28 
+ amaçlı olup bir maddi karşılığı bulunmamaktadır. Finalistlerin yarışma alanında yazılım ve 
+algoritmalarını, yazılım değerlendirme komitesine daha rahat anlatabilmeleri için rapor, sunum 
+veya akış diyagramı gibi yardımcı dokümanları kullanması önerilir.  
+En İyi Tasarım Ödülü:  İDA tasarımı ve üretiminde kendi tasarımlarını yapıp üreten takımlar bu 
+ödül için değerlendirilmeye alınacaktır. Belirtilen ödül prestij amaçlı olup bir maddi karşılığı 
+bulunmamaktadır.  
+7. İLETİŞİM  
+Yarışma hakkında sorular için TEKNOFEST web sitesinde İnsansız Deniz Aracı  Yarışması 
+sayfasından yarışmanın grubuna katılabilirsiniz . Bu grubun aktif olarak takip edilmesi ve her 
+takımdan en az 1 kişinin üye olarak bu gruptaki duyuruları, soru ve cevapları takip etmesi 
+yarışmacıların sorumluluğundadır. Belirtilen e -posta grubunun takip edilmemesi sonucunda 
+doğacak takımların güncel bil gilendirmelere ulaşamama durumundan TEKNOFEST Yarışmalar 
+Komitesi sorumlu değildir.  
+Yarışmanın organizasyonel bölümleri ile ilgili soruların iletisim@teknofest.org  e-posta adresi 
+üzerinden iletilmesi gereklidir. Sorularınızın yukarıda doğru kanallar üzerinden iletilmesi, sorulan 
+sorulara hızlı dönüş yapılabilmesi açısından önem arz etmektedir.  
+8. GENEL KURALLAR  
+Yarışma kapsamında geçerli olan Genel Kurallar kitapçığına ulaşmak için tıklayınız. 
+9. ETİK KURALLAR  
+Yarışma kapsamında geçerli olan Genel Kurallar kitapçığına ulaşmak için tıklayınız.  
+SORUMLULUK BEYANI  
+T3 Vakfı ve TEKNOFEST, yarışmacıların teslim etmiş olduğu herhangi bir üründen veya 
+yarışmacıdan kaynaklanan herhangi bir yaralanma veya hasardan hiçbir şekilde sorumlu değildir. 
+Yarışmacıların 3. kişilere verdiği zararlardan T3 Vakfı ve organizasyon yetki lileri sorumlu değildir. 
+T3 Vakfı ve TEKNOFEST, takımların kendi sistemlerini Türkiye Cumhuriyeti yasaları çerçevesinde 
+hazırlamalarını ve uygulamalarını sağlamaktan sorumlu değildir.  
+Türkiye Teknoloji Takımı Vakfı işbu şartnamede her türlü değişiklik yapma hakkını saklı 
+tutar.  
+ 
+ 
+ 
+ 
+ 
+--- PAGE 29 ---
+ 
+29 
+  
+ 

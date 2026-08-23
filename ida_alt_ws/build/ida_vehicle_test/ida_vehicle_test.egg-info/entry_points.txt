@@ -1,0 +1,4 @@
+[console_scripts]
+vehicle_test_monitor = ida_vehicle_test.monitor_node:main
+vehicle_test_producer = ida_vehicle_test.producer_node:main
+

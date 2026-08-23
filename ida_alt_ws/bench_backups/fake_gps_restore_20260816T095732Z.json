@@ -1,0 +1,7 @@
+{
+  "backup": "/home/ezelproject/ida_alt_ws/bench_backups/fake_gps_backup_20260816T050550Z.json",
+  "created_utc": "20260816T095732Z",
+  "gps1_type_before": 14.0,
+  "gps1_type_restored": 9.0,
+  "schema_version": 1
+}

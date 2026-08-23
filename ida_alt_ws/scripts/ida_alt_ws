@@ -1,0 +1,512 @@
+#!/usr/bin/env bash
+# Short operator CLI for the alternative IDA workspace.
+# This command never emits ARM, RC override or mission START. ``pulse`` is an
+# explicit, bounded, restrained-bench velocity request and never arms the craft.
+set -euo pipefail
+
+if [[ -z "${IDA_WS:-}" && -r /etc/ida/field-test.env ]]; then
+  IDA_WS="$(awk -F= '$1 == "IDA_WS" {print substr($0, index($0, "=") + 1); exit}' /etc/ida/field-test.env)"
+fi
+# /etc/ida/field-test.env bilerek root-only olabilir. Kurulu CLI bu durumda
+# /usr/local konumundan workspace tahmin etmemeli; systemd unit'in herkese
+# okunabilir WorkingDirectory alanı aynı kurulum sözleşmesinin güvenli kaynağıdır.
+if [[ -z "${IDA_WS:-}" && -r /etc/systemd/system/ida-canonical-field.service ]]; then
+  IDA_WS="$(awk -F= '$1 == "WorkingDirectory" {print substr($0, index($0, "=") + 1); exit}' \
+    /etc/systemd/system/ida-canonical-field.service)"
+fi
+if [[ -z "${IDA_WS:-}" ]]; then
+  _IDA_CLI_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+  IDA_WS="$(cd -- "$_IDA_CLI_DIR/.." && pwd)"
+fi
+[[ "$IDA_WS" = /* && -d "$IDA_WS" ]] || {
+  echo "[ida_alt_ws] HATA: IDA workspace bulunamadi: $IDA_WS" >&2
+  exit 1
+}
+SERVICE="ida-canonical-field.service"
+PERCEPTION_SERVICE="ida-yki-perception.service"
+TEAM_SERVICE="idaws.service"
+GENERAL_MODEL="${IDA_GENERAL_MODEL:-$IDA_WS/models/operator/general-gercekbest-engine.engine}"
+P3N_MODEL="$IDA_WS/models/p3_candidates/parkur3_20260816_yolo11n_black_red_green_best.pt"
+P3S_MODEL="$IDA_WS/models/p3_candidates/parkur3_20260816_yolo11s_black_red_green_best.pt"
+YKI_DIR="${IDA_YKI_DIR:-$IDA_WS/ezel-yazilim_yeni/ezel-yazilim/arayuz}"
+FAKE_GPS_SERVICE="ida-fake-gps.service"
+FAKE_GPS_TOOL="$IDA_WS/tools/fake_gps.py"
+FAKE_GPS_CONNECTION="udp:127.0.0.1:14542"
+DEVICE_HELPER="$IDA_WS/scripts/field_device_discovery.sh"
+[[ -f "$DEVICE_HELPER" ]] || { echo "[ida_alt_ws] HATA: cihaz kesif yardimcisi yok" >&2; exit 1; }
+# shellcheck disable=SC1090
+source "$DEVICE_HELPER"
+CAMERA_SPEC="${IDA_CAMERA_DEVICE:-${IDA_FIELD_CAMERA_DEVICE:-auto}}"
+PIXHAWK_SPEC="${IDA_PIXHAWK_PORT:-auto}"
+LIDAR_SPEC="${IDA_LIDAR_PORT:-auto}"
+DECISION_LOGGER="$IDA_WS/tools/decision_telemetry_logger.py"
+DECISION_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/ida_decision_logger"
+DECISION_LOG_ROOT="${IDA_DECISION_LOG_ROOT:-$HOME/ida_decision_logs}"
+CAMERA_CONTROL_PROFILE="${IDA_CAMERA_CONTROL_PROFILE:-$IDA_WS/state/camera_controls.json}"
+
+camera_device_or_empty() {
+  resolve_field_camera_device "$CAMERA_SPEC" 2>/dev/null || true
+}
+
+serial_device_or_empty() {
+  resolve_field_serial_device "$1" "$2" 2>/dev/null || true
+}
+
+say() { printf '[ida_alt_ws] %s\n' "$*"; }
+die() { printf '[ida_alt_ws] HATA: %s\n' "$*" >&2; exit 1; }
+
+as_root() {
+  if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
+
+load_ros() {
+  # ROS generated setup files are not nounset-safe on Humble.
+  set +u
+  # shellcheck disable=SC1091
+  source "$IDA_WS/scripts/jetson_env.sh" >/dev/null
+  set -u
+}
+
+service_active() {
+  systemctl is-active --quiet "$1"
+}
+
+require_stack_stopped() {
+  if service_active "$SERVICE"; then
+    die "$SERVICE aktif; once 'ida_alt_ws stop' kullanin."
+  fi
+  if service_active "$TEAM_SERVICE"; then
+    die "$TEAM_SERVICE aktif; ayni aygitlar paylasilamaz."
+  fi
+  return 0
+}
+
+help_text() {
+  cat <<'EOF'
+Kullanim: ida_alt_ws <komut>   (kisa ad: ida_cli)
+
+  start       Canli canonical stack'i baslatir (ARM/hareket gondermez)
+  stop        Yalniz canonical stack'i durdurur
+  restart     Canonical stack'i yeniden baslatir
+  status      Servisler, aygitlar ve temel ROS durumunu ozetler
+  logs        Canonical servis logunu canli izler
+  cam [MODEL] Arducam web ayarini acar: general (varsayilan), p3n veya p3s
+  map         Pasif lidar/fusion costmap web gorunumunu acar (port 8091)
+  fusion      Fusion durumunu tek seferlik ozetler
+  decision-log Karar kaydi: start [ETIKET], stop, status, show [SATIR]
+  gps         Fake GPS: prepare/start/status/stop/restore (bench-only)
+  pulse       Kisitli bench hizi: pulse SPEED_MPS DURATION_S SAFETY_ACK
+  yki         YKI backend + arayuzu on planda baslatir
+  unit        Hizli, aktuatore dokunmayan regresyon paketini calistirir
+  help        Bu kisa listeyi gosterir
+
+ARM, gorev START ve motor komutlari YKI uzerinden verilir.
+Istisna: 'pulse' yalniz ARM zaten dogrulanmissa kisitli bench hiz istegi yollar.
+EOF
+}
+
+cmd_pulse() {
+  service_active "$SERVICE" || die "once 'ida_alt_ws start' ile canonical stack'i baslatin."
+  [[ $# -eq 3 ]] || die "kullanim: ida_alt_ws pulse SPEED_MPS DURATION_S PROPELLER_AREA_CLEAR"
+  local speed="$1" duration="$2" safety_ack="$3"
+  [[ "$safety_ack" == "PROPELLER_AREA_CLEAR" ]] || \
+    die "son arguman tam olarak PROPELLER_AREA_CLEAR olmali."
+  load_ros
+  python3 - "$speed" "$duration" <<'PY'
+import math, sys
+speed, duration = map(float, sys.argv[1:])
+if not math.isfinite(speed) or not 0.0 < speed <= 0.30:
+    raise SystemExit("HATA: SPEED_MPS (0, 0.30] araliginda olmali")
+if not math.isfinite(duration) or not 0.5 <= duration <= 6.0:
+    raise SystemExit("HATA: DURATION_S [0.5, 6.0] araliginda olmali")
+PY
+  ros2 node list | grep -qx '/ida_command_limiter' || die "ida_command_limiter bulunamadi."
+  local cleanup_done=false
+  cleanup_pulse() {
+    if [[ "$cleanup_done" == false ]]; then
+      ros2 param set /ida_command_limiter bench_pulse_enabled false >/dev/null 2>&1 || true
+      cleanup_done=true
+    fi
+  }
+  trap cleanup_pulse EXIT INT TERM
+  # ROS 2 distributions/locales format the success text differently
+  # (for example, "Set parameter successful").  The command exit status is
+  # the stable contract; matching human-readable stdout caused false failures.
+  ros2 param set /ida_command_limiter bench_pulse_enabled true >/dev/null || \
+    die "bench pulse gate acilamadi."
+  local json
+  json="{\"safety_ack\":\"PROPELLER_AREA_CLEAR\",\"speed_mps\":${speed},\"duration_s\":${duration}}"
+  ros2 topic pub --once /control/bench_pulse_request std_msgs/msg/String "{data: '$json'}" >/dev/null
+  say "pulse gonderildi; sure bitince otomatik sifir bekleniyor"
+  sleep "$(python3 -c "print(float('$duration') + 0.5)")"
+  cleanup_pulse
+  trap - EXIT INT TERM
+  say "bench pulse gate kapandi ve sifir komut yayimlandi"
+}
+
+cmd_gps() {
+  local action="${1:-status}"
+  case "$action" in
+    prepare)
+      service_active "$SERVICE" || die "once 'ida_alt_ws start' ile canonical stack'i baslatin."
+      service_active "$FAKE_GPS_SERVICE" && die "once 'ida_alt_ws gps stop' kullanin."
+      python3 "$FAKE_GPS_TOOL" --connection "$FAKE_GPS_CONNECTION" prepare
+      say "Pixhawk yeniden baslatildi; baglanti donunce 'ida_alt_ws gps start LAT LON' kullanin."
+      ;;
+    start)
+      service_active "$SERVICE" || die "once 'ida_alt_ws start' ile canonical stack'i baslatin."
+      service_active "$FAKE_GPS_SERVICE" && { say "fake GPS zaten aktif"; return 0; }
+      [[ $# -ge 3 && $# -le 4 ]] || die "kullanim: ida_alt_ws gps start LAT LON [ALT_M]"
+      local lat="$2" lon="$3" alt="${4:-1015.0}"
+      python3 "$FAKE_GPS_TOOL" validate --lat "$lat" --lon "$lon" --alt-m "$alt" >/dev/null
+      python3 "$FAKE_GPS_TOOL" --connection "$FAKE_GPS_CONNECTION" check | grep -q '"prepared": true' || \
+        die "Pixhawk fake GPS icin hazir degil; once 'ida_alt_ws gps prepare' kullanin."
+      local temp_env
+      temp_env="$(mktemp)"
+      printf 'IDA_FAKE_GPS_LAT=%s\nIDA_FAKE_GPS_LON=%s\nIDA_FAKE_GPS_ALT_M=%s\n' \
+        "$lat" "$lon" "$alt" >"$temp_env"
+      as_root install -d -m 0755 /run/ida
+      as_root install -m 0644 "$temp_env" /run/ida/fake-gps.env
+      rm -f "$temp_env"
+      as_root systemctl start "$FAKE_GPS_SERVICE"
+      sleep 1
+      service_active "$FAKE_GPS_SERVICE" || die "fake GPS baslatilamadi; journalctl -u $FAKE_GPS_SERVICE kullanin."
+      say "fake GPS aktif: lat=$lat lon=$lon alt=$alt"
+      ;;
+    adopt)
+      service_active "$SERVICE" || die "adopt icin canonical stack aktif olmali."
+      service_active "$FAKE_GPS_SERVICE" && die "once 'ida_alt_ws gps stop' kullanin."
+      [[ $# -eq 2 ]] || die "kullanim: ida_alt_ws gps adopt BACKUP_JSON"
+      python3 "$FAKE_GPS_TOOL" --connection "$FAKE_GPS_CONNECTION" adopt --backup "$2"
+      say "mevcut GPS_INPUT durumu dogrulanmis gercek-GPS yedegine baglandi."
+      ;;
+    status)
+      printf '%-30s %s\n' "$FAKE_GPS_SERVICE" "$(systemctl is-active "$FAKE_GPS_SERVICE" 2>/dev/null || true)"
+      [[ -f /run/ida/fake-gps.env ]] && sed 's/^/[fake-gps] /' /run/ida/fake-gps.env || true
+      ;;
+    stop)
+      as_root systemctl stop "$FAKE_GPS_SERVICE"
+      as_root rm -f /run/ida/fake-gps.env
+      say "fake GPS yayini durdu; Pixhawk parametresi icin restore ayrica gerekir."
+      ;;
+    restore)
+      service_active "$FAKE_GPS_SERVICE" && cmd_gps stop
+      service_active "$SERVICE" || die "restore icin canonical stack aktif olmali."
+      python3 "$FAKE_GPS_TOOL" --connection "$FAKE_GPS_CONNECTION" restore
+      say "gercek GPS tipi geri yuklendi ve Pixhawk yeniden baslatildi."
+      ;;
+    *) die "kullanim: ida_alt_ws gps {prepare|adopt BACKUP_JSON|start LAT LON [ALT_M]|status|stop|restore}" ;;
+  esac
+}
+
+cmd_start() {
+  service_active "$TEAM_SERVICE" && die "$TEAM_SERVICE aktif; once takim servisini durdurun."
+  service_active "$SERVICE" && { say "canonical stack zaten aktif"; return 0; }
+  # /etc/ida bilerek root-only olabilir; normal kullanıcının -f testi bu
+  # durumda mevcut dosyayı "yok" sanır. İçeriği açmadan root ile varlığı doğrula.
+  as_root test -f /etc/ida/field-test.env || die "/etc/ida/field-test.env bulunamadi."
+  # A unit that has never been loaded may make reset-failed return non-zero;
+  # starting it is still valid and causes systemd to load the unit file.
+  as_root systemctl reset-failed "$SERVICE" 2>/dev/null || true
+  as_root systemctl start "$SERVICE"
+  sleep 2
+  if service_active "$SERVICE"; then
+    # Lidar sürücüsü ve köprüsü canonical launch'ın parçasıdır; node isimleri
+    # görünmüyorsa stack aktif görünse bile başlangıcı başarısız say.
+    load_ros
+    local lidar_ready=false
+    for _ in 1 2 3 4 5 6; do
+      if ros2 node list 2>/dev/null | grep -qx '/sllidar_node' && \
+         ros2 node list 2>/dev/null | grep -qx '/ida_sllidar_bridge'; then
+        lidar_ready=true
+        break
+      fi
+      sleep 1
+    done
+    if [[ "$lidar_ready" != true ]]; then
+      as_root systemctl stop "$SERVICE"
+      die "lidar sürücüsü/köprüsü başlamadı; stack fail-closed durduruldu."
+    fi
+    # systemd servisinin active olması, launch içindeki kritik bir node'un
+    # (orn. parametre tipi nedeniyle) çökmediğini kanıtlamaz. Hareket zincirinin
+    # tamamı görülmeden CLI başlangıcı başarılı ilan etmez.
+    local control_ready=false nodes
+    for _ in 1 2 3 4 5 6; do
+      nodes="$(ros2 node list 2>/dev/null || true)"
+      if grep -qx '/ida_autonomy' <<<"$nodes" && \
+         grep -qx '/ida_command_limiter' <<<"$nodes" && \
+         grep -qx '/ida_mavsdk_bridge' <<<"$nodes"; then
+        control_ready=true
+        break
+      fi
+      sleep 1
+    done
+    if [[ "$control_ready" != true ]]; then
+      as_root systemctl stop "$SERVICE"
+      die "otonomi/komut zinciri eksik; stack fail-closed durduruldu."
+    fi
+    local topics required_topic
+    topics="$(ros2 topic list 2>/dev/null || true)"
+    for required_topic in /autonomy/debug /telemetry/state /control/cmd_vel_body; do
+      if ! grep -qx "$required_topic" <<<"$topics"; then
+        as_root systemctl stop "$SERVICE"
+        die "kritik ROS topic eksik: $required_topic; stack fail-closed durduruldu."
+      fi
+    done
+    # Process varlığı yeterli değildir: gerçek scan ve dönüştürülmüş raw obstacle
+    # akışından en az birer taze mesaj görmeden saha stack'i hazır sayılmaz.
+    timeout 8 ros2 topic echo --once /scan >/dev/null 2>&1 || {
+      as_root systemctl stop "$SERVICE"
+      die "lidar node acik fakat /scan verisi gelmiyor."
+    }
+    timeout 8 ros2 topic echo --once /perception/lidar/raw_obstacles >/dev/null 2>&1 || {
+      as_root systemctl stop "$SERVICE"
+      die "lidar scan var fakat canonical raw obstacle akisi gelmiyor."
+    }
+    # Ham lidar/costmap YKI'ye Wi-Fi/WebSocket ile taşınmaz. Yerel ROS algı,
+    # füzyon, kaçınma ve map.mp4 kaydı bundan bağımsız olarak çalışmaya devam eder.
+    as_root systemctl disable --now "$PERCEPTION_SERVICE" 2>/dev/null || true
+    say "canli stack aktif; ARM ve hareket icin YKI kullanin"
+  else
+    systemctl --no-pager --full status "$SERVICE" || true
+    die "stack baslatilamadi; 'ida_alt_ws logs' ile ayrintiyi gorun."
+  fi
+}
+
+cmd_stop() {
+  as_root systemctl stop "$PERCEPTION_SERVICE" 2>/dev/null || true
+  as_root systemctl stop "$SERVICE"
+  say "canonical stack durdu; $TEAM_SERVICE degistirilmedi"
+}
+
+cmd_status() {
+  printf '%-30s %s\n' "$SERVICE" "$(systemctl is-active "$SERVICE" 2>/dev/null || true)"
+  printf '%-30s %s\n' "$TEAM_SERVICE" "$(systemctl is-active "$TEAM_SERVICE" 2>/dev/null || true)"
+  local camera_device pixhawk_device lidar_device
+  camera_device="$(camera_device_or_empty)"
+  pixhawk_device="$(serial_device_or_empty pixhawk "$PIXHAWK_SPEC")"
+  lidar_device="$(serial_device_or_empty lidar "$LIDAR_SPEC")"
+  for device in "$pixhawk_device" "$lidar_device" "$camera_device"; do
+    [[ -n "$device" ]] || { printf '%-30s YOK (Arducam auto-discovery)\n' "kamera"; continue; }
+    if [[ -e "$device" ]]; then
+      printf '%-30s mevcut' "$device"
+      if command -v lsof >/dev/null && lsof "$device" >/dev/null 2>&1; then
+        printf ' (kullanimda)'
+      else
+        printf ' (serbest)'
+      fi
+      printf '\n'
+    else
+      printf '%-30s YOK\n' "$device"
+    fi
+  done
+  if service_active "$SERVICE"; then
+    load_ros
+    local nodes
+    nodes="$(ros2 node list 2>/dev/null || true)"
+    grep -qx '/sllidar_node' <<<"$nodes" && say "lidar surucusu: HAZIR" || say "lidar surucusu: YOK"
+    grep -qx '/ida_sllidar_bridge' <<<"$nodes" && say "lidar koprusu: HAZIR" || say "lidar koprusu: YOK"
+    say "temel topicler"
+    timeout 8 ros2 topic list 2>/dev/null | grep -E '^/(autonomy|control|perception|telemetry)/' | sort || true
+  fi
+}
+
+cmd_cam() {
+  require_stack_stopped
+  local profile="${1:-general}" model class_names class_map
+  case "$profile" in
+    general)
+      model="$GENERAL_MODEL"
+      class_names="black_buoy,red_buoy,green_buoy,orange,yellow"
+      class_map='{"black_buoy":"black","red_buoy":"red","green_buoy":"green","orange":"orange","yellow":"yellow"}'
+      ;;
+    p3n)
+      model="$P3N_MODEL"
+      class_names="black_buoy,red_buoy,green_buoy"
+      class_map='{"black_buoy":"black","red_buoy":"red","green_buoy":"green"}'
+      ;;
+    p3s)
+      model="$P3S_MODEL"
+      class_names="black_buoy,red_buoy,green_buoy"
+      class_map='{"black_buoy":"black","red_buoy":"red","green_buoy":"green"}'
+      ;;
+    *) die "kullanim: ida_cli cam [general|p3n|p3s]" ;;
+  esac
+  local camera_device
+  camera_device="$(camera_device_or_empty)"
+  [[ -n "$camera_device" && -c "$camera_device" ]] || die "Arducam benzersiz olarak bulunamadi"
+  local resolved_camera camera_index
+  resolved_camera="$(readlink -f "$camera_device")"
+  [[ "$(basename "$resolved_camera")" =~ ^video([0-9]+)$ ]] || \
+    die "kamera yolu V4L2 video aygitina cozulmedi: $camera_device"
+  camera_index="${BASH_REMATCH[1]}"
+  [[ -f "$model" ]] || die "kamera modeli bulunamadi: $model"
+  load_ros
+  local address token
+  # hostname -I may list Docker's 172.17.0.1 before the real LAN address.
+  # Route lookup selects the interface a browser on the shared network reaches.
+  address="$(ip -4 route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="src"){print $(i+1); exit}}')"
+  if [[ -z "$address" ]]; then
+    address="$(hostname -I | awk '{for(i=1;i<=NF;i++) if($i !~ /^127\./ && $i !~ /^169\.254\./ && $i !~ /^172\.17\./){print $i; exit}}')"
+  fi
+  token="$(python3 -c 'import secrets; print(secrets.token_urlsafe(18))')"
+  export IDA_CAMERA_WEB_TOKEN="$token"
+  say "kamera modeli: $profile ($(basename "$model"))"
+  say "kamera web araci: http://${address:-JETSON_IP}:8090/?token=${token}"
+  say "ortak yerel ag yeterlidir; internet veya Jetson hotspotu gerekmez"
+  exec python3 "$IDA_WS/tools/camera_model_web.py" \
+    --host 0.0.0.0 --port 8090 --camera "$camera_index" --width 960 --height 600 --camera-fps 80 \
+    --model "$model" --class-names "$class_names" --class-map "$class_map" \
+    --imgsz 640 --conf 0.40 --device 0 \
+    --camera-profile "$CAMERA_CONTROL_PROFILE"
+}
+
+cmd_map() {
+  load_ros
+  say "gorunum: http://$(hostname -I | awk '{print $1}'):8091"
+  exec python3 "$IDA_WS/tools/passive_costmap_viewer.py" \
+    --host 0.0.0.0 --port 8091 \
+    --buoys-topic /perception/buoys \
+    --obstacles-topic /perception/obstacles
+}
+
+cmd_fusion() {
+  load_ros
+  exec python3 "$IDA_WS/tools/fusion_health_summary.py" \
+    --buoys /perception/buoys \
+    --obstacles /perception/obstacles \
+    --timeout 8
+}
+
+cmd_decision_log() {
+  local action="${1:-status}"
+  shift || true
+  local pid_file="$DECISION_STATE_DIR/pid"
+  local current_file="$DECISION_STATE_DIR/current_run"
+  mkdir -p "$DECISION_STATE_DIR" "$DECISION_LOG_ROOT"
+  chmod 700 "$DECISION_STATE_DIR" "$DECISION_LOG_ROOT" 2>/dev/null || true
+
+  case "$action" in
+    start)
+      service_active "$SERVICE" || die "once 'ida_cli start' ile canonical stack'i baslatin."
+      [[ -f "$DECISION_LOGGER" ]] || die "karar kaydedici bulunamadi: $DECISION_LOGGER"
+      local label="${1:-test}"
+      [[ "$label" =~ ^[A-Za-z0-9_-]{1,40}$ ]] || \
+        die "etiket yalniz A-Z, a-z, 0-9, _ ve - icerebilir (1-40)."
+      if [[ -s "$pid_file" ]]; then
+        local old_pid
+        old_pid="$(cat "$pid_file")"
+        if [[ "$old_pid" =~ ^[0-9]+$ ]] && kill -0 "$old_pid" 2>/dev/null; then
+          die "karar kaydi zaten aktif (PID $old_pid)."
+        fi
+        rm -f "$pid_file"
+      fi
+      local run_name run_dir data_dir started_utc
+      run_name="run_$(date -u +%Y%m%d_%H%M%S)_${label}"
+      run_dir="$DECISION_LOG_ROOT/$run_name"
+      data_dir="$run_dir/data"
+      mkdir -m 700 "$run_dir"
+      load_ros
+      umask 077
+      nohup python3 "$DECISION_LOGGER" --out-dir "$data_dir" --hz 5.0 \
+        >"$run_dir/recorder.log" 2>&1 </dev/null &
+      local logger_pid=$!
+      printf '%s\n' "$logger_pid" >"$pid_file"
+      printf '%s\n' "$run_dir" >"$current_file"
+      sleep 1
+      if ! kill -0 "$logger_pid" 2>/dev/null; then
+        cat "$run_dir/recorder.log" >&2 || true
+        rm -f "$pid_file"
+        die "karar kaydedici baslatilamadi."
+      fi
+      # Her koşu, kararları üreten gerçek parametre setini yanında taşır.
+      # Bu salt-okunur sorgudur; node parametresi değiştirmez.
+      if ros2 node list 2>/dev/null | grep -qx '/ida_autonomy'; then
+        ros2 param dump /ida_autonomy >"$run_dir/autonomy_parameters.yaml" 2>"$run_dir/parameter_dump.err" || true
+      fi
+      started_utc="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      say "KARAR KAYDI BASLADI | UTC=$started_utc | etiket=$label | PID=$logger_pid"
+      say "klasor: $run_dir"
+      ;;
+    stop)
+      [[ -s "$pid_file" ]] || die "aktif karar kaydi yok."
+      local stop_pid
+      stop_pid="$(cat "$pid_file")"
+      [[ "$stop_pid" =~ ^[0-9]+$ ]] || die "gecersiz karar kaydi PID dosyasi."
+      if kill -0 "$stop_pid" 2>/dev/null; then
+        kill -INT "$stop_pid"
+        local _i
+        for _i in {1..30}; do
+          kill -0 "$stop_pid" 2>/dev/null || break
+          sleep 0.1
+        done
+        if kill -0 "$stop_pid" 2>/dev/null; then
+          kill -TERM "$stop_pid"
+        fi
+      fi
+      rm -f "$pid_file"
+      say "KARAR KAYDI DURDU | UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      [[ -s "$current_file" ]] && say "klasor: $(cat "$current_file")"
+      ;;
+    status)
+      if [[ -s "$pid_file" ]] && kill -0 "$(cat "$pid_file")" 2>/dev/null; then
+        say "karar kaydi AKTIF | PID=$(cat "$pid_file") | klasor=$(cat "$current_file")"
+      elif [[ -s "$current_file" ]]; then
+        say "karar kaydi PASIF | son klasor=$(cat "$current_file")"
+      else
+        say "karar kaydi PASIF | henuz kosu yok"
+      fi
+      ;;
+    show)
+      [[ -s "$current_file" ]] || die "gosterilecek karar kaydi yok."
+      local lines="${1:-30}" run_path json_path
+      [[ "$lines" =~ ^[0-9]+$ ]] && (( lines >= 1 && lines <= 1000 )) || \
+        die "SATIR [1,1000] araliginda tam sayi olmali."
+      run_path="$(cat "$current_file")"
+      json_path="$run_path/data/decision_telemetry.jsonl"
+      python3 "$DECISION_LOGGER" --render "$json_path" --last "$lines"
+      ;;
+    *)
+      die "kullanim: ida_cli decision-log start [ETIKET] | stop | status | show [SATIR]"
+      ;;
+  esac
+}
+
+cmd_yki() {
+  [[ -x "$YKI_DIR/start.sh" ]] || die "YKI start scripti bulunamadi: $YKI_DIR/start.sh"
+  [[ -x "$YKI_DIR/backend/.venv/bin/python" ]] || \
+    die "Jetson YKI backend ortami kurulu degil; YKI'yi arayuz bilgisayarindan baslatin."
+  [[ -x "$YKI_DIR/node_modules/.bin/vite" ]] || \
+    die "Jetson YKI frontend paketleri kurulu degil; YKI'yi arayuz bilgisayarindan baslatin."
+  exec "$YKI_DIR/start.sh"
+}
+
+cmd_unit() {
+  load_ros
+  cd "$IDA_WS"
+  python3 -m unittest -q tools.test_camera_model_viewer tools.test_field_stack_service
+  python3 -m unittest discover -s src/ida_perception/test -p 'test_*.py' -q
+  say "hizli regresyon paketi tamam"
+}
+
+case "${1:-help}" in
+  start) cmd_start ;;
+  stop) cmd_stop ;;
+  restart) cmd_stop; cmd_start ;;
+  status) cmd_status ;;
+  logs) exec journalctl -fu "$SERVICE" ;;
+  cam) shift; cmd_cam "$@" ;;
+  map) cmd_map ;;
+  fusion) cmd_fusion ;;
+  decision-log) shift; cmd_decision_log "$@" ;;
+  pulse) shift; cmd_pulse "$@" ;;
+  gps) shift; cmd_gps "$@" ;;
+  yki) cmd_yki ;;
+  unit) cmd_unit ;;
+  help|-h|--help) help_text ;;
+  *) help_text >&2; die "bilinmeyen komut: $1" ;;
+esac

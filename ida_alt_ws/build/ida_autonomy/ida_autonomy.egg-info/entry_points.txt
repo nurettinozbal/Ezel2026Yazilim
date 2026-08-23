@@ -1,0 +1,3 @@
+[console_scripts]
+autonomy_node = ida_autonomy.autonomy_node:main
+

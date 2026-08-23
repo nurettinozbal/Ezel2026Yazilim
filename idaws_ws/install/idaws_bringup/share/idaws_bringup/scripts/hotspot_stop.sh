@@ -1,0 +1,1 @@
+/home/ezelproject/idaws_ws/src/idaws/src/idaws_bringup/scripts/hotspot_stop.sh

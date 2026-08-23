@@ -1,0 +1,149 @@
+.container {
+  padding: 30px;
+  color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pageTitle {
+  border-bottom: 1px solid #ef4444;
+  padding-bottom: 10px;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- AYARLAR KUTUSU --- */
+.settingsBox {
+  background: #121214;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.boxHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #3498db;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.inputGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  background: #050505;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.saveButton {
+  background: #10b981;
+  color: black;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #059669;
+}
+
+.saveButton:disabled {
+  background: #27272a;
+  color: #71717a;
+  cursor: not-allowed;
+}
+
+.vehicleSelector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.vehicleButton {
+  flex: 1;
+  padding: 10px;
+  background: #050505;
+  border: 1px solid #444;
+  color: #888;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: monospace;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+
+.vehicleButton:hover {
+  border-color: #3498db;
+}
+
+.vehicleButtonActive {
+  background: #0c2d48;
+  border-color: #3498db;
+  color: #fff;
+}
+
+.fieldNote {
+  font-size: 11px;
+  color: #71717a;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.warningNote {
+  font-size: 11px;
+  color: #f59e0b;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* --- TERMİNAL ALANI --- */
+.terminalSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Flexbox scroll için kritik */
+}
+
+.terminalTitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 5px;
+  font-weight: bold;
+}

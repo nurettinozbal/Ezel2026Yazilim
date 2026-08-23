@@ -1,0 +1,4 @@
+mavsdk
+pymavlink
+pyserial
+setuptools

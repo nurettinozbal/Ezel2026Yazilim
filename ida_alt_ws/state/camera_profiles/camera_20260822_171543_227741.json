@@ -1,0 +1,15 @@
+{
+  "controls": {
+    "auto_exposure": 1,
+    "auto_wb": 1,
+    "brightness": 67,
+    "contrast": 10,
+    "exposure": 5,
+    "gain": 678,
+    "power_line_frequency": 0,
+    "saturation": 8,
+    "wb_kelvin": 5006
+  },
+  "saved_at_utc": "2026-08-22T14:15:43Z",
+  "schema_version": 1
+}

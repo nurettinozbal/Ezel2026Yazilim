@@ -1,0 +1,6 @@
+[console_scripts]
+command_limiter_node = ida_control.command_limiter_node:main
+gazebo_pose_sync_node = ida_control.gazebo_pose_sync_node:main
+mavsdk_bridge_node = ida_control.mavsdk_bridge_node:main
+tty_mavlink_router = ida_control.tty_mavlink_router:main
+

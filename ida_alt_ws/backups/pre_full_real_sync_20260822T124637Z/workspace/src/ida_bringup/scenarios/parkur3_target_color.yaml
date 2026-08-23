@@ -1,0 +1,14 @@
+{
+  "origin": {"lat": 40.8630501, "lon": 29.2599517},
+  "initial_pose": {"x": 0.0, "y": 0.0, "heading_deg": 0.0},
+  "waypoints": [
+    {"x": 18.0, "y": 0.0, "parkur": 3}
+  ],
+  "buoys": [],
+  "obstacles": [],
+  "targets": [
+    {"id": "target_red", "x": 25.0, "y": -5.0, "color": "red"},
+    {"id": "target_green", "x": 25.0, "y": 0.0, "color": "green"},
+    {"id": "target_black", "x": 25.0, "y": 5.0, "color": "black"}
+  ]
+}

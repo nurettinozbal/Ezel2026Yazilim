@@ -1,0 +1,8 @@
+msg/Buoy.idl
+msg/Buoy.msg
+msg/BuoyArray.idl
+msg/BuoyArray.msg
+msg/Cluster.idl
+msg/Cluster.msg
+msg/ClusterArray.idl
+msg/ClusterArray.msg

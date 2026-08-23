@@ -1,0 +1,4 @@
+[console_scripts]
+scan_filter_node = idaws_jetson.scan_filter_node:main
+system_check_node = idaws_jetson.system_check_node:main
+

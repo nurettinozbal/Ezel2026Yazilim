@@ -1,0 +1,229 @@
+{
+  "disarmed_confirmed": true,
+  "events": [
+    {
+      "event": "GPS_WARMUP",
+      "monotonic": 10722.906915423
+    },
+    {
+      "event": "SET_GUIDED_DISARMED",
+      "monotonic": 10729.923163177
+    },
+    {
+      "event": "ARM_REQUEST",
+      "monotonic": 10730.183755739
+    },
+    {
+      "event": "ARMED_ZERO_SETTLE",
+      "monotonic": 10730.985864917
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 10732.199574589,
+      "seconds": 3
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 10733.214438723,
+      "seconds": 2
+    },
+    {
+      "event": "COUNTDOWN",
+      "monotonic": 10734.229826491,
+      "seconds": 1
+    },
+    {
+      "duration_s": 1.0,
+      "event": "FORWARD_PULSE_START",
+      "monotonic": 10735.243887517,
+      "speed_mps": 0.2
+    },
+    {
+      "event": "FORWARD_PULSE_END",
+      "monotonic": 10736.260771624
+    },
+    {
+      "event": "CLEANUP_ZERO",
+      "monotonic": 10737.77522231
+    },
+    {
+      "event": "DISARM_REQUEST",
+      "monotonic": 10738.804430273
+    }
+  ],
+  "gps_fix": 3,
+  "lat": 37.8729947,
+  "log_path": "/home/ezelproject/ida_alt_ws/bench_backups/guided_airflow_test_20260815T093938Z.json",
+  "lon": 32.487151,
+  "manual_confirmed": true,
+  "mask": "0x5e7",
+  "mode_mapping": {
+    "GUIDED": 15,
+    "MANUAL": 0
+  },
+  "pulse_s": 1.0,
+  "pulse_servo11_max": 1537,
+  "pulse_servo11_min": 1516,
+  "pulse_servo9_max": 1537,
+  "pulse_servo9_min": 1517,
+  "servo_samples": [
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10731.151654535
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10731.390355061
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10731.650420754
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10731.890425745
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10732.15103597
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10732.390368583
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10732.651987455
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10732.890994295
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10733.151637481
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10733.390639585
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10733.650400561
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10733.890280298
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10734.150808694
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10734.391478477
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10734.650501536
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10734.89034748
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10735.150924837
+    },
+    {
+      "servo11": 1516,
+      "servo9": 1517,
+      "t": 10735.39203358
+    },
+    {
+      "servo11": 1529,
+      "servo9": 1529,
+      "t": 10735.650796565
+    },
+    {
+      "servo11": 1533,
+      "servo9": 1533,
+      "t": 10735.890524999
+    },
+    {
+      "servo11": 1537,
+      "servo9": 1537,
+      "t": 10736.150548479
+    },
+    {
+      "servo11": 1525,
+      "servo9": 1526,
+      "t": 10736.390090474
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10736.650800444
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10736.891861504
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10737.150631751
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10737.390330936
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10737.650562903
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10737.891191242
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10738.150815409
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10738.392188129
+    },
+    {
+      "servo11": 1500,
+      "servo9": 1500,
+      "t": 10738.650521687
+    }
+  ],
+  "source_system": 255,
+  "speed_mps": 0.2,
+  "success": true
+}

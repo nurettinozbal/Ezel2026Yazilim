@@ -1,0 +1,84 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Tüm ekranı kapla */
+  width: 100vw;
+  background-color: #000; /* Siyah Zemin */
+  overflow: hidden; /* Dış kaydırma çubuğunu engelle */
+  color: #fff;
+}
+
+/* --- HEADER (Üst Kısım) --- */
+.header {
+  height: 60px;
+  background-color: #09090b;
+  border-bottom: 1px solid #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  z-index: 50;
+}
+
+/* Logo ve Yazı Alanı */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logoImage {
+  height: auto;
+  max-height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.3));
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ef4444; /* Takım Kırmızısı */
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* --- NAVİGASYON BARI ALANI --- */
+.navigationBar {
+  flex-shrink: 0;
+  background-color: #000;
+  border-bottom: 1px solid #333;
+  z-index: 40;
+}
+
+/* --- ANA İÇERİK ALANI --- */
+.mainContent {
+  flex: 1; /* Kalan tüm boşluğu doldur */
+  position: relative;
+  overflow: hidden; /* Taşarsa kendi içinde kaydırılsın */
+  background-color: #000;
+}
+
+/* --- FOOTER (Alt Kısım - İNCELTİLDİ) --- */
+.footer {
+  height: 30px; /* 35px -> 30px yaptık */
+  background-color: #09090b;
+  border-top: 1px solid #27272a;
+  flex-shrink: 0;
+  z-index: 50;
+} 

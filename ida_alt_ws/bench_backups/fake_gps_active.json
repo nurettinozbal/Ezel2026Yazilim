@@ -1,0 +1,10 @@
+{
+  "backup": "/home/ezelproject/ida_alt_ws/bench_backups/fake_gps_backup_20260816T231505Z.json",
+  "connection": "udp:127.0.0.1:14542",
+  "created_utc": "20260816T231505Z",
+  "gps1_type_before": 9.0,
+  "gps1_type_temporary": 14,
+  "schema_version": 1,
+  "target_component": 1,
+  "target_system": 1
+}

@@ -1,0 +1,85 @@
+# P1/P2 algı akışı (İngilizce model: orange/yellow — eşleme gerekmez).
+ida_yolo_camera:
+  ros__parameters:
+    model_path: ""           # Saha launch'ı sürümlü workspace modelini verir.
+    model_type: "auto"
+    class_names: "orange,yellow"
+    class_name_map: ""       # boş -> kimlik eşleme (İngilizce model)
+    allowed_colors: "orange,yellow" # genel 5-renk modelde yalnız P1/P2 renklerini yayınla
+    confidence_threshold: 0.45
+    iou_threshold: 0.45
+    camera_index: -1         # -1 -> topic'ten frame al (camera_topic ile)
+    camera_topic: ""         # örn. /camera/image_raw/compressed
+    # Arducam B0495 native binned mode (verified on Jetson: 79.74 FPS).
+    image_width: 960
+    image_height: 600
+    camera_fps: 80.0
+    publish_hz: 10.0
+    fov_deg: 90.0
+    record_video: false
+    record_path: ""
+    focal_length_px: 600.0
+    target_height_m: 0.5
+
+# P3 algı akışı (İngilizce model: red/green/black — eşleme gerekmez, kimlik).
+ida_yolo_camera_p3:
+  ros__parameters:
+    model_path: ""           # Saha launch'ı sürümlü workspace modelini verir.
+    model_type: "auto"
+    class_names: "red,green,black"   # SIRA ÖNEMLİ: model çıktı sırası red, green, black
+    class_name_map: ""       # boş -> kimlik eşleme (İngilizce model; Türkçe model gerekirse parametreyle)
+    allowed_colors: "red,green,black"
+    confidence_threshold: 0.45
+    iou_threshold: 0.45
+    camera_index: -1         # -1 -> topic'ten frame al (camera_topic ile)
+    camera_topic: ""         # örn. /camera/image_raw/compressed
+    # Both role models share the same physical Arducam B0495 capture mode.
+    image_width: 960
+    image_height: 600
+    camera_fps: 80.0
+    publish_hz: 10.0
+    fov_deg: 90.0
+    record_video: false
+    record_path: ""
+    focal_length_px: 600.0
+    target_height_m: 0.5
+
+ida_rplidar:
+  ros__parameters:
+    # Donanım yolu launch/cihaz keşfi tarafından açıkça verilmelidir.
+    # Boş varsayılan yanlış numaralı seri porta bağlanmayı engeller.
+    serial_port: ""
+    baudrate: 115200
+    publish_hz: 10.0
+    lidar_range_m: 18.0
+    min_distance_m: 0.3
+    cluster_gap_m: 0.35
+    min_cluster_points: 3
+    dry_run: true
+
+# sllidar_ros2 köprüsü (A/B yedeği: ida_rplidar SİLİNMEZ, launch'tan yorum).
+# /scan (sensor_msgs/LaserScan) -> /perception/obstacles (JSON kontratı).
+ida_sllidar_bridge:
+  ros__parameters:
+    scan_topic: "/scan"
+    # This vehicle's installed S2 was bench-verified with the bow target:
+    # raw 0 deg points aft, so rotate by 180 deg before clustering/fusion.
+    angle_offset_deg: 180.0
+    # 2026-08-15 controlled bench calibration: the same bottle moved from the
+    # camera's right to left while the unmirrored S2 bearing moved in the
+    # opposite direction.  With this exact bow-mounted S2, mirror=true aligns
+    # ROS LaserScan (+left) with the stack's camera/fusion lateral convention.
+    mirror_scan: true
+    # Keep the bow-facing ±80 deg sector. Rear/body returns must not populate
+    # the autonomy costmap; 360 restores the backwards-compatible full scan.
+    front_fov_deg: 160.0
+    # S2 aracın burun hattında, araç merkezinden 57 cm ileride.
+    # Kümeler costmap/fusion'a verilmeden önce araç-merkezli base frame'e taşınır.
+    sensor_forward_offset_m: 0.57
+    sensor_lateral_right_offset_m: 0.0
+    lidar_range_m: 18.0
+    min_distance_m: 0.3
+    cluster_gap_m: 0.35
+    min_cluster_points: 3
+    max_angle_gap_deg: 8.0
+    publish_hz: 10.0

@@ -1,0 +1,386 @@
+<!doctype html>
+<title>İDA Debug Oturumu</title>
+
+<style>
+  /* ---- Tokens ---- */
+  :root {
+    --ground: #EEF3F4;
+    --surface: #FAFCFC;
+    --ink: #14242B;
+    --muted: #5C6E76;
+    --line: #D5DEE1;
+    --accent: #D95F23;
+    --accent-soft: #F6E3D7;
+    --good: #2E7D4F;
+    --good-soft: #DEEEE4;
+    --warn: #9C7A12;
+    --warn-soft: #F3EBCF;
+    --crit: #B93A2B;
+    --crit-soft: #F6DED9;
+    --mono-bg: #E3EAEC;
+    --ring: #D95F23;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0A1A21;
+      --surface: #10242D;
+      --ink: #E3EDF0;
+      --muted: #8FA6AE;
+      --line: #1F3A45;
+      --accent: #F07E3E;
+      --accent-soft: #3A2417;
+      --good: #3FB97C;
+      --good-soft: #143528;
+      --warn: #E0BE4A;
+      --warn-soft: #33290F;
+      --crit: #E5604F;
+      --crit-soft: #3A1C18;
+      --mono-bg: #0E2028;
+      --ring: #F07E3E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0A1A21;
+    --surface: #10242D;
+    --ink: #E3EDF0;
+    --muted: #8FA6AE;
+    --line: #1F3A45;
+    --accent: #F07E3E;
+    --accent-soft: #3A2417;
+    --good: #3FB97C;
+    --good-soft: #143528;
+    --warn: #E0BE4A;
+    --warn-soft: #33290F;
+    --crit: #E5604F;
+    --crit-soft: #3A1C18;
+    --mono-bg: #0E2028;
+    --ring: #F07E3E;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 56px 28px 72px; }
+
+  /* ---- Masthead ---- */
+  .eyebrow {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(30px, 4.6vw, 42px);
+    line-height: 1.08;
+    margin: 0 0 8px;
+    text-wrap: balance;
+    letter-spacing: -.015em;
+  }
+  .meta {
+    color: var(--muted);
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 12.5px;
+    margin: 0 0 26px;
+  }
+  .rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
+
+  /* ---- Status ledger ---- */
+  .ledger {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 30px 0 0;
+  }
+  @media (max-width: 720px) { .ledger { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px 15px;
+  }
+  .card .no {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+  .card h3 { margin: 4px 0 10px; font-size: 15px; text-wrap: balance; }
+
+  /* ---- Status chips (buoy colors) ---- */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 11.5px;
+    letter-spacing: .02em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+  }
+  .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .chip.good   { color: var(--good); background: var(--good-soft); border-color: var(--good); }
+  .chip.warn   { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+  .chip.crit   { color: var(--crit); background: var(--crit-soft); border-color: var(--crit); }
+  .chip.accent { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+
+  /* ---- Sections ---- */
+  section { margin-top: 46px; }
+  .sec-label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 0 14px;
+  }
+  .sec-label .idx {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  h2 { font-size: 19px; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+  h3 { font-size: 15.5px; margin: 26px 0 8px; }
+
+  p { margin: 0 0 12px; max-width: 66ch; }
+  ul { margin: 0 0 14px; padding-left: 20px; max-width: 72ch; }
+  li { margin-bottom: 6px; }
+  code {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: .86em;
+    background: var(--mono-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .kv { font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace; }
+
+  /* ---- Tables ---- */
+  .tblwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    background: var(--mono-bg);
+  }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.num { font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace; }
+
+  /* ---- Callout ---- */
+  .callout {
+    border: 1px solid var(--crit);
+    border-left-width: 4px;
+    background: var(--crit-soft);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 18px 0;
+  }
+  .callout .tag {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--crit);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .callout p { margin: 0; }
+
+  /* ---- Checklist ---- */
+  .checks { list-style: none; padding: 0; margin: 0; }
+  .checks li {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    max-width: none;
+  }
+  .checks li:last-child { border-bottom: 0; }
+  .checks .box {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+    color: var(--muted);
+    flex: 0 0 auto;
+  }
+
+  /* ---- Footer ---- */
+  footer { margin-top: 60px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
+
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<body>
+<div class="wrap">
+
+  <!-- Masthead -->
+  <p class="eyebrow">TEKNOFEST 2026 · İnsansız Deniz Aracı · Otonomi Yazılımı</p>
+  <h1>İDA Debug Oturumu</h1>
+  <p class="meta">12 Ağustos 2026 — tick hızı · P2 sarı 180° · P1 koridor salınımı</p>
+  <hr class="rule">
+
+  <!-- Status ledger -->
+  <div class="ledger">
+    <div class="card">
+      <div class="no">01 · KRİTİK</div>
+      <h3>Tick hızı</h3>
+      <span class="chip good">kod+test ✅</span> <span class="chip warn">sim ⏳</span>
+      <p style="font-size:13px;margin:10px 0 0;color:var(--muted)">Swept-cache + tek geçiş: plan 110→35ms, ~3.1×</p>
+    </div>
+    <div class="card">
+      <div class="no">02 · KRİTİK</div>
+      <h3>P2 sarı 180°</h3>
+      <span class="chip good">çözüm ✅</span> <span class="chip warn">sim ⏳</span>
+      <p style="font-size:13px;margin:10px 0 0;color:var(--muted)">4-kadran atan2 doğrulandı; avoid ölü kod bulundu</p>
+    </div>
+    <div class="card">
+      <div class="no">03 · KRİTİK</div>
+      <h3>P1 koridor</h3>
+      <span class="chip good">çözüm ✅</span> <span class="chip warn">sim ⏳</span>
+      <p style="font-size:13px;margin:10px 0 0;color:var(--muted)">Bearing duyarlılığı ~4× azaldı; ağırlık dengesi doğrulandı</p>
+    </div>
+  </div>
+
+  <!-- Keşif -->
+  <section>
+    <div class="sec-label"><span class="idx">//</span><h2>Oturum başında bulunanlar</h2></div>
+    <ul>
+      <li><strong>Kod senkronu tamamdı:</strong> <code>dwa.py</code> / <code>autonomy_node.py</code> / <code>costmap.py</code> lokal↔sunucu md5 birebir aynı — 4-kadran atan2 fix'i sunucuda.</li>
+      <li><strong>⚠️ <code>autonomy.yaml</code> sunucuda ESKİYDI:</strong> <code>dwa_w_heading</code> 3.5 (hedef 1.8), <code>dwa_w_corridor</code> 0.8 (hedef 1.6), <code>dwa_w_avoid</code> parametresi yoktu (hedef 1.0), <code>dwa_recovery_yaw</code> 30 (hedef 25). P2/P1 düzeltmelerinin ağırlık tarafı sim'de hiç yürürlükte olmamıştı.</li>
+      <li><strong>Sim <code>COMPLETE</code> durumdaydı</strong> — misyon bitmiş; DWA yüklü tick ölçümü için yeniden başlatıldı.</li>
+      <li><strong>Sunucu (192.168.20.32) oturum ortasında erişilemez oldu</strong> (4× timeout) — sim doğrulaması kod tarafında tamamlanamadı.</li>
+    </ul>
+  </section>
+
+  <!-- Görev 1 -->
+  <section>
+    <div class="sec-label"><span class="idx">01</span><h2>Tick hızı — ölçüm ve karar noktası</h2></div>
+    <p>Misyon başlatıldı (ARM → mission → GUIDED → waypoints+start), araç <code>PARKUR_1_NAV</code>'da DWA ile seyrederken ölçüm yapıldı:</p>
+    <div class="tblwrap"><table>
+      <tr><th>Durum</th><th class="num">Frekans</th><th class="num">min / max</th><th>Hedef</th></tr>
+      <tr><td>Boşta (DWA yüksüz)</td><td class="num">10.0 Hz</td><td class="num">88 / 112 ms</td><td><span class="chip good">✅</span></td></tr>
+      <tr><td><strong>Görev altında (DWA aktif)</strong></td><td class="num"><strong>4.0–4.7 Hz</strong></td><td class="num">208 / 410 ms</td><td><span class="chip crit">❌ ≥8Hz karşılanmıyor</span></td></tr>
+    </table></div>
+
+    <h3>Karar noktası: asenkron DWA gerekli miydi?</h3>
+    <p><strong>Hayır — reddedildi.</strong> GIL gerçeği: saf Python <code>dwa.plan()</code> worker thread'de de GIL'i tutar, tick yine bloklanır. Mimari-tasarim agent'ı bu yönde net karar verdi; kodlama + code-reviewer onayladı. Gerçek çözüm maliyeti düşürmekti:</p>
+    <ul>
+      <li><strong>Swept-cell cache</strong> (<code>dwa.py</code>): <code>build_swept_cells</code> sonucu <code>(vx, yaw, n_cells)</code> → hücre listesi, <code>OrderedDict</code> FIFO (512). Aynı adaylar her tick'te aynı geometriyi ürettiğinden isabet oranı 1.0.</li>
+      <li><strong>Döngü birleştirme</strong> (<code>score_candidate</code>): çarpışma + maliyet + unknown 3 ayrı sweep → tek geçiş (early-exit korundu).</li>
+      <li><strong>Costmap yayın bölücü</strong> (<code>autonomy_node.py:920</code>): <code>% 3</code> → <code>% 4</code> (to_json ~11ms artık 2.5Hz).</li>
+    </ul>
+
+    <h3>Benchmark (<code>bench_dwa.py</code>, 30 duba, 119 aday)</h3>
+    <div class="tblwrap"><table>
+      <tr><th>Ölçüm</th><th class="num">Değer</th></tr>
+      <tr><td>Soğuk ilk plan (cache boş)</td><td class="num">120.8 ms</td></tr>
+      <tr><td>Sıcak plan (100 ölçüm ort.)</td><td class="num">32–36 ms</td></tr>
+      <tr><td>Cache boyutu</td><td class="num">119 / 512</td></tr>
+      <tr><td>İsabet oranı</td><td class="num">1.0000</td></tr>
+      <tr><td>Eski akış → yeni akış</td><td class="num">~110 ms → ~35 ms (~3.1×)</td></tr>
+    </table></div>
+    <p><strong>Durum:</strong> kod + test tamam; sim'de görev altında ≥8Hz doğrulaması sunucu erişilmez olduğu için yapılamadı.</p>
+  </section>
+
+  <!-- Kritik bulgu -->
+  <section>
+    <div class="sec-label"><span class="idx">⚠</span><h2>Kritik bulgu: <code>avoid</code> terimi ölü kod</h2></div>
+    <div class="callout">
+      <span class="tag">Dead code — envanter #13</span>
+      <p><code>score_candidate</code>'de <code>avoid</code> döngüsü <code>collides</code> ile <strong>aynı eşiği</strong> (<code>inflated ≥ COST_YELLOW</code>) tarıyor. Çarpışan aday <code>−inf</code> alıp eleniyor; çarpışmayan adayda hiçbir hücre eşiği aşmıyor → <code>avoid = 0</code> her zaman (planlama agent'ı 476 aday-değerlendirmede kanıtladı). Sonuç: <code>dwa_w_avoid 2.0→1.0</code> değişikliği davranışsal olarak <strong>nötr</strong> — P2 180° dönüşün gerçek çözümü yalnızca 4-kadran atan2'dir. Gerçek "smooth kaçınma" istenirse ayrı bir mesafe ölçüsü gerekecek.</p>
+    </div>
+  </section>
+
+  <!-- Görev 2 -->
+  <section>
+    <div class="sec-label"><span class="idx">02</span><h2>P2 sarı duba 180° dönüş</h2></div>
+    <p><strong>Kök neden:</strong> eski <code>max(goal[0], 0.001)</code> bearing'i 0'a değil <strong>90°'ye</strong> çekiyordu — <code>atan2(lat, 0.001)</code> hedefin lateral'ine göre ±90° üretir. Hedef arkada kalan araç bu yüzden dönüş adayını hiç kazanamıyordu.</p>
+    <p><strong>Çözüm:</strong> tam 4-kadran <code>atan2(goal[1], goal[0])</code> (<code>dwa.py:331</code>).</p>
+    <div class="tblwrap"><table>
+      <tr><th>Ölçüm (goal = (−5, 0.1))</th><th class="num">Değer</th></tr>
+      <tr><td>Bearing — yeni formül</td><td class="num">178.85° (≈π, doğru)</td></tr>
+      <tr><td>Bearing — eski formül</td><td class="num">89.43° (hata)</td></tr>
+      <tr><td>yaw=0 adayı heading — yeni</td><td class="num">0.006 (düşük, dönmeli)</td></tr>
+      <tr><td>yaw=0 adayı heading — eski</td><td class="num">0.503 (yanlış yüksek)</td></tr>
+    </table></div>
+    <p><strong>Doğrulama:</strong> tam <code>plan()</code> çağrısında hedef arkadayken dönüş adayı (|yaw| ≥ 20°/s) seçiliyor; 2 regresyon testi eklendi (<code>test_p2_180_goal_behind_four_quadrant_bearing</code>, <code>test_p2_plan_turns_when_goal_behind</code>).</p>
+  </section>
+
+  <!-- Görev 3 -->
+  <section>
+    <div class="sec-label"><span class="idx">03</span><h2>P1 koridor salınımı</h2></div>
+    <p><strong>Çözüm:</strong> koridor aktifken hedef <code>(lookahead, cl·0.3)</code> — 8–10m ilerideki koridor merkezi (<code>autonomy_node.py:947–958</code>); mikro waypoint bearing'ine duyarlılık kırılır.</p>
+    <div class="tblwrap"><table>
+      <tr><th>Karşılaştırma (0.5m yanal kayma)</th><th class="num">Bearing değişimi</th></tr>
+      <tr><td>Waypoint hedefi (6.0, −2.5)</td><td class="num">3.95°</td></tr>
+      <tr><td>Koridor hedefi (8.0, −0.3)</td><td class="num">1.07°</td></tr>
+      <tr><td>corridor/heading oranı — eski (3.5/1.0)</td><td class="num">0.28</td></tr>
+      <tr><td>corridor/heading oranı — yeni (1.8/1.6)</td><td class="num">0.86</td></tr>
+    </table></div>
+    <p><strong>Doğrulama:</strong> bearing duyarlılığı ~4× azaldı, corridor artık heading'i dengeleyen katman. 2 test eklendi (<code>test_p1_corridor_goal_centers_lane</code>, <code>test_p1_corridor_low_conf_falls_back</code>).</p>
+  </section>
+
+  <!-- Dosya değişiklikleri -->
+  <section>
+    <div class="sec-label"><span class="idx">▤</span><h2>Dosya değişiklikleri</h2></div>
+    <div class="tblwrap"><table>
+      <tr><th>Dosya</th><th>Değişiklik</th></tr>
+      <tr><td><code>src/ida_planning/ida_planning/dwa.py</code></td><td>Swept-cell cache (<code>OrderedDict</code> FIFO 512) + tek geçiş döngü birleştirme; imzalar değişmedi</td></tr>
+      <tr><td><code>src/ida_autonomy/ida_autonomy/autonomy_node.py</code></td><td><code>_costmap_pub_div</code> <code>% 3</code> → <code>% 4</code></td></tr>
+      <tr><td><code>src/ida_bringup/config/autonomy.yaml</code></td><td><strong>Sunucuya sync edildi</strong> (eski ağırlıklar giderildi) + build</td></tr>
+      <tr><td><code>src/ida_planning/test_saf.py</code></td><td>96 → 103 test (+3 cache, +4 P2/P1)</td></tr>
+      <tr><td><code>src/ida_planning/bench_dwa.py</code></td><td>Çift <code>main()</code> silindi (ölçüm aracı temizlendi)</td></tr>
+      <tr><td><code>README_AUTONOMY_ROS2.md</code></td><td><code>/planning/costmap</code> kontratı 10Hz → ~2.5Hz</td></tr>
+      <tr><td><code>DEBUG_OTURUMU_SORUN_ENVANTERI.md</code></td><td>#1, #2, #3, #10, #11 güncellendi; #13 (avoid dead-code) eklendi</td></tr>
+    </table></div>
+    <p><strong>Test sonucu:</strong> <code>python src/ida_planning/test_saf.py</code> → <span class="chip good">103/103 OK</span> · Eşdeğerlik: eski/yeni akış bit-ayar aynı (60 aday × 3 costmap durumu) · <code>py_compile</code> temiz.</p>
+  </section>
+
+  <!-- Kalan işler -->
+  <section>
+    <div class="sec-label"><span class="idx">▸</span><h2>Kalan işler — sunucu erişilebilir olunca</h2></div>
+    <ul class="checks">
+      <li><span class="box">☐</span>Güncel dosyaları sunucuya at: <code>dwa.py</code>, <code>autonomy_node.py</code>, <code>autonomy.yaml</code>, <code>test_saf.py</code> → md5 doğrula</li>
+      <li><span class="box">☐</span><code>colcon build --symlink-install</code> (ida_bringup + ida_planning + ida_autonomy)</li>
+      <li><span class="box">☐</span>Sim: launch → <code>sim_arm.py</code> → <code>sim_upload_mission.py</code> → GUIDED → waypoints + start</li>
+      <li><span class="box">☐</span>Görev altında <code>ros2 topic hz /autonomy/state</code> ≥8Hz (kabul kriteri)</li>
+      <li><span class="box">☐</span>P2 sarı testi: 180° dönüş yok mu (<code>/autonomy/debug</code>)</li>
+      <li><span class="box">☐</span>P1 koridor testi: salınım yok, koridor merkezi takibi</li>
+      <li><span class="box">☐</span>Envanter #13: gerçek smooth kaçınma isteniyor mu → <code>avoid</code> ölü kod kararı</li>
+    </ul>
+    <p style="color:var(--muted)">Not: sunucu oturum ortasında erişilemez oldu (sim CPU yükü / ağ). Kod tarafı tamamlandı; sim doğrulaması açık kaldı.</p>
+  </section>
+
+  <!-- Agentic süreç -->
+  <section>
+    <div class="sec-label"><span class="idx">∞</span><h2>Agentic süreç</h2></div>
+    <div class="tblwrap"><table>
+      <tr><th>Aşama</th><th>Agent</th><th>Çıktı</th></tr>
+      <tr><td>Keşif</td><td>3× Explore</td><td>Tick mimarisi, DWA skorlama, sim başlatma akışı — yaml sync eksikliği bulundu</td></tr>
+      <tr><td>Mimari</td><td>mimari-tasarim</td><td>Swept-cache tasarımı; async DWA GIL gerekçesiyle reddedildi</td></tr>
+      <tr><td>Planlama</td><td>planlama</td><td>P2/P1 sayısal doğrulama; avoid dead-code kanıtı; 4 test</td></tr>
+      <tr><td>Kodlama</td><td>kodlama</td><td>Cache + döngü birleştirme + benchmark script'leri (3.1× doğrulandı)</td></tr>
+      <tr><td>İnceleme</td><td>code-reviewer</td><td>Koşullu onay: OrderedDict (B1/B2), çift main (B4), cache testleri (B5), README/envanter (B6/B7)</td></tr>
+    </table></div>
+  </section>
+
+  <footer>
+    İDA otonomi yazılımı · TEKNOFEST 2026 · Bu rapor debug oturumunun kod-tarafı sonucunu belgeler; sim doğrulaması sunucu erişimi geri geldiğinde tamamlanacaktır.
+  </footer>
+
+</div>
+</body>

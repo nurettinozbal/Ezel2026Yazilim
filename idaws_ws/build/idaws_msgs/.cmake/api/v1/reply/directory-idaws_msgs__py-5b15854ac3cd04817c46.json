@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "idaws_msgs__py",
+		"source" : "/home/ezelproject/idaws_ws/build/idaws_msgs/idaws_msgs__py"
+	}
+}

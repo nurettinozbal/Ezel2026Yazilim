@@ -1,0 +1,390 @@
+# IDA gerçek araç için TEK ayar kaynağı.
+# Simülasyon güvenli varsayılanları diğer YAML'lerde kalır; saha günü yalnız bu
+# dosya değiştirilir. Launch bu değerleri otonomi, limiter ve GUIDED bridge'e
+# birlikte uygular; hız/yaw değerleri başka scriptte tekrar edilmez.
+
+# Saha hareket zarfı. Bunlar bench/deneme değerleri değildir.
+# YKİ motor yüzdesi SERVO_OUTPUT_RAW üzerinden okunur: 1600 PWM yaklaşık
+# +20%'dir. Eski ESC ayarında 1550-1560 civarında gözlenen başlama eşiği,
+# kalibrasyon sonrası kaldırılmıştır; artık nötrün hemen üstü hareket üretebilir.
+# Bu bilgi m/s'ye doğrusal çevrilmez; Pixhawk hız kontrolcüsü
+# su yüküne ve hız hatasına göre PWM üretir. Uygulama katmanındaki kesin
+# tavan 1.6 m/s, planlayıcının normal hareket yollarındaki komut tabanı
+# 0.70 m/s'dir. Bu taban bir PWM/yeterli itki garantisi değildir.
+ida_field_envelope:
+  # Bu sanal node yalniz merkezi profil dogrulamasi icindir. ros__parameters
+  # katmani dosyanin tum ROS2 node'larina --params-file olarak verilebilmesini
+  # saglar; calisan bir ida_field_envelope node'u yoktur.
+  ros__parameters:
+    hard_max_speed_mps: 1.6
+    min_navigation_command_mps: 0.70
+
+# Donanım ve su üstü/su içi itki zarfı. Bu bölüm PWM yazmaz; launch başlangıcında
+# profil tutarlılığını doğrular. GUIDED yolunda Jetson hâlâ m/s ve yaw-rate
+# gönderir, Pixhawk hız kontrolcüsü PWM'i üretir. Elektriksel tavan Pixhawk'ta
+# ayrıca bu bölümdeki değerlerle doğrulanmalıdır; araç bunu otomatik değiştirmez.
+ida_thruster_envelope:
+  ros__parameters:
+    thruster_count: 2
+    left_servo_channel: 9
+    right_servo_channel: 11
+    battery_cells: 6
+    battery_nominal_voltage_v: 22.2
+    battery_capacity_ah: 16.0
+    thruster_max_thrust_kgf_each: 8.0
+    manufacturer_continuous_current_a_each: 35.0
+    # Aşağıdaki SERVO değerleri ekipten alınan ön iskelettir. Araçtan PARAM_VALUE
+    # dökümü alınana kadar doğrulanmış kalibrasyon veya yazma hedefi değildir.
+    servo_snapshot_verified: false
+    servo_min_pwm: 1000
+    servo_trim_pwm: 1500
+    servo_max_pwm: 2000
+    left_servo_reversed: 0
+    right_servo_reversed: 0
+    required_left_servo_function: 73
+    required_right_servo_function: 74
+    required_frame_class: 2
+    continuous_pwm_limit: 1700
+    burst_pwm_limit: 1700
+    burst_duration_s: 2.0
+    pixhawk_mot_thr_min_pct: 0
+    pixhawk_mot_thr_max_pct: 40
+    pixhawk_mot_slewrate_pct_s: 20
+    verification_poll_s: 5.0
+    calibration_burst_throttle_pct: 40
+    target_actual_cruise_speed_mps: 0.75
+    target_actual_max_speed_mps: 1.0
+    autonomy_burst_enabled: false
+
+ida_autonomy:
+  ros__parameters:
+    loop_hz: 10.0
+    waypoint_threshold_m: 4.0
+    waypoint_overshoot_guard_m: 6.0
+    max_speed_mps: 1.6
+    # Seyir yaw'i değil, saha testinde çalışan son pivot/hard komut tavanı.
+    # P2 arc <=22, recovery 25, align/pivot 30 deg/s; >=22.5 deg/s iken son
+    # güvenlik zarfı ileri itkisini sıfırlar.
+    max_yaw_rate_deg_s: 50.0
+    yaw_kp_deg_s_per_deg: 0.55
+    telemetry_timeout_s: 2.0
+    perception_timeout_s: 2.0
+    obstacle_avoid_distance_m: 8.0
+
+    # P3: tek kare ancak lidar ile aynı fiziksel hedefte birleşirse kabul edilir.
+    target_min_confidence: 0.20
+    p3_search_yaw_rate_deg_s: 30.0 # teorik 360 derece / 30 deg/s = 12 saniye
+    p3_search_rotations_per_cycle: 1
+    p3_search_initial_hold_s: 1.0
+    p3_staging_advance_s: 3.0
+    p3_staging_speed_mps: 0.70
+    p3_staging_arrival_m: 1.0
+    # Hakem P2 noktası kabul edildikten sonra mission listesine nokta
+    # eklemeden, son rota doğrultusunda P3 araması öncesi ilerleme.
+    p2_exit_advance_m: 5.0
+    p2_exit_advance_speed_mps: 0.70
+    p3_lock_confirm_s: 0.0
+    p3_lock_confirm_frames: 1
+    # Kısa model kesintisinde ileri itki yok; yalnız son yaw ile yeniden
+    # edinim. Saha modelinin aralıklı tespitine ayrılan tolerans korunur;
+    # arama saati bu sürede veya sonrasında başa sarmaz.
+    p3_target_loss_grace_s: 2.0
+    p3_lock_yaw_gain_deg_s: 35.0
+    p3_engage_center_max: 0.18
+    p3_engage_distance_m: 1.2
+    p3_align_distance_m: 5.0
+    p3_approach_speed_mps: 0.70
+    p3_approach_yaw_max_deg_s: 20.0
+    p3_lock_min_speed_mps: 0.70
+    p3_engage_speed_mps: 0.70
+    sim_gate_truth_enabled: false
+    engage_window_s: 2.0
+    # 0: hedef rengi YKI/IHA'dan gelene kadar görev zaman aşımı yok.
+    p3_hold_timeout_s: 0.0
+    wrong_avoid_lateral_m: 1.5
+    wrong_avoid_speed_mps: 0.70
+
+    failsafe_recovery_enabled: true
+    failsafe_recovery_s: 5.0
+
+    # Puanlama davranışı sürüş kararlarını da etkilediği için saha profilindedir.
+    score_kd1: 5.0
+    score_kd2: 5.0
+    score_ed2: 5.0
+    score_ooc_mode: "corridor"
+    score_half_width_m: 8.0
+    score_sustained_contact_s: 30.0
+    score_contact_radius_m: 1.6
+    score_drop_after_s: 5.0
+    score_include_uav_bonus: true
+    course_geometry_enter_m: 4.5
+    course_geometry_exit_m: 5.5
+
+    p2_min_pair_crossings: 2
+    # 0: parkur tamamlanana veya operatör STOP verene kadar görev zaman aşımı yok.
+    p1_max_duration_s: 0.0
+    p2_max_duration_s: 0.0
+    yellow_sighting_threshold: 4
+    yellow_sighting_decay: 2
+    yellow_sighting_range_m: 15.0
+    yellow_sighting_forward_m: 1.0
+    yellow_sighting_lateral_m: 6.0
+    yellow_sighting_min_confidence: 0.30
+    pair_max_lateral_m: 15.0
+    pair_min_lateral_gap_m: 1.0
+    pair_cross_trigger_forward_m: 3.0
+    pair_cross_complete_forward_m: -0.5
+    pair_min_confidence: 0.30
+    pair_max_age_s: 20.0
+    pair_max_forward_gap_m: 3.0
+    pair_max_crossing_gap_s: 2.0
+
+    # Lidar geometrisi DWA'da hard obstacle'dır. Kamera yalnız renk ekler;
+    # eşleşmeyen lidar kümesi de kaçınma engeli olarak kalır.
+    dwa_enabled: true
+    nn_sort_enabled: false
+    costmap_size_m: 30.0
+    costmap_cell_m: 0.25
+    costmap_bot_radius_m: 0.6
+    costmap_safety_m: 0.5
+    dwa_recovery_vx: 0.70
+    dwa_recovery_yaw: 25.0
+    dwa_w_obstacle: 0.7
+    dwa_w_heading: 1.8
+    dwa_w_progress: 1.2
+    dwa_w_speed: 0.6
+    dwa_w_smooth: 0.3
+    dwa_w_unknown: 0.6
+    dwa_w_corridor: 1.6
+    dwa_w_avoid: 0.25         # Kamera sarı yönü ikincil; lidar çarpışma veto'su birincil
+    dwa_vx_steps: 7
+    dwa_yaw_steps: 17
+    dwa_sim_time: 3.5
+    dwa_sim_step: 0.25
+    dwa_accel_max: 0.8
+    dwa_slow_vx: 0.70
+    dwa_min_drive_vx: 0.70
+    dwa_min_turn_rate_deg_s: 20.0
+    # Aynı sıkışma olayında recovery tarafını korur; yön ancak 12 ardışık
+    # güvenli normal DWA tick'inden sonra yeniden seçilebilir.
+    dwa_recovery_latch_ticks: 12
+    dwa_align_before_drive_deg: 42.0
+    dwa_align_yaw_rate_deg_s: 30.0
+    dwa_align_parkurs: [1]
+    # DWA kaçınma yön histerezisi: sabit engelde v=0/pivot ile v=0.7/arc
+    # geçişlerini bastırır. Yön değişimi en az bu kadar tick üstün kalmalı.
+    dwa_avoid_direction_latch_ticks: 8
+    p2_dwa_max_yaw_rate_deg_s: 22.0
+
+    # Yakın-alan güvenliği (saha bulgusu 2026-08-17): hard obstacle 0.93-1.56 m
+    # mesafedeyken bazı komutlarda v=0.7 m/s korundu. Araç 0.76 m genişlik /
+    # 1.18 m uzunluk; lidar merkezden 0.57 m önde (ida_sllidar_bridge gövde
+    # frame'e taşır). DWA skorlamasından bağımsız kesin kural: engel
+    # stop_m içinde ve |lateral| <= stop_lateral_m ise ileri komut 0 + pivot;
+    # slow_m içinde ise hız düşürülür. Histerezis: stop aktifken engel
+    # stop_release_m üstüne çıkmadan ileri komut açılmaz. P3 hedef angajmanı
+    # bu katmandan etkilenmez (kendi mesafe/merkezleme kurallarına tabidir).
+    # Kaçınma mesafesi artırıldı (kullanıcı gözlemi 2026-08-18): P2'de kaçınma
+    # çok yakından/genişten alınıyor, araç parkur dışına çıkıyordu. stop 2.5,
+    # slow 5.0, release 4.0 ile engel daha erken algılanır ve pivot daha erken
+    # başlar (parkur içinde kalış).
+    near_field_stop_m: 2.5
+    near_field_slow_m: 5.0
+    near_field_stop_lateral_m: 1.0
+    # Yavaşlama yalnız gövdenin ileri süpürme şeridinde uygulanır. Dışarıdaki
+    # duba DWA costmap'inde kalır ama waypoint köşesinde yerinde pivota kilitlemez.
+    near_field_slow_lateral_m: 1.5
+    near_field_pivot_yaw_deg_s: 30.0
+    near_field_slow_speed_mps: 0.80
+    near_field_stop_release_m: 4.0
+    near_field_escape_trigger_s: 1.0
+    near_field_escape_reverse_s: 1.5
+    near_field_escape_cooldown_s: 1.0
+    near_field_escape_reverse_mps: 0.20
+    near_field_escape_yaw_deg_s: 30.0
+    near_field_escape_rear_stop_m: 1.5
+    # Reverse yayından sonra yakın-alan koridoru gerçekten açıldıysa, aynı
+    # doğrultuda tekrar ileri gitmek yerine ters direksiyonlu kısa çıkış yayı.
+    # 20 deg/s, nav_final_high_yaw=22.5 sınırının altında kalır; güncel engel
+    # tekrar merkezlenirse final güvenlik zarfı ileri komutu anında keser.
+    near_field_escape_forward_commit_s: 1.5
+    near_field_escape_forward_commit_mps: 0.40
+    near_field_escape_forward_commit_yaw_deg_s: 20.0
+    # Water-test thrust threshold is higher than SITL; still bounded below the
+    # field cruise ceiling while aligning at a waypoint corner.
+    near_field_heading_align_speed_mps: 0.70
+    near_field_heading_align_max_yaw_deg_s: 20.0
+    # Tek davranış hakemi: yüksek yaw veya önde 2 m içindeki lidar engelinde
+    # ileri itki sıfır; recovery/align geçişleri kısa dwell ile kararlı kalır.
+    nav_align_min_dwell_s: 0.6
+    nav_recovery_min_dwell_s: 1.0
+    nav_slow_min_dwell_s: 0.4
+    nav_final_high_yaw_deg_s: 22.5
+    nav_final_obstacle_stop_m: 2.0
+    nav_rotational_sweep_radius_m: 1.0
+    # Saha motorlarının etkin alt sınırı; yalnız arkadaki süpürme engelinden
+    # düz ileri ayrılmak için ve yaw=0 iken kullanılır.
+    nav_rear_sweep_escape_speed_mps: 0.70
+    safety_base_m: 0.5
+    safety_max_m: 10.0
+    reaction_time_s: 1.0
+    max_decel_mps2: 1.5
+    max_speed_scale: 1.0
+    # [0] hiçbir gerçek parkurla eşleşmez; boş ROS2 dizi tip belirsizliği
+    # oluşturmadan koridoru hedef kaynağı yapmayı kapalı tutar.
+    corridor_goal_parkurs: [0]
+    corridor_bias_parkurs: [1]
+    corridor_goal_lookahead_min_m: 8.0
+    corridor_goal_lateral_gain: 0.3
+    stuck_timeout_s: 3.0
+    stuck_min_dist_m: 0.2
+    stuck_vx_threshold: 0.1
+
+ida_command_limiter:
+  ros__parameters:
+    max_vx_mps: 1.6
+    max_vy_mps: 0.0
+    max_yaw_rate_rad_s: 0.872664626
+    # Saha akışında kapalıdır; yalnız ayrı bench komutu geçici açabilir.
+    bench_pulse_enabled: false
+    bench_pulse_max_speed_mps: 0.30
+    bench_pulse_max_duration_s: 6.0
+
+ida_mavsdk_bridge:
+  ros__parameters:
+    command_timeout_s: 0.6
+    send_hz: 10.0
+    health_source_timeout_s: 1.5
+    pymavlink_baud: 115200
+    guided_retry_s: 1.0
+    guided_timeout_s: 5.0
+    command_retry_s: 0.5
+    guided_health_timeout_s: 2.5
+    guided_max_forward_mps: 1.6
+    guided_max_reverse_mps: 1.6
+    guided_max_yaw_rate_rad_s: 0.872664626
+    target_color_poll_hz: 1.0
+    mission_download_hz: 0.2
+    mission_raw_enabled: true
+    mission_control_poll_hz: 2.0
+    mission_control_ros_ack_timeout_s: 1.0
+    param_call_timeout_s: 2.0
+    param_max_retries: 2
+    param_consecutive_fail_limit: 30
+    yki_status_heartbeat_s: 2.0
+
+# Arducam B0495 saha edinim ve görüntü ayarlarının tek kaynağı. Cihaz yolu
+# kurulum kimliğidir; bu bölüme bilerek konmaz.
+ida_field_camera_driver:
+  ros__parameters:
+    image_width: 960
+    image_height: 600
+    camera_fps: 30
+    fov_deg: 82.0
+    focal_length_px: 552.2
+    pixel_format: "YUYV"
+    output_encoding: "rgb8"
+    camera_frame_id: "camera_optical"
+    # 2026-08-20 13:21 TRT saha kamera ayarı. Ayrıntılı ve zaman damgalı
+    # kopya state/camera_profiles altındadır; servis önce aktif JSON profili
+    # varsa onu uygular, yoksa bu güvenli fallback değerlerini kullanır.
+    auto_exposure: 0
+    exposure_time_absolute: 5
+    white_balance_automatic: true
+    white_balance_temperature: 4635
+    gain: 616
+    saturation: 10
+    brightness: 2
+    contrast: 10
+    power_line_frequency: 0
+
+sllidar_node:
+  ros__parameters:
+    serial_baudrate: 1000000
+    frame_id: "laser"
+    inverted: false
+    angle_compensate: true
+    scan_mode: "DenseBoost"
+    scan_frequency: 10.0
+
+ida_yolo_camera:
+  ros__parameters:
+    confidence_threshold: 0.20
+    iou_threshold: 0.45
+    imgsz: 640
+    device: ""
+    image_width: 960
+    image_height: 600
+    camera_fps: 30.0
+    publish_hz: 10.0
+    fov_deg: 82.0
+    focal_length_px: 552.2
+    target_height_m: 0.5
+    record_video: false
+
+ida_yolo_camera_p3:
+  ros__parameters:
+    confidence_threshold: 0.20
+    iou_threshold: 0.45
+    imgsz: 640
+    device: ""
+    image_width: 960
+    image_height: 600
+    camera_fps: 30.0
+    publish_hz: 10.0
+    fov_deg: 82.0
+    focal_length_px: 552.2
+    target_height_m: 0.5
+    record_video: false
+
+ida_sllidar_bridge:
+  ros__parameters:
+    angle_offset_deg: 180.0
+    mirror_scan: true
+    front_fov_deg: 160.0
+    sensor_forward_offset_m: 0.57
+    sensor_lateral_right_offset_m: 0.0
+    lidar_range_m: 18.0
+    min_distance_m: 0.3
+    cluster_gap_m: 0.35
+    min_cluster_points: 3
+    max_angle_gap_deg: 8.0
+    publish_hz: 10.0
+    raw_point_limit: 720
+
+ida_sensor_fusion:
+  ros__parameters:
+    publish_hz: 10.0
+    camera_timeout_s: 0.5
+    lidar_timeout_s: 0.5
+    camera_role_merge_s: 0.0
+    max_bearing_error_deg: 6.0
+    ambiguity_margin_deg: 0.25
+    max_association_items: 10
+    buffer_size: 20
+    clock_rollback_threshold_s: 0.5
+
+ida_telemetry_logger:
+  ros__parameters:
+    log_hz: 1.0
+    flush_every_lines: 1
+
+ida_video_logger:
+  ros__parameters:
+    log_hz: 1.0
+    fps: 15.0
+    fourcc: "mp4v"
+    segment_duration_s: 10.0
+    frame_stall_timeout_s: 2.0
+    frame_width: -1
+    frame_height: -1
+    processed_image_topic: "/perception/processed_image/p1p2"
+
+ida_map_logger:
+  ros__parameters:
+    log_hz: 5.0
+    flush_every_lines: 1
+
+ida_logging_status:
+  ros__parameters:
+    status_hz: 1.0

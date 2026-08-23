@@ -1,0 +1,269 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
+  height: 100%;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  color: #ef4444; /* Takım Kırmızısı */
+  letter-spacing: 2px;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-bottom: 2px solid #333;
+  padding-bottom: 5px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- KART TASARIMI --- */
+.card {
+  background: #121214;
+  border: 1px solid #333;
+  border-left: 4px solid #333; /* Varsayılan */
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: #ef4444;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+  transform: translateX(4px);
+}
+
+.iconContainer {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dataContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.cardValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+}
+
+.cardUnit {
+  font-size: 11px;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Hata Durumu */
+.alertMode {
+  border: 1px solid #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  box-shadow: inset 0 0 20px rgba(220, 38, 38, 0.2);
+  animation: dangerPulse 1s infinite;
+}
+
+@keyframes dangerPulse {
+  0% { border-color: #dc2626; }
+  50% { border-color: transparent; }
+  100% { border-color: #dc2626; }
+}
+
+/* --- YENİ EKLENEN SINIFLAR (DashboardView için) --- */
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.nextWpBox {
+  border: 1px dashed #3498db;
+  border-radius: 6px;
+  padding: 5px;
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.manualInputWrapper {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s;
+}
+
+.manualInputWrapper:active {
+  transform: scale(0.98);
+}
+
+.editIcon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  opacity: 0.7;
+}
+
+.bottomSection {
+  margin-top: auto;
+}.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
+  height: 100%;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  color: #ef4444; /* Takım Kırmızısı */
+  letter-spacing: 2px;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-bottom: 2px solid #333;
+  padding-bottom: 5px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- KART TASARIMI --- */
+.card {
+  background: #121214;
+  border: 1px solid #333;
+  border-left: 4px solid #333; /* Varsayılan */
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: #ef4444;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+  transform: translateX(4px);
+}
+
+.iconContainer {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dataContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.cardValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+}
+
+.cardUnit {
+  font-size: 11px;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Hata Durumu */
+.alertMode {
+  border: 1px solid #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  box-shadow: inset 0 0 20px rgba(220, 38, 38, 0.2);
+  animation: dangerPulse 1s infinite;
+}
+
+@keyframes dangerPulse {
+  0% { border-color: #dc2626; }
+  50% { border-color: transparent; }
+  100% { border-color: #dc2626; }
+}
+
+/* --- YENİ EKLENEN SINIFLAR (DashboardView için) --- */
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.nextWpBox {
+  border: 1px dashed #3498db;
+  border-radius: 6px;
+  padding: 5px;
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.manualInputWrapper {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s;
+}
+
+.manualInputWrapper:active {
+  transform: scale(0.98);
+}
+
+.editIcon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  opacity: 0.7;
+}
+
+.bottomSection {
+  margin-top: auto;
+}
