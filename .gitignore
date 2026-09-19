@@ -6,6 +6,6 @@
 *.mp4
 *.avi
 *.bag
+__pycache__/
 log/
 logs/
-__pycache__/
